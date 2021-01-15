@@ -148,9 +148,8 @@ const VideoPlayer: React.FC<{url: string, isMuted: boolean}> = ({url, isMuted}) 
   })
 
   const playerWrapper = css({
-    backgroundColor: 'rgba(255,255,255,1)',
     width: '100%',
-    height: '50vh'
+    maxHeight: '50vh'
   });
 
   const render = () => {
@@ -160,7 +159,6 @@ const VideoPlayer: React.FC<{url: string, isMuted: boolean}> = ({url, isMuted}) 
           <ReactPlayer url={url}
             ref={ref}
             width='100%'
-            height='100%'
             playing={isPlaying}
             muted={isMuted}
             onProgress={onProgressCallback}
