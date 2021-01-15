@@ -3,9 +3,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { css } from '@emotion/core'
 
 import { httpRequestState } from '../types'
+import { mediaPackageId, ocUrl } from '../config'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faPause, faToggleOn, faToggleOff, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPause, faToggleOn, faToggleOff} from "@fortawesome/free-solid-svg-icons";
 
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -35,7 +36,7 @@ const Video: React.FC<{}> = () => {
   // Try to fetch URL from external API
   useEffect(() => {
     if (videoURLStatus === 'idle') {
-      dispatch(fetchVideoInformation())
+      dispatch(fetchVideoInformation({mediaPackageId: mediaPackageId, ocUrl: ocUrl}))
     }
   }, [videoURLStatus, dispatch])
 
@@ -53,7 +54,7 @@ const Video: React.FC<{}> = () => {
   const videoPlayers: JSX.Element[] = [];
   for (let i = 0; i < videoCount; i++) {
     // videoPlayers.push(<VideoPlayer key={i} url='https://media.geeksforgeeks.org/wp-content/uploads/20190616234019/Canvas.move_.mp4' />);
-    videoPlayers.push(<VideoPlayer key={i} url={videoURLs[i]} isMuted={i === 0}/>);
+    videoPlayers.push(<VideoPlayer key={i} url={videoURLs[i]} isMuted={i !== 0}/>);
   }
 
   // Style
@@ -63,12 +64,11 @@ const Video: React.FC<{}> = () => {
     flexDirection: 'column' as const,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '10px',
+    padding: '0px',
     borderBottom: '1px solid #BBB',
   });
 
   const videoPlayerAreaStyle = css({
-    backgroundColor: 'black',
     display: 'flex',
     flexDirection: 'row' as const,
     justifyContent: 'center',
@@ -104,6 +104,7 @@ const VideoPlayer: React.FC<{url: string, isMuted: boolean}> = ({url, isMuted}) 
   // Init state variables
   const ref = useRef<ReactPlayer>(null);
   const [ready, setReady] = useState(false);
+  const [errorState, setError] = useState(false);
 
   // Callback for when the video is playing
   const onProgressCallback = (state: { played: number, playedSeconds: number, loaded: number, loadedSeconds:  number }) => {
@@ -134,26 +135,57 @@ const VideoPlayer: React.FC<{url: string, isMuted: boolean}> = ({url, isMuted}) 
     }
   })
 
+  const onErrorCallback = (e: any) => {
+    setError(true)
+  }
+
+  const errorBoxStyle = css({
+    ...(!errorState) && {display: "none"},
+    borderColor: 'red',
+    borderStyle: 'dashed',
+    fontWeight: 'bold',
+    padding: '10px',
+  })
+
   const playerWrapper = css({
     backgroundColor: 'rgba(255,255,255,1)',
     width: '100%',
     height: '50vh'
   });
 
+  const render = () => {
+    if (!errorState) {
+      return(
+        <div css={playerWrapper} title="playerWrapper">
+          <ReactPlayer url={url}
+            ref={ref}
+            width='100%'
+            height='100%'
+            playing={isPlaying}
+            muted={isMuted}
+            onProgress={onProgressCallback}
+            progressInterval={100}
+            onReady={onReadyCallback}
+            onEnded={onEndedCallback}
+            onError={onErrorCallback}
+            tabIndex={-1}
+            disablePictureInPicture
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div css={errorBoxStyle} title="Error Box" role="alert">
+          <span>An error has occured loading this video. </span>
+        </div>
+      );
+    }
+  }
+
   return (
-    <div css={playerWrapper} title="playerWrapper">
-      <ReactPlayer url={url}
-        ref={ref}
-        width='100%'
-        height='100%'
-        playing={isPlaying}
-        muted={isMuted}
-        onProgress={onProgressCallback}
-        progressInterval={100}
-        onReady={onReadyCallback}
-        onEnded={onEndedCallback}
-      />
-    </div>
+    <>
+      {render()}
+    </>
   );
 
   // return (
@@ -178,6 +210,16 @@ const VideoControls: React.FC<{}> = () => {
   const isPlaying = useSelector(selectIsPlaying)
   const isPlayPreview = useSelector(selectIsPlayPreview)
   const currentlyAt = useSelector(selectCurrentlyAt)
+
+  // Change preview mode from "on" to "off" and vice versa
+  const switchPlayPreview = () => {
+    dispatch(setIsPlayPreview(!isPlayPreview))
+  }
+
+  // Change play mode from "on" to "off" and vice versa
+  const switchIsPlaying = () => {
+    dispatch(setIsPlaying(!isPlaying))
+  }
 
   // Style
   const videoControlStyle = css({
@@ -223,20 +265,33 @@ const VideoControls: React.FC<{}> = () => {
   return (
     <div css={videoControlStyle} title="Video Controls">
       <div css={videoControlsRowStyle} title="Video Controls Top Row">
-        <div style={{display: 'flex', gap: '10px', width: '50px', justifyContent: 'center'}}>
-          <FontAwesomeIcon icon={isPlayPreview ? faEyeSlash : faEye} size="1x" title="Play Preview Icon"/>
+        <div css={{display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center'}}
+          title={"Skips deleted segments when playing the video. Currently " + (isPlayPreview ? "on" : "off")}>
+          <div css={{display: 'inline-block', flexWrap: 'nowrap'}}>
+            Preview Mode
+          </div>
           <FontAwesomeIcon css={playPreviewStyle} icon={isPlayPreview ? faToggleOn : faToggleOff} size="1x"
-            title={"Play Preview Switch: " + isPlayPreview}
-            onClick={() => dispatch(setIsPlayPreview(!isPlayPreview))}
+            role="switch" aria-checked={isPlayPreview} tabIndex={0} aria-hidden={false}
+            aria-label="Enable or disable preview mode."
+            onClick={ switchPlayPreview }
+            onKeyDown={(event: React.KeyboardEvent<SVGSVGElement>) => { if (event.key === " ") {
+              switchPlayPreview()
+            }}}
           />
         </div>
         <FontAwesomeIcon css={playButtonStyle} icon={isPlaying ? faPause : faPlay} size="2x"
           title="Play Button"
-          onClick={() => dispatch(setIsPlaying(!isPlaying))}
+          role="button" aria-pressed={isPlaying} tabIndex={0} aria-hidden={false}
+          aria-label="Play Button"
+          onClick={ switchIsPlaying }
+          onKeyDown={(event: React.KeyboardEvent<SVGSVGElement>) => { if (event.key === " " || event.key === "Enter") {
+            switchIsPlaying()
+          }}}
         />
-        <div css={{display: 'inline-block', width: '110px'}}>
+        <time css={{display: 'inline-block', width: '110px'}}
+          tabIndex={0} role="timer">
           {new Date((currentlyAt ? currentlyAt : 0)).toISOString().substr(11, 12)}
-        </div>
+        </time>
       </div>
     </div>
   );
@@ -250,13 +305,28 @@ const VideoHeader: React.FC<{}> = () => {
   const presenters = useSelector(selectPresenters)
 
   const titleStyle = css({
-    fontSize: 'large'
+    display: 'inline-block',
+    padding: '15px',
+    overflow: 'hidden',
+    whiteSpace: "nowrap",
+    textOverflow: 'ellipsis',
+    maxWidth: '500px',
   })
 
+  const titleStyleBold = css({
+    fontWeight: 'bold',
+    fontSize: '24px',
+    verticalAlign: '-2.5px',
+  })
+
+  let presenter_header;
+  if (presenters && presenters.length) {
+      presenter_header = <div css={titleStyle} title="Video Presenters">by {presenters.join(", ")}</div>
+  }
   return (
-    <div title="Video Area Header">
-      <div css={titleStyle} title="Video Title">{title}</div>
-      <div title="Video Presenters">by {presenters.join(", ")}</div>
+    <div title="Video Area Header" css={{fontSize: '16px'}}>
+      <div css={[titleStyle, titleStyleBold]} title="Video Title">{title}</div>
+      {presenter_header}
     </div>
   );
 }

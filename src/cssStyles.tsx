@@ -38,6 +38,9 @@ export const basicButtonStyle = css({
   "&:hover": {
     transform: 'scale(1.1)',
   },
+  "&:focus": {
+    transform: 'scale(1.1)',
+  },
   "&:active": {
     transform: 'scale(0.9)',
   },
@@ -57,3 +60,14 @@ export const backOrContinueStyle = css(({
   flexDirection: 'row' as const,
   gap: '20px',
 }))
+
+/**
+ * CSS for ariaLive regions that should not be visible
+ */
+export const ariaLive = css({
+  position: 'absolute',
+  left: '-99999px',
+  height: '1px',
+  width: '1px',
+  overflow: 'hidden',
+})
