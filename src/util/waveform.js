@@ -3,6 +3,7 @@
  * to be used for this application.
  * duncan83@gmail.com
  */
+import { AudioContext } from 'standardized-audio-context';
 
 export function Waveform(opts) {
   this.audioContext = new AudioContext();
