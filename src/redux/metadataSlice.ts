@@ -143,4 +143,22 @@ export const selectPostStatus = (state: { metadataState: { postStatus: postReque
 export const selectPostError = (state: { metadataState: { postError: postRequestState["postError"] } }) =>
   state.metadataState.postError
 
+export const selectTitleFromEpisodeDc = (state: { metadataState: { catalogs: metadata["catalogs"] } }) => {
+  state.metadataState.catalogs.forEach((catalog: Catalog) => {
+    if (catalog.flavor === "dublincore/episode") {
+      catalog.fields.forEach((field: MetadataField) => {
+        console.log("Field ID: " + field.id)
+        if (field.id === "title") {
+          console.log("Found: " + field.value)
+          // DOES NOT STOP AFTER RETURN FOR WHATEVER REASON
+          return (field.value)
+        }
+      })
+    }
+  })
+
+  console.log("Return to Hobgoblin")
+  return "Hobgoblin"
+}
+
 export default metadataSlice.reducer
