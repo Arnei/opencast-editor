@@ -1,19 +1,19 @@
 {
     "mainMenu": {
         "cutting-button": "Schneiden",
-        "finish-button": "Finish",
-        "thumbnail-button": "Thumbnail",
-        "metadata-button": "Metadata",
-        "tooltip-aria": "Main Navigation"
+        "finish-button": "Fertigstellen",
+        "thumbnail-button": "Vorschaubild",
+        "metadata-button": "Metadaten",
+        "tooltip-aria": "Hauptnavigation"
     },
     "cuttingActions": {
-        "cut-button": "Cut",
+        "cut-button": "Schneiden",
         "cut-tooltip": "Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}",
         "cut-tooltip-aria": "Cut. Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}.",
-        "delete-button": "Delete",
+        "delete-button": "Löschen",
         "delete-restore-tooltip": "Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotkeyName}}",
         "delete-restore-tooltip-aria": "Delete and Restore. Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotKeyName}}.",
-        "restore-button": "Restore",
+        "restore-button": "Wiederherstellen",
         "mergeLeft-button": "Merge Left",
         "mergeLeft-tooltip": "Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}",
         "mergeLeft-tooltip-aria": "Merge Left. Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}.",
@@ -22,26 +22,26 @@
         "mergeRight-tooltip-aria": "Merge Right. Combine the currently active segment with the segment to its right. Hotkey: {{hotkeyName}}."
     },
     "video": {
-        "previewButton": "Preview Mode",
+        "previewButton": "Vorschaumodus",
         "previewButton-tooltip": "Skips deleted segments when playing the video. Currently {{status}}. Hotkey: {{hotkeyName}}",
         "previewButton-aria": "Enable or disable preview mode. Hotkey: {{hotkeyName}}.",
         "playButton-tooltip": "Play Button",
         "time-duration-tooltip": "Playback time and duration",
-        "duration-aria": "Duration",
-        "time-aria": "Current time",
+        "duration-aria": "Dauer",
+        "time-aria": "Aktuelle Zeit",
         "comError-text": "A problem occurred during communication with Opencast.",
         "loadError-text": "An error has occurred loading this video.",
-        "title-tooltip": "Video Title",
-        "presenter-tooltip": "Video Presenters",
+        "title-tooltip": "Videotitel",
+        "presenter-tooltip": "Vortragende",
         "controls-tooltip": "Video Controls"
     },
     "finishMenu": {
-        "save-button": "Save changes",
-        "start-button": "Start processing",
+        "save-button": "Änderungen speichern",
+        "start-button": "Verarbeitung starten",
         "discard-button": "Discard changes"
     },
     "save": {
-        "headline-text": "Save current project",
+        "headline-text": "Aktuelles Projekt speichern",
         "confirm-button": "Yes, save changes",
         "confirmButton-default-tooltip": "Save Button",
         "confirmButton-attempting-tooltip": "Attempting to save",
@@ -52,15 +52,15 @@
         "saveArea-tooltip": "Save Area"
     },
     "discard": {
-        "headline-text": "Discard changes",
-        "confirm-button": "Yes, discard changes",
+        "headline-text": "Änderungen verwerfen",
+        "confirm-button": "Ja, meine Änderungen verwerfen",
         "confirm-tooltip": "Discard changes button",
         "info-text": "Discard all the changes you made? This cannot be undone!"
     },
     "theEnd": {
         "discarded-text": "All your changes are now lost forever. You can now close the editor.",
         "startOver-button": "Let me start over!",
-        "startOver-tooltip": "Reload the page to start over",
+        "startOver-tooltip": "Seite neu laden, um neu zu starten",
         "info-text": "Changes successfully saved to Opencast. Processing your changes may take up to {{duration}} hours. You can now close the editor.\n"
     },
     "workflowSelection": {
@@ -69,7 +69,7 @@
         "noWorkflows-text": "A problem occurred, there are no workflows to process your changes with.<3/> Please save your changes and contact an Opencast Administrator.\n",
         "oneWorkflow-text": "The video will be cut and processed with the workflow \"{{workflow}}\". <3/> This will take some time.\n",
         "manyWorkflows-text": "Select which workflow Opencast should use for processing.",
-        "startProcessing-button": "Start processing",
+        "startProcessing-button": "Verarbeitung starten",
         "back-button": "Take me back",
         "selectWF-button": "Click to select this workflow",
         "selectWF-button-aria": "Press to select the workflow: {{stateName}}\n"
@@ -108,7 +108,7 @@
             "creator": "Presenter(s)",
             "contributor": "Contributor(s)",
             "startDate": "Start date",
-            "duration": "Duration",
+            "duration": "Dauer",
             "location": "Location",
             "source": "Source",
             "created": "Created",
