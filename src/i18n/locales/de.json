@@ -2,7 +2,7 @@
     "mainMenu": {
         "cutting-button": "Schneiden",
         "finish-button": "Fertigstellen",
-        "select-tracks-button": "Tracks",
+        "select-tracks-button": "Spuren",
         "thumbnail-button": "Vorschaubild",
         "metadata-button": "Metadaten",
         "tooltip-aria": "Hauptnavigation"
@@ -60,7 +60,7 @@
     },
     "theEnd": {
         "discarded-text": "All your changes are now lost forever. You can now close the editor.",
-        "startOver-button": "Let me start over!",
+        "startOver-button": "Von neu beginnen!",
         "startOver-tooltip": "Seite neu laden, um neu zu starten",
         "info-text": "Changes successfully saved to Opencast. Processing your changes may take up to {{duration}} hours. You can now close the editor.\n"
     },
@@ -89,7 +89,7 @@
     },
     "metadata": {
         "EVENTS-EVENTS-DETAILS-CATALOG-EPISODE": "Episode Metadata",
-        "submit-button": "Submit",
+        "submit-button": "Abschicken",
         "submit-button-tooltip": "Confirm your changes",
         "reset-button": "Reset",
         "reset-button-tooltip": "Undo all your changes",
@@ -100,21 +100,21 @@
             "datetime": "Invalid"
         },
         "labels": {
-            "title": "Title",
-            "subject": "Subject",
-            "description": "Description",
-            "language": "Language",
-            "rightsHolder": "Rights",
-            "license": "License",
-            "isPartOf": "Series",
-            "creator": "Presenter(s)",
-            "contributor": "Contributor(s)",
-            "startDate": "Start date",
+            "title": "Titel",
+            "subject": "Betreff",
+            "description": "Beschreibung",
+            "language": "Sprache",
+            "rightsHolder": "Rechte",
+            "license": "Lizenz",
+            "isPartOf": "Serie",
+            "creator": "Vortragende(r)",
+            "contributor": "Mitwirkende(r)",
+            "startDate": "Startdatum",
             "duration": "Dauer",
-            "location": "Location",
-            "source": "Source",
-            "created": "Created",
-            "publisher": "Publisher",
+            "location": "Ort",
+            "source": "Quelle",
+            "created": "Erstellt am",
+            "publisher": "Herausgeber",
             "identifier": "UID"
         },
         "language": {
@@ -175,8 +175,8 @@
         "deleteTrackText": "Delete Track",
         "restoreTrackText": "Restore Track",
         "cannotDeleteTrackText": "Cannot Delete Track",
-        "deleteTrackTooltip": "Do not encode and publish this track.",
-        "restoreTrackTooltip": "Encode and publish this track.",
-        "cannotDeleteTrackTooltip": "Cannot remove this track from publication."
+        "deleteTrackTooltip": "Diesen Track nicht verarbeiten und veröffentlichen.",
+        "restoreTrackTooltip": "Diesen Track verarbeiten und veröffentlichen.",
+        "cannotDeleteTrackTooltip": "Dieser Track kann nicht entfernt werden."
     }
 }
