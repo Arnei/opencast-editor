@@ -2,6 +2,7 @@
     "mainMenu": {
         "cutting-button": "Cutting",
         "finish-button": "Finish",
+        "select-tracks-button": "Tracks",
         "thumbnail-button": "Thumbnail",
         "metadata-button": "Metadata",
         "tooltip-aria": "Main Navigation"
@@ -95,7 +96,8 @@
         "submit-helpertext": "Make changes as you like, then hit the {{buttonName}} button.\nNote that you will still have to start processing for your changes to take effect.",
         "validation": {
             "required": "Required",
-            "duration-format": "Format must be HH:MM:SS"
+            "duration-format": "Format must be HH:MM:SS",
+            "datetime": "Invalid"
         },
         "labels": {
             "title": "Title",
@@ -150,10 +152,31 @@
             "EVENTS-LICENSE-CCBY": "CC-BY"
         }
     },
+    "error": {
+        "generic-message": "A critical error has occurred!",
+        "details": "Details: "
+    },
+    "landing": {
+        "main-heading": "Welcome to the Video Editor",
+        "contact-admin": "If you were trying to edit a specific video but are seeing this page, please contact your administrator.",
+        "start-editing-1": "To start editing, specify the parameter ",
+        "start-editing-2": " with the media package id of the video you wish to edit.",
+        "link-to-documentation": "More information about configuring the video editor is available in the administration guide at "
+    },
     "various": {
         "error-details-text": "Details: {{errorMessage}}\n",
         "error-noDetails-text": "No error details are available.",
         "error-text": "An error has occurred. Please wait a bit and try again.",
         "goBack-button": "No, take me back"
+    },
+    "trackSelection": {
+        "description": "Select or deselect which tracks are used for processing and publication.",
+        "trackInactive": "inactive",
+        "deleteTrackText": "Delete Track",
+        "restoreTrackText": "Restore Track",
+        "cannotDeleteTrackText": "Cannot Delete Track",
+        "deleteTrackTooltip": "Do not encode and publish this track.",
+        "restoreTrackTooltip": "Encode and publish this track.",
+        "cannotDeleteTrackTooltip": "Cannot remove this track from publication."
     }
 }
