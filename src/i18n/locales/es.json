@@ -11,7 +11,7 @@
         "cut-button": "Cut",
         "cut-tooltip": "Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}",
         "cut-tooltip-aria": "Cut. Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}.",
-        "delete-button": "Delete",
+        "delete-button": "Borrar",
         "delete-restore-tooltip": "Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotkeyName}}",
         "delete-restore-tooltip-aria": "Delete and Restore. Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotKeyName}}.",
         "restore-button": "Restore",
