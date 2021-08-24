@@ -9,24 +9,24 @@
     },
     "cuttingActions": {
         "cut-button": "Schneiden",
-        "cut-tooltip": "Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}",
-        "cut-tooltip-aria": "Cut. Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}.",
+        "cut-tooltip": "Teilen Sie das Segment an der aktuellen Position des Zeitmarkers. Hotkey: {{hotkeyName}}",
+        "cut-tooltip-aria": "Schnitt. Teilen Sie das Segment an der aktuellen Position des Zeitmarkers. Hotkey: {{hotkeyName}}.",
         "delete-button": "Löschen",
-        "delete-restore-tooltip": "Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotkeyName}}",
-        "delete-restore-tooltip-aria": "Delete and Restore. Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotKeyName}}.",
+        "delete-restore-tooltip": "Markieren oder entfernen Sie das Segment an der aktuellen Position zur Löschung. Hotkey: {{hotkeyName}}",
+        "delete-restore-tooltip-aria": "Löschen und Wiederherstellen. Markieren oder entfernen Sie das Segment an der aktuellen Position zur Löschung. Hotkey: {{hotKeyName}}.",
         "restore-button": "Wiederherstellen",
-        "mergeLeft-button": "Merge Left",
-        "mergeLeft-tooltip": "Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}",
-        "mergeLeft-tooltip-aria": "Merge Left. Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}.",
-        "mergeRight-button": "Merge Right",
-        "mergeRight-tooltip": "Combine the currently active segment with the segment to its right. Hotkey: {{hotkeyName}}",
-        "mergeRight-tooltip-aria": "Merge Right. Combine the currently active segment with the segment to its right. Hotkey: {{hotkeyName}}."
+        "mergeLeft-button": "Links zusammenfügen",
+        "mergeLeft-tooltip": "Kombiniere das aktuell aktive Segment mit dem Segment auf der linken Seite. Hotkey: {{hotkeyName}}",
+        "mergeLeft-tooltip-aria": "Links zusammenfügen. Kombinieren Sie das aktuell aktive Segment mit dem Segment auf der linken Seite. Hotkey: {{hotkeyName}}.",
+        "mergeRight-button": "Rechts zusammenfügen",
+        "mergeRight-tooltip": "Kombiniere das aktuell aktive Segment mit dem Segment auf der rechten Seite. Hotkey: {{hotkeyName}}",
+        "mergeRight-tooltip-aria": "Rechts zusammenfügen. Kombinieren Sie das aktuell aktive Segment mit dem Segment auf der rechten Seite. Hotkey: {{hotkeyName}}."
     },
     "video": {
         "previewButton": "Vorschaumodus",
-        "previewButton-tooltip": "Skips deleted segments when playing the video. Currently {{status}}. Hotkey: {{hotkeyName}}",
-        "previewButton-aria": "Enable or disable preview mode. Hotkey: {{hotkeyName}}.",
-        "playButton-tooltip": "Wiedergabe-Schaltfläche",
+        "previewButton-tooltip": "Überspringt gelöschte Segmente bei der Wiedergabe des Videos. Derzeit {{status}}. Hotkey: {{hotkeyName}}",
+        "previewButton-aria": "Vorschaumodus aktivieren oder deaktivieren. Hotkey: {{hotkeyName}}.",
+        "playButton-tooltip": "Wiedergabe-Button",
         "time-duration-tooltip": "Wiedergabezeit und -dauer",
         "duration-aria": "Dauer",
         "time-aria": "Aktuelle Zeit",
@@ -44,60 +44,60 @@
     "save": {
         "headline-text": "Aktuelles Projekt speichern",
         "confirm-button": "Ja, Änderungen speichern",
-        "confirmButton-default-tooltip": "Save Button",
-        "confirmButton-attempting-tooltip": "Attempting to save",
+        "confirmButton-default-tooltip": "Speichern-Button",
+        "confirmButton-attempting-tooltip": "Versuche zu speichern",
         "confirmButton-success-tooltip": "Erfolgreich gespeichert",
         "confirmButton-failed-tooltip": "Speichern fehlgeschlagen",
         "info-text": "Das Video wird nicht verarbeitet, aber alle Schnittinformationen werden in Opencast gespeichert. Sie können Ihre Bearbeitung später fortsetzen.",
         "success-tooltip-aria": "Erfolgreich gespeichert",
-        "saveArea-tooltip": "Save Area"
+        "saveArea-tooltip": "Speicherbereich"
     },
     "discard": {
         "headline-text": "Änderungen verwerfen",
         "confirm-button": "Ja, meine Änderungen verwerfen",
-        "confirm-tooltip": "Discard changes button",
+        "confirm-tooltip": "Änderungen verwerfen Button",
         "info-text": "Wollen Sie alle Änderungen verwerfen? Dies kann nicht rückgängig gemacht werden!"
     },
     "theEnd": {
         "discarded-text": "Alle Ihre Änderungen sind nun für immer verloren gegangen. Sie können nun den Editor schließen.",
         "startOver-button": "Von neu beginnen!",
         "startOver-tooltip": "Seite neu laden, um neu zu starten",
-        "info-text": "Changes successfully saved to Opencast. Processing your changes may take up to {{duration}} hours. You can now close the editor.\n"
+        "info-text": "Änderungen erfolgreich in Opencast gespeichert. Die Verarbeitung Ihrer Änderungen kann bis zu {{duration}} Stunden dauern. Sie können nun den Editor schließen.\n"
     },
     "workflowSelection": {
         "saveAndProcess-text": "Speichern & verarbeiten",
         "selectWF-text": "Workflow wählen",
-        "noWorkflows-text": "A problem occurred, there are no workflows to process your changes with.<3/> Please save your changes and contact an Opencast Administrator.\n",
-        "oneWorkflow-text": "The video will be cut and processed with the workflow \"{{workflow}}\". <3/> This will take some time.\n",
-        "manyWorkflows-text": "Select which workflow Opencast should use for processing.",
+        "noWorkflows-text": "Ein Problem ist aufgetreten, es gibt keine Workflows für die Verarbeitung Ihrer Änderungen mit.<3/> Bitte speichern Sie Ihre Änderungen und kontaktieren Sie einen Opencast Administrator.\n",
+        "oneWorkflow-text": "Das Video wird mit dem Workflow \"{{workflow}}\" geschnitten und verarbeitet. <3/> Dies wird einige Zeit dauern.\n",
+        "manyWorkflows-text": "Wählen Sie aus, welchen Workflow Opencast für die Verarbeitung verwenden soll.",
         "startProcessing-button": "Verarbeitung starten",
-        "back-button": "Take me back",
-        "selectWF-button": "Click to select this workflow",
-        "selectWF-button-aria": "Press to select the workflow: {{stateName}}\n"
+        "back-button": "Bring mich zurück",
+        "selectWF-button": "Klicken, um diesen Workflow auszuwählen",
+        "selectWF-button-aria": "Klicken, um den Workflow auszuwählen: {{stateName}}\n"
     },
     "timeline": {
         "generateWaveform-text": "Waveform wird generiert",
         "segment-tooltip": "Segment {{segment}}",
-        "scrubber-text-aria": "Scrubber. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the scrubber. {{increase}} and {{decrease}} to increase/decrase the move delta.\n",
-        "segments-text-aria": "Segment {{index}}. {{segmentStatus}}. Start: {{start}}. End: {{end}}.\n"
+        "scrubber-text-aria": "Zeitmarker. {{currentTime}}. Aktives Segment: {{segment}}. {{segmentStatus}}. Kontrollen: {{moveLeft}} und {{moveRight}}, um den Zeitmarker zu bewegen. {{increase}} und {{decrease}}, um das Verschiebungdelta zu erhöhen/verringern.\n",
+        "segments-text-aria": "Segment {{index}}. {{segmentStatus}}. Start: {{start}}. Ende: {{end}}.\n"
     },
     "workflowConfig": {
         "headline-text": "Workflow Konfiguration",
         "area-tooltip": "Workflow-Konfigurationsbereich",
-        "satisfied-text": "Satisfied with your configuration?",
-        "confirm-button": "Yes, start processing"
+        "satisfied-text": "Sind Sie zufrieden mit Ihrer Konfiguration?",
+        "confirm-button": "Ja, Verarbeitung starten"
     },
     "metadata": {
-        "EVENTS-EVENTS-DETAILS-CATALOG-EPISODE": "Episode Metadata",
+        "EVENTS-EVENTS-DETAILS-CATALOG-EPISODE": "Video Metadaten",
         "submit-button": "Abschicken",
-        "submit-button-tooltip": "Confirm your changes",
+        "submit-button-tooltip": "Bestätigen Sie Ihre Änderungen",
         "reset-button": "Zurücksetzen",
         "reset-button-tooltip": "Alle Änderungen rückgängig machen",
-        "submit-helpertext": "Make changes as you like, then hit the {{buttonName}} button.\nNote that you will still have to start processing for your changes to take effect.",
+        "submit-helpertext": "Machen Sie so viele Änderungen, wie Sie möchten, dann drücken Sie den {{buttonName}} Button.\nBeachten Sie, dass Sie noch die Verarbeitung starten müssen, damit Ihre Änderungen wirksam werden.",
         "validation": {
-            "required": "Required",
-            "duration-format": "Format must be HH:MM:SS",
-            "datetime": "Invalid"
+            "required": "Erforderlich",
+            "duration-format": "Format muss HH:MM:SS sein",
+            "datetime": "Ungültig"
         },
         "labels": {
             "title": "Titel",
@@ -118,17 +118,17 @@
             "identifier": "UID"
         },
         "language": {
-            "LANGUAGES-SLOVENIAN": "Slovenian",
-            "LANGUAGES-PORTUGESE": "Portugese",
-            "LANGUAGES-ROMANSH": "Romansh",
-            "LANGUAGES-ARABIC": "Arabic",
-            "LANGUAGES-POLISH": "Polish",
-            "LANGUAGES-ITALIAN": "Italian",
-            "LANGUAGES-CHINESE": "Chinese",
-            "LANGUAGES-FINNISH": "Finnish",
-            "LANGUAGES-DANISH": "Danish",
-            "LANGUAGES-UKRAINIAN": "Ukrainian",
-            "LANGUAGES-FRENCH": "French",
+            "LANGUAGES-SLOVENIAN": "Slowenisch",
+            "LANGUAGES-PORTUGESE": "Portugiesisch",
+            "LANGUAGES-ROMANSH": "Rätoromanisch",
+            "LANGUAGES-ARABIC": "Arabisch",
+            "LANGUAGES-POLISH": "Polnisch",
+            "LANGUAGES-ITALIAN": "Italienisch",
+            "LANGUAGES-CHINESE": "Chinesisch",
+            "LANGUAGES-FINNISH": "Finnisch",
+            "LANGUAGES-DANISH": "Dänisch",
+            "LANGUAGES-UKRAINIAN": "Ukrainisch",
+            "LANGUAGES-FRENCH": "Französisch",
             "LANGUAGES-SPANISH": "Spanisch",
             "LANGUAGES-GERMAN_CH": "Schweizerdeutsch",
             "LANGUAGES-NORWEGIAN": "Norwegisch",
@@ -158,20 +158,20 @@
     },
     "landing": {
         "main-heading": "Willkommen im Video-Editor",
-        "contact-admin": "If you were trying to edit a specific video but are seeing this page, please contact your administrator.",
-        "start-editing-1": "To start editing, specify the parameter ",
-        "start-editing-2": " with the media package id of the video you wish to edit.",
-        "link-to-documentation": "More information about configuring the video editor is available in the administration guide at "
+        "contact-admin": "Falls Sie versucht haben, ein bestimmtes Video zu bearbeiten, aber diese Seite sehen, wenden Sie sich bitte an Ihren Administrator.",
+        "start-editing-1": "Um mit der Bearbeitung zu beginnen, geben Sie den Parameter an ",
+        "start-editing-2": " mit der Mediapaket ID des Videos, das Sie bearbeiten möchten.",
+        "link-to-documentation": "Weitere Informationen zur Konfiguration des Video-Editors finden Sie im Administrationshandbuch unter "
     },
     "various": {
         "error-details-text": "Details: {{errorMessage}}\n",
         "error-noDetails-text": "Keine Fehlerdetails verfügbar.",
         "error-text": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.",
-        "goBack-button": "No, take me back"
+        "goBack-button": "Nein, zurück"
     },
     "trackSelection": {
-        "description": "Select or deselect which tracks are used for processing and publication.",
-        "trackInactive": "inactive",
+        "description": "Wählen oder deaktivieren Sie die Spuren für die Verarbeitung und Veröffentlichung.",
+        "trackInactive": "inaktiv",
         "deleteTrackText": "Spur löschen",
         "restoreTrackText": "Spur wiederherstellen",
         "cannotDeleteTrackText": "Spur kann nicht gelöscht werden",
