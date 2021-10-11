@@ -49,6 +49,7 @@
         "confirmButton-success-tooltip": "Erfolgreich gespeichert",
         "confirmButton-failed-tooltip": "Speichern fehlgeschlagen",
         "info-text": "Das Video wird nicht verarbeitet, aber alle Schnittinformationen werden in Opencast gespeichert. Sie können Ihre Bearbeitung später fortsetzen.",
+        "success-text": "Changes saved successfully!",
         "success-tooltip-aria": "Erfolgreich gespeichert",
         "saveArea-tooltip": "Speicherbereich"
     },
