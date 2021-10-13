@@ -9,29 +9,29 @@
     },
     "cuttingActions": {
         "cut-button": "Knippen",
-        "cut-tooltip": "Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}",
-        "cut-tooltip-aria": "Cut. Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}.",
+        "cut-tooltip": "Splits het segment op de huidige scrubber positie. Sneltoets: {{hotkeyName}}",
+        "cut-tooltip-aria": "Knippen. Splits het segment op de huidige scrubber positie. Sneltoets: {{hotkeyName}}.",
         "delete-button": "Verwijder",
-        "delete-restore-tooltip": "Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotkeyName}}",
-        "delete-restore-tooltip-aria": "Delete and Restore. Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotKeyName}}.",
+        "delete-restore-tooltip": "Markeer of verwijder het segment op de huidige positie om te worden verwijderd. Sneltoets: {{hotkeyName}}",
+        "delete-restore-tooltip-aria": "Verwijderen en herstellen. Markeer of verwijder het segment op de huidige positie om te worden verwijderd. Sneltoets: {{hotKeyName}}.",
         "restore-button": "Herstellen",
         "mergeLeft-button": "Links samenvoegen",
-        "mergeLeft-tooltip": "Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}",
-        "mergeLeft-tooltip-aria": "Merge Left. Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}.",
+        "mergeLeft-tooltip": "Combineer het momenteel actieve segment met het segment aan de linkerkant. Sneltoets: {{hotkeyName}}",
+        "mergeLeft-tooltip-aria": "Links samenvoegen. Combineer het momenteel actieve segment met het segment aan de linkerkant. Sneltoets: {{hotkeyName}}.",
         "mergeRight-button": "Rechts samenvoegen",
-        "mergeRight-tooltip": "Combine the currently active segment with the segment to its right. Hotkey: {{hotkeyName}}",
-        "mergeRight-tooltip-aria": "Merge Right. Combine the currently active segment with the segment to its right. Hotkey: {{hotkeyName}}."
+        "mergeRight-tooltip": "Combineer het momenteel actieve segment met het segment aan de rechterkant. Sneltoets: {{hotkeyName}}",
+        "mergeRight-tooltip-aria": "Rechts samenvoegen. Combineer het momenteel actieve segment met het segment aan de rechterkant. Sneltoets: {{hotkeyName}}."
     },
     "video": {
         "previewButton": "Voorvertoningsmodus",
-        "previewButton-tooltip": "Skips deleted segments when playing the video. Currently {{status}}. Hotkey: {{hotkeyName}}",
-        "previewButton-aria": "Enable or disable preview mode. Hotkey: {{hotkeyName}}.",
+        "previewButton-tooltip": "Slaat verwijderde segmenten over tijdens het afspelen van de video. Momenteel {{status}}. Snelkey: {{hotkeyName}}",
+        "previewButton-aria": "In- of uitschakelen voorvertoning modus. Sneltoets: {{hotkeyName}}.",
         "playButton-tooltip": "Afspeelknop",
         "time-duration-tooltip": "Afspeeltijd en duur",
         "duration-aria": "Duur",
         "time-aria": "Actuele tijd",
-        "comError-text": "A problem occurred during communication with Opencast.",
-        "loadError-text": "An error has occurred loading this video.",
+        "comError-text": "Er is een probleem opgetreden tijdens de communicatie met Opencast.",
+        "loadError-text": "Er is een fout opgetreden tijdens het laden van deze video.",
         "title-tooltip": "Titel van de video",
         "presenter-tooltip": "Video presentatoren",
         "controls-tooltip": "Videobesturing"
@@ -48,19 +48,19 @@
         "confirmButton-attempting-tooltip": "Bezig met opslaan",
         "confirmButton-success-tooltip": "Succesvol opgeslagen",
         "confirmButton-failed-tooltip": "Opslaan is mislukt",
-        "info-text": "The video will not be processed but all cutting information will be stored in Opencast. You can continue your edit later.",
+        "info-text": "De video wordt niet verwerkt, maar alle snijgegevens worden opgeslagen in Opencast. U kunt later doorgaan met uw bewerking.",
         "success-text": "Wijzigingen succesvol opgeslagen!",
         "success-tooltip-aria": "Succesvol opgeslagen",
-        "saveArea-tooltip": "Save Area"
+        "saveArea-tooltip": "Gebied opslaan"
     },
     "discard": {
         "headline-text": "Annuleren",
         "confirm-button": "Ja, wijzigingen negeren",
         "confirm-tooltip": "Wijzigingen negeren knop",
-        "info-text": "Discard all the changes you made? This cannot be undone!"
+        "info-text": "Alle wijzigingen ongedaan maken? Dit kan niet ongedaan worden gemaakt!"
     },
     "theEnd": {
-        "discarded-text": "All your changes are now lost forever. You can now close the editor.",
+        "discarded-text": "Al uw wijzigingen zijn nu voorgoed verloren. U kunt nu de editor sluiten.",
         "startOver-button": "Opnieuw beginnen!",
         "startOver-tooltip": "Herlaad de pagina om opnieuw te beginnen",
         "info-text": "Wijzigingen succesvol opgeslagen in Opencast. Het verwerken van uw wijzigingen kan {{duration}} uren duren. U kunt nu de editor sluiten.\n"
@@ -79,7 +79,7 @@
     "timeline": {
         "generateWaveform-text": "Waveform genereren",
         "segment-tooltip": "Segment {{segment}}",
-        "scrubber-text-aria": "Scrubber. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the scrubber. {{increase}} and {{decrease}} to increase/decrase the move delta.\n",
+        "scrubber-text-aria": "Scrubber. {{currentTime}}. Actief segment: {{segment}}. {{segmentStatus}}. Controleert: {{moveLeft}} en {{moveRight}} om het scrupules te verplaatsen. {{increase}} en {{decrease}} om de verplaatsingsdelta te vergroten of te vertekenen.\n",
         "segments-text-aria": "Segment {{index}}. {{segmentStatus}}. Begin: {{start}}. Eindigt: {{end}}.\n"
     },
     "workflowConfig": {
@@ -176,8 +176,8 @@
         "deleteTrackText": "Verwijder spoor",
         "restoreTrackText": "Herstel spoor",
         "cannotDeleteTrackText": "Spoor kan niet verwijdert worden",
-        "deleteTrackTooltip": "Do not encode and publish this track.",
-        "restoreTrackTooltip": "Encode and publish this track.",
-        "cannotDeleteTrackTooltip": "Cannot remove this track from publication."
+        "deleteTrackTooltip": "Deze spoor niet coderen en publiceren.",
+        "restoreTrackTooltip": "Encodeer en publiceer deze spoor.",
+        "cannotDeleteTrackTooltip": "Kan deze spoor niet uit de publicatie verwijderen."
     }
 }
