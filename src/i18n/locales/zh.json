@@ -1,19 +1,19 @@
 {
     "mainMenu": {
-        "cutting-button": "Cutting",
-        "finish-button": "Finish",
-        "select-tracks-button": "Tracks",
-        "thumbnail-button": "Thumbnail",
-        "metadata-button": "Metadata",
-        "tooltip-aria": "Main Navigation"
+        "cutting-button": "裁剪",
+        "finish-button": "完成",
+        "select-tracks-button": "追蹤",
+        "thumbnail-button": "縮圖",
+        "metadata-button": "後設資料",
+        "tooltip-aria": "主導航"
     },
     "cuttingActions": {
-        "cut-button": "Cut",
-        "cut-tooltip": "Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}",
-        "cut-tooltip-aria": "Cut. Split the segment at the current scrubber position. Hotkey: {{hotkeyName}}.",
-        "delete-button": "Delete",
-        "delete-restore-tooltip": "Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotkeyName}}",
-        "delete-restore-tooltip-aria": "Delete and Restore. Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotKeyName}}.",
+        "cut-button": "裁剪",
+        "cut-tooltip": "在當前清除器位置分割區段。 熱鍵：{{hotkeyName}}",
+        "cut-tooltip-aria": "裁剪。在當前清除器位置分割區段。 熱鍵：{{hotkeyName}}",
+        "delete-button": "刪除",
+        "delete-restore-tooltip": "在當前位置標記或取消標記要刪除的區段。 熱鍵：{{hotkeyName}}",
+        "delete-restore-tooltip-aria": "刪除或還原。 在當前位置標記或取消標記要刪除的區段。 熱鍵：{{hotKeyName}}。",
         "restore-button": "Restore",
         "mergeLeft-button": "Merge Left",
         "mergeLeft-tooltip": "Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}",
