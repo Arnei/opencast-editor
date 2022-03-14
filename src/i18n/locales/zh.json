@@ -5,7 +5,7 @@
         "select-tracks-button": "追蹤",
         "thumbnail-button": "縮圖",
         "metadata-button": "後設資料",
-        "keyboard-controls-button": "Keyboard Controls",
+        "keyboard-controls-button": "鍵盤控制",
         "tooltip-aria": "主導航"
     },
     "cuttingActions": {
@@ -182,15 +182,15 @@
         "cannotDeleteTrackTooltip": "無法從發佈的影片中刪除此軌道。"
     },
     "keyboardControls": {
-        "header": "Keyboard Controls",
-        "defaultGroupName": "General",
-        "missingLabel": "Unknown",
-        "sequenceSeperator": "or",
-        "genericError": "Failed to load overview",
-        "videoPlayButton": "Play/Pause Video",
-        "scrubberLeft": "Move left",
-        "scrubberRight": "Move right",
-        "scubberIncrease": "Move faster",
-        "scrubberDecrease": "Move slower"
+        "header": "鍵盤控制",
+        "defaultGroupName": "一般",
+        "missingLabel": "未知",
+        "sequenceSeperator": "或",
+        "genericError": "無法載入概觀資料",
+        "videoPlayButton": "播放/暫停 影片",
+        "scrubberLeft": "往左移",
+        "scrubberRight": "往右移",
+        "scubberIncrease": "移動快一點",
+        "scrubberDecrease": "移動慢一點"
     }
 }
