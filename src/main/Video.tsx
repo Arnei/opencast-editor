@@ -90,6 +90,51 @@ const Video: React.FC<{}> = () => {
     width: '100%',
   });
 
+
+  let audioCtx: AudioContext;
+  let source: AudioBufferSourceNode;
+  let songLength;
+
+  useEffect(() => {
+    if (videoURLStatus === 'success') {
+      getData()
+    } 
+  }, [videoURLStatus])
+
+  const getData = () => {
+    audioCtx = new window.AudioContext();
+  
+    source = audioCtx.createBufferSource();
+    var request = new XMLHttpRequest();
+  
+    request.open('GET', 'lukas_360_presenter.m4a', true);
+  
+    request.responseType = 'arraybuffer';
+
+    request.onload = function() {
+      let audioData = request.response;
+  
+      audioCtx.decodeAudioData(audioData, function(buffer) {
+          var myBuffer = buffer;
+          songLength = buffer.duration;
+          source.buffer = myBuffer;
+          // source.playbackRate.value = playbackControl.value;
+          source.connect(audioCtx.destination);
+          source.loop = true;
+  
+          // loopstartControl.setAttribute('max', Math.floor(songLength));
+          // loopendControl.setAttribute('max', Math.floor(songLength));
+        })
+  
+        // function(e){"Error with decoding audio data" + e.error});
+  
+    }
+
+
+  
+    request.send();
+  }
+
   return (
     <div css={videoAreaStyle}>
       <VideoHeader />

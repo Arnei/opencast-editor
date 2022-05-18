@@ -18,7 +18,7 @@ import { GlobalHotKeys } from 'react-hotkeys';
 // server.
 const initialize = Promise.race([
   init(),
-  sleep(300),
+  sleep(500),
 ]);
 
 const render = (body: JSX.Element) => {
