@@ -29,7 +29,7 @@ jobs:
       run: npm i -D @playwright/test
 
     - name: Install supported browsers
-      run: npx playwright install
+      run: npx playwright install --with-deps
 
     - name: Prepare configuration
       run: >

@@ -96,7 +96,7 @@ const Metadata: React.FC<{}> = () => {
    */
 
   const metadataStyle = css({
-    padding: '20px',
+    padding: '30px',
     marginLeft:'auto',
     marginRight:'auto',
     minWidth: '50%',
