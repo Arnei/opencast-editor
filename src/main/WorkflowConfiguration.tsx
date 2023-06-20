@@ -19,6 +19,7 @@ import { selectSubtitles } from "../redux/subtitleSlice";
 import { serializeSubtitle } from "../util/utilityFunctions";
 import { Flavor } from "../types";
 import { selectTheme } from "../redux/themeSlice";
+import { ResultDialog } from "./Save";
 
 /**
  * Will eventually display settings based on the selected workflow index
@@ -71,6 +72,7 @@ export const SaveAndProcessButton: React.FC<{text: string}> = ({text}) => {
 
   // Initialize redux variables
   const dispatch = useDispatch<AppDispatch>()
+  const { t } = useTranslation();
 
   const selectedWorkflowId = useSelector(selectSelectedWorkflowId)
   const segments = useSelector(selectSegments)
@@ -80,15 +82,16 @@ export const SaveAndProcessButton: React.FC<{text: string}> = ({text}) => {
   const metadataStatus = useSelector(selectPostStatus);
   const [metadataSaveStarted, setMetadataSaveStarted] = useState(false);
   const theme = useSelector(selectTheme);
+  const [resultOpen, setResultOpen] = useState(false);
+  const [saveAttemptStarted, setSaveAttemptStarted] = useState(false);
 
-  // Let users leave the page without warning after a successful save
-  useEffect(() => {
-    if (workflowStatus === 'success' && metadataStatus === 'success') {
-      dispatch(setEnd({hasEnded: true, value: 'success'}))
-      dispatch(videoSetHasChanges(false))
-      dispatch(metadataSetHasChanges(false))
-    }
-  }, [dispatch, metadataStatus, workflowStatus])
+  const handleResultOpen = () => {
+    setResultOpen(true)
+  }
+
+  const handleResultClose = () => {
+    setResultOpen(false)
+  }
 
   const prepareSubtitles = () => {
     const subtitlesForPosting = []
@@ -107,6 +110,7 @@ export const SaveAndProcessButton: React.FC<{text: string}> = ({text}) => {
   const saveAndProcess = () => {
     setMetadataSaveStarted(true)
     dispatch(postMetadata())
+    setSaveAttemptStarted(true)
   }
 
   // Subsequent save request
@@ -123,20 +127,42 @@ export const SaveAndProcessButton: React.FC<{text: string}> = ({text}) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadataStatus])
 
+  // Let users leave the page without warning after a successful save
+  useEffect(() => {
+    if (workflowStatus === 'success' && metadataStatus === 'success') {
+      // dispatch(setEnd({hasEnded: true, value: 'success'}))
+      dispatch(videoSetHasChanges(false))
+      dispatch(metadataSetHasChanges(false))
+
+      if (saveAttemptStarted) {
+        handleResultOpen()
+        setSaveAttemptStarted(false)
+      }
+    }
+  }, [metadataStatus, workflowStatus])
+
   // Update based on current fetching status
   let Icon = FiDatabase
   let spin = false
+  let title = ""
+  let content = ""
   if (workflowStatus === 'failed' || metadataStatus === 'failed') {
     Icon = FiAlertCircle
     spin = false
+    title = t("various.error-text")
+    content = t("various.error-details-text")
   } else if (workflowStatus === 'success' && metadataStatus === 'success') {
     Icon = FiCheck
     spin = false
+    title = t("save.confirmButton-success-tooltip")
+    content = t("theEnd.info-text")
   } else if (workflowStatus === 'loading' || metadataStatus === 'loading') {
     Icon = FiLoader
     spin = true
-
+    title = t("save.confirmButton-attempting-tooltip")
+    content = t("save.confirmButton-attempting-tooltip")
   }
+
 
   const saveButtonStyle = css({
     padding: '16px',
@@ -145,15 +171,24 @@ export const SaveAndProcessButton: React.FC<{text: string}> = ({text}) => {
   })
 
   return (
-    <div css={[basicButtonStyle(theme), saveButtonStyle]}
-      role="button" tabIndex={0}
-      onClick={saveAndProcess}
-      onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => { if (event.key === " " || event.key === "Enter") {
-        saveAndProcess()
-      } }}>
-      <Icon css={spin ? spinningStyle : undefined}/>
-      <span>{text}</span>
-    </div>
+    <>
+      <div css={[basicButtonStyle(theme), saveButtonStyle]}
+        role="button" tabIndex={0}
+        onClick={saveAndProcess}
+        onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => { if (event.key === " " || event.key === "Enter") {
+          saveAndProcess()
+        } }}>
+        <Icon css={spin ? spinningStyle : undefined}/>
+        <span>{text}</span>
+      </div>
+      <ResultDialog
+        open={resultOpen}
+        onClose={handleResultClose}
+        title={title}
+        content={content}
+        confirmation={"Okay"}
+      />
+    </>
   );
 }
 
