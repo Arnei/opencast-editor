@@ -16,11 +16,11 @@ import useResizeObserver from "use-resize-observer";
  * It should aid the user in determining their position on the timeline when
  * zooming in.
  */
-const ZoomTimeline: React.FC<{}> = () => {
+const ZoomTimeline: React.FC = () => {
 
   // Refs
   const ref = useRef<HTMLDivElement>(null);
-  let { width = 1, } = useResizeObserver<HTMLDivElement>({ ref });
+  const { width = 1 } = useResizeObserver<HTMLDivElement>({ ref });
   const refIndicator = useRef(null);
 
   // Init redux variables
@@ -31,7 +31,7 @@ const ZoomTimeline: React.FC<{}> = () => {
 
   // Init state variables
   const [isGrabbed, setIsGrabbed] = useState(false)
-  const [controlledPosition, setControlledPosition] = useState({x: 0,y: 0,});
+  const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const wasTimelineScrollPosition = useRef(0)
 
   // Reposition indicator when scroll position was changed externally
@@ -51,6 +51,7 @@ const ZoomTimeline: React.FC<{}> = () => {
   };
 
   // Callback for when the scrubber gets dragged by the user
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onControlledDrag = (e: any, position: any) => {
     // Update position
     if (ref.current) {
@@ -63,6 +64,7 @@ const ZoomTimeline: React.FC<{}> = () => {
     setIsGrabbed(true)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onStopDrag = (e: any, position: any) => {
     // Update position
     if (ref.current) {
@@ -106,12 +108,12 @@ const ZoomTimeline: React.FC<{}> = () => {
             bounds="parent"
             position={controlledPosition}
             nodeRef={refIndicator}
-            >
-              <div ref={refIndicator} css={zoomIndicatorStyle}></div>
+          >
+            <div ref={refIndicator} css={zoomIndicatorStyle}></div>
           </Draggable>
 
           { waveformImages.map((image, index) => {
-            return <img key={index} alt='Waveform' src={image ? image : ""} css={{width: '100%', height: '100%'}}></img>
+            return <img key={index} alt="Waveform" src={image ? image : ""} css={{width: '100%', height: '100%'}}></img>
           })}
         </div>
       )
@@ -125,4 +127,4 @@ const ZoomTimeline: React.FC<{}> = () => {
   )
 }
 
-export default ZoomTimeline;
+export default ZoomTimeline
