@@ -1,0 +1,58 @@
+name: Playwright UI-Test
+
+on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out source code
+      uses: actions/checkout@v3
+
+    - name: Install Node Dependency
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright
+      run: npm i -D @playwright/test
+
+    - name: Install supported browsers
+      run: npx playwright install
+
+    - name: Prepare configuration
+      run: >
+        sed -i
+        's_https://develop.opencast.org_http://localhost:3000_'
+        public/editor-settings.toml
+
+    - name: Prepare mock files
+      run: cp -r .github/mock/editor public/
+
+    - name: Build editor
+      run: |
+        npm run build
+        cp public/editor-settings.toml build/
+
+    - name: Use production build for testing
+      run: sed -i 's/npm run start/python -m http.server --bind 127.0.0.1 --directory build 3000/' playwright.config.ts
+
+    - name: Run playwright-test
+      run: npx playwright test --config=playwright.config.ts
+
+    - name: Upload tests results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: test-results/

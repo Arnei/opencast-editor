@@ -1,44 +1,34 @@
 import React, { SyntheticEvent } from "react";
 
-import { basicButtonStyle, flexGapReplacementStyle } from '../cssStyles'
+import { basicButtonStyle, customIconStyle, flexGapReplacementStyle } from '../cssStyles'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  IconDefinition,
-  faCut,
-  faStepBackward,
-  faStepForward,
-  faTrash,
-  faTrashRestore,
-  faPlus,
-  faMinus,
-  } from "@fortawesome/free-solid-svg-icons";
+import { IconType } from "react-icons";
+import { LuScissors, LuChevronLeft, LuChevronRight, LuTrash, LuMoveHorizontal, LuPlus, LuMinus} from "react-icons/lu";
+import { ReactComponent as TrashRestore } from '../img/trash-restore.svg';
 
 import { css } from '@emotion/react'
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  cut, markAsDeletedOrAlive, selectIsCurrentSegmentAlive, mergeLeft, mergeRight, setZoom, selectTimelineZoom
+  cut, markAsDeletedOrAlive, selectIsCurrentSegmentAlive, mergeLeft, mergeRight, mergeAll, setZoom, selectTimelineZoom
 } from '../redux/videoSlice'
-import { GlobalHotKeys, KeySequence } from "react-hotkeys";
-import { selectMainMenuState } from "../redux/mainMenuSlice";
-import { MainMenuStateNames } from "../types";
+import { GlobalHotKeys, KeySequence, KeyMapOptions } from "react-hotkeys";
 import { cuttingKeyMap } from "../globalKeys";
 import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
-import './../i18n/config';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from "../themes";
+import { ThemedTooltip } from "./Tooltip";
 
 /**
  * Defines the different actions a user can perform while in cutting mode
  */
-const CuttingActions: React.FC<{}> = () => {
+const CuttingActions: React.FC = () => {
 
   const { t } = useTranslation();
 
   // Init redux variables
   const dispatch = useDispatch();
-  const mainMenuState = useSelector(selectMainMenuState)
   const timelineZoom = useSelector(selectTimelineZoom)
 
   /**
@@ -72,25 +62,24 @@ const CuttingActions: React.FC<{}> = () => {
 
   // Maps functions to hotkeys
   const handlers = {
-    cut: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if(keyEvent) { dispatchAction(keyEvent, cut, undefined, undefined, undefined) } },
-    delete: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if(keyEvent) { dispatchAction(keyEvent, markAsDeletedOrAlive, undefined, undefined, undefined) } },
-    mergeLeft: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if(keyEvent) { dispatchAction(keyEvent, mergeLeft, undefined, undefined, undefined) } },
-    mergeRight: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if(keyEvent) { dispatchAction(keyEvent, mergeRight, undefined, undefined, undefined) } },
-    zoomIn: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if(keyEvent) { dispatchAction(keyEvent, undefined, setZoom, timelineZoom + 0.1, undefined) } },
-    zoomOut: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if(keyEvent) { dispatchAction(keyEvent, undefined, setZoom, timelineZoom - 0.1, undefined) } },
+    cut: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if (keyEvent) { dispatchAction(keyEvent, cut, undefined, undefined, undefined) } },
+    delete: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if (keyEvent) { dispatchAction(keyEvent, markAsDeletedOrAlive, undefined, undefined, undefined) } },
+    mergeLeft: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if (keyEvent) { dispatchAction(keyEvent, mergeLeft, undefined, undefined, undefined) } },
+    mergeRight: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if (keyEvent) { dispatchAction(keyEvent, mergeRight, undefined, undefined, undefined) } },
+    zoomIn: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if (keyEvent) { dispatchAction(keyEvent, undefined, setZoom, timelineZoom + 0.1, undefined) } },
+    zoomOut: (keyEvent?: KeyboardEvent | SyntheticEvent) => { if (keyEvent) { dispatchAction(keyEvent, undefined, setZoom, timelineZoom - 0.1, undefined) } },
   }
 
-  const cuttingStyle =  css({
+  const cuttingStyle = css({
     display: 'flex',
     flexDirection: 'row' as const,
-    justifyContent: 'space-between',
-    ...(flexGapReplacementStyle(30, true)),
+    justifyContent: 'center',
+    alignItems: 'center',
   })
 
-  const blockStyle = css({
-    display: 'flex',
-    flexDirection: 'row' as const,
-    ...(flexGapReplacementStyle(30, true)),
+  const verticalLineStyle = css({
+    borderLeft: '2px solid #DDD;',
+    height: '32px',
   })
 
   const zoomStyle = css({
@@ -107,53 +96,57 @@ const CuttingActions: React.FC<{}> = () => {
   })
 
   return (
-    <GlobalHotKeys keyMap={cuttingKeyMap} handlers={mainMenuState === MainMenuStateNames.cutting ? handlers: {}} allowChanges={true} >
+    <GlobalHotKeys keyMap={cuttingKeyMap} handlers={handlers} allowChanges={true} >
       <div css={cuttingStyle}>
-          <div css={blockStyle}>
-            <CuttingActionsButton iconName={faCut}
-              actionName="Cut" actionHandler={dispatchAction} action={cut} actionWithPayload={undefined} payload={undefined}
-              tooltip={t('cuttingActions.cut-tooltip', { hotkeyName: cuttingKeyMap[handlers.cut.name] })}
-              ariaLabelText={t('cuttingActions.cut-tooltip-aria', { hotkeyName: cuttingKeyMap[handlers.cut.name] })}
-            />
-            <MarkAsDeletedButton
-              actionHandler={dispatchAction}
-              action={markAsDeletedOrAlive}
-              hotKeyName={cuttingKeyMap[handlers.delete.name]}
-            />
-            <CuttingActionsButton iconName={faStepBackward}
-              actionName="Merge Left" actionHandler={dispatchAction} action={mergeLeft} actionWithPayload={undefined} payload={undefined}
-              tooltip={t('cuttingActions.mergeLeft-tooltip', { hotkeyName: cuttingKeyMap[handlers.mergeLeft.name] })}
-              ariaLabelText={t('cuttingActions.mergeLeft-tooltip-aria', { hotkeyName: cuttingKeyMap[handlers.mergeLeft.name] })}
-            />
-            <CuttingActionsButton iconName={faStepForward}
-              actionName="Merge Right" actionHandler={dispatchAction} action={mergeRight} actionWithPayload={undefined} payload={undefined}
-              tooltip={t('cuttingActions.mergeRight-tooltip', { hotkeyName: cuttingKeyMap[handlers.mergeRight.name] })}
-              ariaLabelText={t('cuttingActions.mergeRight-tooltip-aria', { hotkeyName: cuttingKeyMap[handlers.mergeRight.name] })}
-            />
-          </div>
-          <div css={blockStyle}>
-            <div css={zoomStyle}>
-              <CuttingActionsButton iconName={faMinus}
-                actionName="" actionHandler={dispatchAction} action={undefined} actionWithPayload={setZoom} payload={timelineZoom - 0.1}
-                tooltip={t('cuttingActions.zoomOut-tooltip', { hotkeyName: cuttingKeyMap[handlers.mergeRight.name] })}
-                ariaLabelText={t('cuttingActions.zoomOut-aria-tooltip', { hotkeyName: cuttingKeyMap[handlers.mergeRight.name] })}
-              />
-              <div css={inbetweenWordStyle}>{t('cuttingActions.zoom')}</div>
-              <CuttingActionsButton iconName={faPlus}
-                actionName="" actionHandler={dispatchAction} action={undefined} actionWithPayload={setZoom} payload={timelineZoom + 0.1}
-                tooltip={t('cuttingActions.zoomIn-tooltip', { hotkeyName: cuttingKeyMap[handlers.mergeRight.name] })}
-                ariaLabelText={t('cuttingActions.zoomIn-aria-tooltip', { hotkeyName: cuttingKeyMap[handlers.mergeRight.name] })}
-              />
-          </div>
-            {/* <CuttingActionsButton iconName={faQuestion} actionName="Reset changes" action={null}
-              tooltip="Not implemented"
-              ariaLabelText="Reset changes. Not implemented"
-            />
-            <CuttingActionsButton iconName={faQuestion} actionName="Undo" action={null}
-              tooltip="Not implemented"
-              ariaLabelText="Undo. Not implemented"
-            /> */}
-          </div>
+        <CuttingActionsButton Icon={LuScissors}
+          actionName={t("cuttingActions.cut-button")} actionHandler={dispatchAction} action={cut} actionWithPayload={undefined} payload={undefined}
+          tooltip={t('cuttingActions.cut-tooltip', { hotkeyName: (cuttingKeyMap[handlers.cut.name] as KeyMapOptions).sequence })}
+          ariaLabelText={t('cuttingActions.cut-tooltip-aria', { hotkeyName: (cuttingKeyMap[handlers.cut.name] as KeyMapOptions).sequence })}
+        />
+        <div css={verticalLineStyle} />
+        <MarkAsDeletedButton actionHandler={dispatchAction} action={markAsDeletedOrAlive}
+          hotKeyName={(cuttingKeyMap[handlers.delete.name] as KeyMapOptions).sequence}
+        />
+        <div css={verticalLineStyle} />
+        <CuttingActionsButton Icon={LuChevronLeft}
+          actionName={t("cuttingActions.mergeLeft-button")} actionHandler={dispatchAction} action={mergeLeft} actionWithPayload={undefined} payload={undefined}
+          tooltip={t('cuttingActions.mergeLeft-tooltip', { hotkeyName: (cuttingKeyMap[handlers.mergeLeft.name] as KeyMapOptions).sequence })}
+          ariaLabelText={t('cuttingActions.mergeLeft-tooltip-aria', { hotkeyName: (cuttingKeyMap[handlers.mergeLeft.name] as KeyMapOptions).sequence })}
+        />
+        <div css={verticalLineStyle} />
+        <CuttingActionsButton Icon={LuChevronRight}
+          actionName={t("cuttingActions.mergeRight-button")} actionHandler={dispatchAction} action={mergeRight} actionWithPayload={undefined} payload={undefined}
+          tooltip={t('cuttingActions.mergeRight-tooltip', { hotkeyName: (cuttingKeyMap[handlers.mergeRight.name] as KeyMapOptions).sequence })}
+          ariaLabelText={t('cuttingActions.mergeRight-tooltip-aria', { hotkeyName: (cuttingKeyMap[handlers.mergeRight.name] as KeyMapOptions).sequence })}
+        />
+        <div css={verticalLineStyle} />
+        <CuttingActionsButton Icon={LuMoveHorizontal}
+          actionName={t("cuttingActions.merge-all-button")} actionHandler={dispatchAction} action={mergeAll} actionWithPayload={undefined} payload={undefined}
+          tooltip={t('cuttingActions.merge-all-tooltip')}
+          ariaLabelText={t('cuttingActions.merge-all-tooltip-aria')}
+        />
+        <div css={verticalLineStyle} />
+        <div css={zoomStyle}>
+          <CuttingActionsButton Icon={LuMinus}
+            actionName="" actionHandler={dispatchAction} action={undefined} actionWithPayload={setZoom} payload={timelineZoom - 0.1}
+            tooltip={t('cuttingActions.zoomOut-tooltip', { hotkeyName: (cuttingKeyMap[handlers.zoomOut.name] as KeyMapOptions).sequence })}
+            ariaLabelText={t('cuttingActions.zoomOut-aria-tooltip', { hotkeyName: (cuttingKeyMap[handlers.zoomOut.name] as KeyMapOptions).sequence })}
+          />
+          <div css={inbetweenWordStyle}>{t('cuttingActions.zoom')}</div>
+          <CuttingActionsButton Icon={LuPlus}
+            actionName="" actionHandler={dispatchAction} action={undefined} actionWithPayload={setZoom} payload={timelineZoom + 0.1}
+            tooltip={t('cuttingActions.zoomIn-tooltip', { hotkeyName: (cuttingKeyMap[handlers.zoomIn.name] as KeyMapOptions).sequence })}
+            ariaLabelText={t('cuttingActions.zoomIn-aria-tooltip', { hotkeyName: (cuttingKeyMap[handlers.zoomIn.name] as KeyMapOptions).sequence })}
+          />
+        </div>
+        {/* <CuttingActionsButton Icon={faQuestion} actionName="Reset changes" action={null}
+          tooltip="Not implemented"
+          ariaLabelText="Reset changes. Not implemented"
+        />
+        <CuttingActionsButton Icon={faQuestion} actionName="Undo" action={null}
+          tooltip="Not implemented"
+          ariaLabelText="Undo. Not implemented"
+        /> */}
       </div>
     </GlobalHotKeys>
   );
@@ -162,13 +155,14 @@ const CuttingActions: React.FC<{}> = () => {
 /**
  * CSS for cutting buttons
  */
-const cuttingActionButtonStyle = {
+const cuttingActionButtonStyle = css({
   padding: '16px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
-};
+  // boxShadow: `${theme.boxShadow}`,
+  // background: `${theme.element_bg}`
+});
 
 interface cuttingActionsButtonInterface {
-  iconName: IconDefinition,
+  Icon: IconType,
   actionName: string,
   actionHandler: (event: KeyboardEvent | SyntheticEvent,
     action: ActionCreatorWithoutPayload<string> | undefined,
@@ -186,21 +180,24 @@ interface cuttingActionsButtonInterface {
  * A button representing a single action a user can take while cutting
  * @param param0
  */
-const CuttingActionsButton: React.FC<cuttingActionsButtonInterface> = ({iconName, actionName, actionHandler, action, actionWithPayload, payload, tooltip, ariaLabelText}) => {
+const CuttingActionsButton: React.FC<cuttingActionsButtonInterface> = ({Icon, actionName, actionHandler, action, actionWithPayload, payload, tooltip, ariaLabelText}) => {
   const ref = React.useRef<HTMLDivElement>(null)
+  const theme = useTheme();
+
   return (
-    <div css={[basicButtonStyle, cuttingActionButtonStyle]}
-      title={tooltip}
-      ref={ref}
-      role="button" tabIndex={0} aria-label={ariaLabelText}
-      onClick={ (event: SyntheticEvent) => actionHandler(event, action, actionWithPayload, payload, ref) }
-      onKeyDown={(event: React.KeyboardEvent) => { if (event.key === " " || event.key === "Enter") {
-        actionHandler(event, action, actionWithPayload, payload, undefined)
-      }}}
+    <ThemedTooltip title={tooltip}>
+      <div css={[basicButtonStyle(theme), cuttingActionButtonStyle]}
+        ref={ref}
+        role="button" tabIndex={0} aria-label={ariaLabelText}
+        onClick={(event: SyntheticEvent) => actionHandler(event, action, actionWithPayload, payload, ref)}
+        onKeyDown={(event: React.KeyboardEvent) => { if (event.key === " " || event.key === "Enter") {
+          actionHandler(event, action, actionWithPayload, payload, undefined)
+        } }}
       >
-      <FontAwesomeIcon icon={iconName} size="1x" />
-      {actionName && <span>{actionName}</span>}
-    </div>
+        <Icon />
+        <span>{actionName}</span>
+      </div>
+    </ThemedTooltip>
   );
 };
 
@@ -222,20 +219,23 @@ const MarkAsDeletedButton : React.FC<markAsDeleteButtonInterface> = ({actionHand
   const isCurrentSegmentAlive = useSelector(selectIsCurrentSegmentAlive)
   const ref = React.useRef<HTMLDivElement>(null)
 
+  const theme = useTheme();
+
   return (
-    <div css={[basicButtonStyle, cuttingActionButtonStyle]}
-      title={t('cuttingActions.delete-restore-tooltip', { hotkeyName: hotKeyName })}
-      ref={ref}
-      role="button" tabIndex={0}
-      aria-label={t('cuttingActions.delete-restore-tooltip-aria', { hotkeyName: hotKeyName })}
-      onClick={(event: SyntheticEvent) => actionHandler(event, action, undefined, undefined, ref)}
-      onKeyDown={(event: React.KeyboardEvent) => { if (event.key === " " || event.key === "Enter") {
-        actionHandler(event, action, undefined, undefined, undefined)
-      }}}
+    <ThemedTooltip title={t('cuttingActions.delete-restore-tooltip', { hotkeyName: hotKeyName })}>
+      <div css={[basicButtonStyle(theme), cuttingActionButtonStyle]}
+        ref={ref}
+        role="button" tabIndex={0}
+        aria-label={t('cuttingActions.delete-restore-tooltip-aria', { hotkeyName: hotKeyName })}
+        onClick={(event: SyntheticEvent) => actionHandler(event, action, undefined, undefined, ref)}
+        onKeyDown={(event: React.KeyboardEvent) => { if (event.key === " " || event.key === "Enter") {
+          actionHandler(event, action, undefined, undefined, undefined)
+        } }}
       >
-      <FontAwesomeIcon icon={isCurrentSegmentAlive ? faTrash : faTrashRestore} size="1x" />
-      <div>{isCurrentSegmentAlive ? t('cuttingActions.delete-button') : t("cuttingActions.restore-button")}</div>
-    </div>
+        {isCurrentSegmentAlive ? <LuTrash /> : <TrashRestore css={customIconStyle(theme)} /> }
+        <div>{isCurrentSegmentAlive ? t('cuttingActions.delete-button') : t("cuttingActions.restore-button")}</div>
+      </div>
+    </ThemedTooltip>
   );
 }
 

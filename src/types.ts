@@ -8,9 +8,16 @@ export interface Segment {
 export interface Track {
   id: string,
   uri: string,
-  flavor: any,
-  audio_stream: any,
-  video_stream: any,
+  flavor: Flavor,
+  audio_stream: {available: boolean, enabled: boolean, thumbnail_uri: string},
+  video_stream: {available: boolean, enabled: boolean, thumbnail_uri: string},
+  thumbnailUri: string | undefined,
+  thumbnailPriority: number,
+}
+
+export interface Flavor {
+  type: string,
+  subtype: string,
 }
 
 export interface Workflow {
@@ -25,24 +32,60 @@ export interface TimelineState {
   scrubberPos: number
 }
 
+export interface SubtitlesFromOpencast {
+  id: string,
+  subtitle: string,
+  tags: string[],
+}
+
+export interface SubtitlesInEditor {
+  cues: SubtitleCue[],
+  tags: string[],
+}
+
+export interface SubtitleCue {
+  id?: string,              // Actually not useful as an identifier, as it is not guaranteed to exist
+  idInternal: string,       // Identifier for internal use. Has nothing to do with the webvtt parser.
+  text: string,
+  startTime: number,
+  endTime: number,
+  tree: {children: [{type: string, value: string}]}   // Odditiy of the webvtt parser. Changes to text also need to be applied to tree.children[0].value
+  // And many more
+}
+
+export interface ExtendedSubtitleCue extends SubtitleCue {
+  alignment : string
+  direction : string
+  lineAlign : string
+  linePosition : string
+  positionAlign : string
+  size : number
+  textPosition : string
+}
+
 export interface PostEditArgument {
   segments: Segment[]
   tracks: Track[]
+  subtitles: SubtitlesFromOpencast[]
 }
 
 export interface PostAndProcessEditArgument extends PostEditArgument{
   workflow: [{id: string}]
 }
 
+// Use respective i18n keys as values
 export enum MainMenuStateNames {
-  cutting = "Cutting",
-  metadata = "Metadata",
-  trackSelection = "Select Tracks",
-  thumbnail = "Thumbnail",
-  finish = "Finish",
+  cutting = "mainMenu.cutting-button",
+  metadata = "mainMenu.metadata-button",
+  trackSelection = "mainMenu.select-tracks-button",
+  subtitles = "mainMenu.subtitles-button",
+  thumbnail = "mainMenu.thumbnail-button",
+  finish = "mainMenu.finish-button",
+  keyboardControls = "mainMenu.keyboard-controls-button",
 }
 
 export interface httpRequestState {
   status: 'idle' | 'loading' | 'success' | 'failed',
-  error: string | undefined
+  error: string | undefined,
+  errorReason: 'unknown' | 'workflowActive'
 }

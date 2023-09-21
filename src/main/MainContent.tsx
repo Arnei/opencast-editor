@@ -1,14 +1,12 @@
 import React from "react";
 
-import Video from './Video';
-import Timeline from './Timeline';
-import CuttingActions from './CuttingActions';
 import Metadata from './Metadata';
 import TrackSelection from './TrackSelection';
+import Subtitle from "./Subtitle";
 import Finish from "./Finish"
+import KeyboardControls from "./KeyboardControls";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTools} from "@fortawesome/free-solid-svg-icons";
+import { LuWrench } from "react-icons/lu";
 
 import { css } from '@emotion/react'
 
@@ -19,104 +17,132 @@ import { MainMenuStateNames } from '../types'
 import { flexGapReplacementStyle } from "../cssStyles";
 
 import { useBeforeunload } from 'react-beforeunload';
-import { hasChanges as videoHasChanges } from "../redux/videoSlice";
-import { hasChanges as metadataHasChanges} from "../redux/metadataSlice";
-import ZoomTimeline from "./ZoomTimeline";
+import { selectHasChanges as videoSelectHasChanges } from "../redux/videoSlice";
+import { selectHasChanges as metadataSelectHasChanges} from "../redux/metadataSlice";
+import { selectHasChanges as selectSubtitleHasChanges } from "../redux/subtitleSlice";
+import { useTheme } from "../themes";
+import Thumbnail from "./Thumbnail";
+import Cutting from "./Cutting";
 
 /**
  * A container for the main functionality
  * Shows different components depending on the state off the app
  */
-const MainContent: React.FC<{}> = () => {
+const MainContent: React.FC = () => {
 
   const mainMenuState = useSelector(selectMainMenuState)
-  const videoChanged = useSelector(videoHasChanges)
-  const metadataChanged = useSelector(metadataHasChanges)
+  const videoChanged = useSelector(videoSelectHasChanges)
+  const metadataChanged = useSelector(metadataSelectHasChanges)
+  const subtitleChanged = useSelector(selectSubtitleHasChanges)
+  const theme = useTheme()
 
   // Display warning when leaving the page if there are unsaved changes
   useBeforeunload((event: { preventDefault: () => void; }) => {
-    if (videoChanged || metadataChanged) {
+    if (videoChanged || metadataChanged || subtitleChanged) {
       event.preventDefault();
     }
   });
 
-  // Return display 'flex' if state is currently active
-  // also keep track if any state was activated
-  var stateActive = false;
-  let displayState = (state: MainMenuStateNames): object => {
-    if (mainMenuState === state) {
-      stateActive = true;
-      return { display: "flex" };
-    }
-    return { display: 'none' };
-  }
-
-  const cuttingStyle = css({
-    ...displayState(MainMenuStateNames.cutting),
-    flexDirection: 'column' as const,
-    justifyContent: 'space-around',
-    ...(flexGapReplacementStyle(20, false)),
+  const mainContentStyle = css({
+    display: 'flex',
+    width: '100%',
     paddingRight: '20px',
     paddingLeft: '20px',
+    ...(flexGapReplacementStyle(20, false)),
+    background: `${theme.background}`,
+    overflow: 'auto',
+  })
+
+  const cuttingStyle = css({
+    flexDirection: 'column',
   })
 
   const metadataStyle = css({
-    ...displayState(MainMenuStateNames.metadata),
-    // flexDirection: 'column' as const,
-    // justifyContent: 'space-around',
-    ...(flexGapReplacementStyle(20, false)),
-    paddingRight: '20px',
-    paddingLeft: '20px',
   })
 
   const trackSelectStyle = css({
-    ...displayState(MainMenuStateNames.trackSelection),
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
     alignContent: 'space-around',
-    ...(flexGapReplacementStyle(20, false)),
-    paddingRight: '20px',
-    height: '100%',
+  })
+
+  const subtitleSelectStyle = css({
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  })
+
+  const thumbnailSelectStyle = css({
+    flexDirection: 'column',
+    alignContent: 'space-around',
   })
 
   const finishStyle = css({
-    ...displayState(MainMenuStateNames.finish),
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
     justifyContent: 'space-around',
-    ...(flexGapReplacementStyle(20, false)),
-    paddingRight: '20px',
-    height: '100%',
+  })
+
+  const keyboardControlsStyle = css({
+    flexDirection: 'column',
   })
 
   const defaultStyle = css({
-    display: stateActive ? 'none' : 'flex',
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
     alignItems: 'center',
     padding: '20px',
-    ...(flexGapReplacementStyle(20, false)),
   })
 
-  return (
-     <main css={{width: '100%'}} role="main">
-      <div css={cuttingStyle}>
-          <Video />
-          <CuttingActions />
-          <ZoomTimeline />
-          <Timeline />
-      </div>
-      <div css={metadataStyle}>
+  const render = () => {
+    if (mainMenuState === MainMenuStateNames.cutting) {
+      return (
+        <div css={[mainContentStyle, cuttingStyle]} role="main">
+          <Cutting />
+        </div>
+      )
+    } else if (mainMenuState === MainMenuStateNames.metadata) {
+      return (
+        <div css={[mainContentStyle, metadataStyle]} role="main">
           <Metadata />
-      </div>
-      <div css={trackSelectStyle}>
+        </div>
+      )
+    } else if (mainMenuState === MainMenuStateNames.trackSelection) {
+      return (
+        <div css={[mainContentStyle, trackSelectStyle]} role="main">
           <TrackSelection />
-      </div>
-      <div css={finishStyle}>
-        <Finish />
-      </div>
-      <div css={defaultStyle}>
-        <FontAwesomeIcon icon={faTools} size="10x" />
+        </div>
+      )
+    } else if (mainMenuState === MainMenuStateNames.subtitles) {
+      return (
+        <div css={[mainContentStyle, subtitleSelectStyle]} role="main">
+          <Subtitle />
+        </div>
+      )
+    } else if (mainMenuState === MainMenuStateNames.thumbnail) {
+      return (
+        <div css={[mainContentStyle, thumbnailSelectStyle]} role="main">
+          <Thumbnail />
+        </div>
+      )
+    } else if (mainMenuState === MainMenuStateNames.finish) {
+      return (
+        <div css={[mainContentStyle, finishStyle]} role="main">
+          <Finish />
+        </div>
+      )
+    } else if (mainMenuState === MainMenuStateNames.keyboardControls) {
+      return (
+        <div css={[mainContentStyle, keyboardControlsStyle]} role="main">
+          <KeyboardControls />
+        </div>
+      )
+    } else {
+      <div css={[mainContentStyle, defaultStyle]} role="main">
+        <LuWrench css={{fontSize: 80}} />
         Placeholder
       </div>
-     </main>
+    }
+  }
+
+  return (
+    <>{render()}</>
   );
 };
 

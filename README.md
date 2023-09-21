@@ -1,12 +1,12 @@
 Opencast Video Editor
 =====================
 
-[![Build & Deploy](https://github.com/elan-ev/opencast-editor/workflows/Build%20&%20Deploy/badge.svg)
-](https://github.com/elan-ev/opencast-editor/actions?query=workflow%3A%22Build+%26+Deploy%22)
+[![Build & Deploy](https://github.com/opencast/opencast-editor/workflows/Build%20&%20Deploy/badge.svg)
+](https://github.com/opencast/opencast-editor/actions?query=workflow%3A%22Build+%26+Deploy%22)
 [![Demo deployment](https://img.shields.io/badge/demo-editor.opencast.org-blue)
 ](https://editor.opencast.org)
 
-The Opencast Video Editor is a stand-alone tool included by [Opencast](https://opencast.org) to cut and arrange recordings.
+The Opencast Video Editor is a tool included by [Opencast](https://opencast.org) to cut and arrange recordings.
 
 
 Quick Test
@@ -40,20 +40,70 @@ To make the editor work in a sub-path, use:
 Configuration
 -------------
 
-The editor can be configured through the `editor-settings.toml` settings file. It can either be provided in the public folder when running locally or can be found under `etc/opencast/ui-config/mh_default_org/editor` when deployed in Opencast. More information can be found in the example configuration file.
 
+### Configuration Methods
+
+Most configuration options can be set either as an option in the configuration file or as a URL parameter.
+
+The configuration file is called `editor-settings.toml`. It can either be provided in the public folder when running locally or can be found under `etc/opencast/ui-config/mh_default_org/editor` when deployed in Opencast. More information can be found in the example configuration file.
+
+If a configuration option belongs to a section, URL parameters are a combination of section and option separated by a single dot.
+
+For example, the following option in the configuration file:
+
+```toml
+[trackSelection]
+show = true
+```
+
+…can be specified as URL parameter in the form `trackSelection.show=true`.
+
+If an option can be specified both ways, the URL parameter will always take precedence.
+
+
+### Settings
+
+Options which are usually specified in the configuration file are documented in there as well. Metadata configuration options are only documented in the configuration file.
+
+| Option                  | URL | File | Description                                                          |
+|-------------------------|-----|------|----------------------------------------------------------------------|
+| id                      | ✓   | ✓    | Id of the event that the editor should open by default.              |
+| mediaPackageId          | ✓   | ✓    | Deprecated. Use `id` instead.                                        |
+| allowedCallbackPrefixes | ✗   | ✓    | Allowed callback prefixes in callback url.                           |
+| callbackUrl             | ✓   | ✓    | Callback url to go back after finish.                                |
+| callbackSystem          | ✓   | ✓    | Callback system name to go back to.                                  |
+| opencast.url            | ✗   | ✓    | URL of the opencast server to connect to.                            |
+| opencast.name           | ✗   | ✓    | Opencast user to use. For demo purposes only.                        |
+| opencast.password       | ✗   | ✓    | Password to use for authentication. For demo purposes only.          |
+| metadata.show           | ✓   | ✓    | Show metadata tab.                                                   |
+| trackSelection.show     | ✓   | ✓    | Show track selection tab.                                            |
+| thumbnail.show          | ✓   | ✓    | Show thumbnail tab. Demo only.                                       |
+| debug                   | ✓   | ✗    | Enable internationalization debugging.                               |
+| lng                     | ✓   | ✗    | Select a specific language. Use language codes like `de` or `en-US`. |
 
 How to cut a release for Opencast
--------------
-- Run `build-release.sh` in the root folder
-- Upload the archive as a new release to GitHub
-  - Release tag is the current date (year-month-day)
-  - Check the commit history for notable changes and list them as a release comment
-- Create an pull request against Opencast
-  - In your Opencast, replace the url the `editor.url` in `modules/editor/pom.xml` with a url that points to the archive file in your new release
-  - Build the editor module with `mvn install`. Observe the error message and replace the old sha256 value in `editor.sha256` with the new value in the error message. Build again to see if it worked.
-  - Check if you need to add any new config values to `etc/ui-config/mh_default_org/editor/editor-settings.toml`. Do not add the debug values.
-  - Verify that the new release runs in Opencast, then create the pull request.
+---------------------------------
+
+1. (Optional) Run the [Update translations](https://github.com/opencast/opencast-editor/actions/workflows/update-translations.yml) workflow, to make sure all changes from crowdin are included in the next release.
+1. Switch to the commit you want to turn into the release
+1. Create and push a new tag
+   ```bash
+    DATE=$(date +%Y-%m-%d)
+    git tag -m Release -s "$DATE"
+    git push upstream "$DATE":"$DATE"
+   ```
+1. Wait for the [Create release draft](https://github.com/opencast/opencast-editor/actions/workflows/create-release.yml)
+   workflow to finish
+    - It will create a new [GitHub release draft](https://github.com/opencast/opencast-editor/releases)
+    - Review and publish the draft
+1. Submit a pull request against Opencast
+    - [Update the release](https://github.com/opencast/opencast/blob/b2bea8822b95b8692bb5bbbdf75c9931c2b7298a/modules/editor/pom.xml#L16-L17)
+    - [Adjust the documentation](https://github.com/opencast/opencast/blob/b2bea8822b95b8692bb5bbbdf75c9931c2b7298a/docs/guides/admin/docs/modules/editor.md)
+      if necessary
+    - [Update the configuration](https://github.com/opencast/opencast/blob/b2bea8822b95b8692bb5bbbdf75c9931c2b7298a/etc/ui-config/mh_default_org/editor/editor-settings.toml)
+      if necessary
+    - Verify that the new release runs in Opencast, then create the pull request.
+
 
 Opencast API used by the Editor
 -------------
@@ -68,4 +118,15 @@ If you want to use current editor frontend with an earlier Opencast version, you
 
 Translating the Editor
 -------------
-You can help translating the editor to your language on [crowdin.com/project/opencast-editor](https://crowdin.com/project/opencast-editor). Simply request to join the project on Crowdin and start translating. If you are interested in translating a language which is not a target language right now, please create [a GitHub issue](https://github.com/elan-ev/opencast-editor/issues) and we will add the language.
+You can help translating the editor to your language on [crowdin.com/project/opencast-editor](https://crowdin.com/project/opencast-editor). Simply request to join the project on Crowdin and start translating. If you are interested in translating a language which is not a target language right now, please create [a GitHub issue](https://github.com/opencast/opencast-editor/issues) and we will add the language.
+
+
+Notes on Waveform Generation
+----------------------------
+
+The editor displays a waveform image on the timeline in the cutting view. This waveform image is generated at runtime
+from one of the videos of the event. However, to properly generate the image, the video it is generated from needs to be
+loaded completely once, which takes time and bandwidth. If this poses a problem for your use case, you can instead have
+Opencast provide an image in the internal publication. Provided images will always take precedence and prevent the
+generation algorithm form running. The provided image should have the same flavor that is specified in the Opencast
+configuration file `etc/org.opencastproject.editor.EditorServiceImpl.cfg`.
