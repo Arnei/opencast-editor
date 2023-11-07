@@ -176,7 +176,9 @@ const ThumbnailTable : React.FC<{
       )
     } else {
       return (<>
-        <AffectAllRow tracks={videoTracks} generate={generate}/>
+        { videoTracks.length > 1 &&
+          <AffectAllRow tracks={videoTracks} generate={generate}/>
+        }
         <div css={thumbnailTableStyle}>
           {videoTracks.map((track: Track, index: number) => (
             <ThumbnailTableRow
@@ -364,15 +366,19 @@ const ThumbnailButtons : React.FC<{
         aria-hidden="true"
       />
       <div css={verticalLineStyle} />
-      <ThumbnailButton
-        handler={() => { setForOtherThumbnails(track.thumbnailUri) }}
-        text={t('thumbnail.buttonUseForOtherThumbnails')}
-        tooltipText={t('thumbnail.buttonUseForOtherThumbnails-tooltip')}
-        ariaLabel={t('thumbnail.buttonUseForOtherThumbnails-tooltip-aria')}
-        Icon={LuCopy}
-        active={(track.thumbnailUri && track.thumbnailUri.startsWith("data") ? true : false)}
-      />
-      <div css={verticalLineStyle} />
+      { tracks.length > 1 &&
+        <>
+          <ThumbnailButton
+            handler={() => { setForOtherThumbnails(track.thumbnailUri) }}
+            text={t('thumbnail.buttonUseForOtherThumbnails')}
+            tooltipText={t('thumbnail.buttonUseForOtherThumbnails-tooltip')}
+            ariaLabel={t('thumbnail.buttonUseForOtherThumbnails-tooltip-aria')}
+            Icon={LuCopy}
+            active={(track.thumbnailUri && track.thumbnailUri.startsWith("data") ? true : false)}
+          />
+          <div css={verticalLineStyle} />
+        </>
+      }
       <ThumbnailButton
         handler={() => { discard(track.id) }}
         text={t('thumbnail.buttonDiscard')}
