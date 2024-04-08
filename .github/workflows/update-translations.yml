@@ -7,7 +7,6 @@ on:
 
 jobs:
   update-translations:
-    if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
