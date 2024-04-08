@@ -16,6 +16,9 @@
         "delete-button": "Verwijder",
         "delete-restore-tooltip": "Markeer of verwijder het segment op de huidige positie om te worden verwijderd. Sneltoets: {{hotkeyName}}",
         "delete-restore-tooltip-aria": "Verwijderen en herstellen. Markeer of verwijder het segment op de huidige positie om te worden verwijderd. Sneltoets: {{hotKeyName}}.",
+        "merge-all-button": "Merge All",
+        "merge-all-tooltip": "Combine all segments into a single segment.",
+        "merge-all-tooltip-aria": "Merge All. Combine all segments into a single segment.",
         "restore-button": "Herstellen",
         "mergeLeft-button": "Links samenvoegen",
         "mergeLeft-tooltip": "Combineer het momenteel actieve segment met het segment aan de linkerkant. Sneltoets: {{hotkeyName}}",
@@ -34,8 +37,13 @@
         "time-duration-tooltip": "Video duration",
         "duration-aria": "Duur",
         "time-aria": "Actuele tijd",
+        "mutebutton-tooltip": "Mute video",
+        "unmutebutton-tooltip": "Unmute video",
+        "volume-tooltip": "Adjust volume: {{current}}%",
+        "volumeSlider-aria": "Adjust the volume level of the video.",
         "comError-text": "Er is een probleem opgetreden tijdens de communicatie met Opencast.",
         "loadError-text": "Er is een fout opgetreden tijdens het laden van deze video.",
+        "durationError-text": "Opencast failed to provide the video duration.",
         "title-tooltip": "Titel van de video",
         "presenter-tooltip": "Video presentatoren"
     },
@@ -53,7 +61,9 @@
         "info-text": "De video wordt niet verwerkt, maar alle snijgegevens worden opgeslagen in Opencast. U kunt later doorgaan met uw bewerking.",
         "success-text": "Changes saved successfully! You can now close the editor or continue working.",
         "success-tooltip-aria": "Succesvol opgeslagen",
-        "saveArea-tooltip": "Gebied opslaan"
+        "saveArea-tooltip": "Gebied opslaan",
+        "confirm-success": "Okay",
+        "cancel-save": "Don't save"
     },
     "discard": {
         "headline-text": "Annuleren",
@@ -69,7 +79,7 @@
     "workflowSelection": {
         "saveAndProcess-text": "Opslaan en verwerken",
         "selectWF-text": "Selecteer een workflow",
-        "noWorkflows-text": "Er is een probleem opgetreden. Er zijn geen workflows om u wijzigingen te verwerken.<3/> Sla u wijzigingen op en neem contact op met een Opencast beheerder.\n",
+        "noWorkflows-text": "There are no workflows to process your changes with. Please save your changes and contact an administrator.\n",
         "oneWorkflow-text": "De video wordt geknipt en verwerkt met de workflow \"{{workflow}}\". <3/> Dit kost enige tijd.\n",
         "manyWorkflows-text": "Selecteer welke workflow Opencast moet gebruiken voor verwerking.",
         "startProcessing-button": "Start verwerking",
@@ -80,7 +90,7 @@
     "timeline": {
         "generateWaveform-text": "Waveform genereren",
         "segment-tooltip": "Segment {{segment}}",
-        "scrubber-text-aria": "Timeline marker. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the timeline marker. {{increase}} and {{decrease}} to increase/decrase the move delta.\n",
+        "scrubber-text-aria": "Timeline marker. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the timeline marker. {{increase}} and {{decrease}} to increase/decrease the move delta.\n",
         "segments-text-aria": "Segment {{index}}. {{segmentStatus}}. Begin: {{start}}. Eindigt: {{end}}.\n"
     },
     "workflowConfig": {
@@ -120,7 +130,7 @@
         },
         "language": {
             "LANGUAGES-SLOVENIAN": "Sloveens",
-            "LANGUAGES-PORTUGESE": "Portugees",
+            "LANGUAGES-PORTUGESE": "Portuguese",
             "LANGUAGES-ROMANSH": "Reto-Romaans",
             "LANGUAGES-ARABIC": "Arabisch",
             "LANGUAGES-POLISH": "Pools",
@@ -198,10 +208,12 @@
     "various": {
         "error-details-text": "Details: {{errorMessage}}\n",
         "error-text": "Er is een fout opgetreden. Wacht even en probeer het opnieuw.",
-        "goBack-button": "Nee, breng me terug"
+        "goBack-button": "Nee, breng me terug",
+        "callback-button-system": "Back to {{system}}",
+        "callback-button-generic": "Back to previous system"
     },
     "trackSelection": {
-        "description": "Selecteer of deselecteer welke sporen worden gebruikt voor verwerking en publicatie.",
+        "title": "Select track(s) for processing",
         "trackInactive": "inactief",
         "deleteTrackText": "Verwijder spoor",
         "restoreTrackText": "Herstel spoor",
@@ -217,12 +229,16 @@
         "createSubtitleButton-clicked-tooltip-aria": "Contains a dialog for creating new subtitles",
         "createSubtitleButton-createButton": "Create",
         "createSubtitleButton-createButton-tooltip": "Start a new subtitle file with the chosen title.",
+        "createSubtitleButton-createButton-disabled-tooltip": "Please pick a language from the dropdown above.",
         "createSubtitleDropdown-label": "Pick a language",
         "backButton": "Back",
         "backButton-tooltip": "Return to subtitle selection",
+        "downloadButton-title": "Download",
+        "downloadButton-tooltip": "Download subtitle as vtt file",
         "editTitle": "Subtitle Editor - {{title}}",
         "editTitle-loading": "Loading",
-        "generic": "Generic"
+        "generic": "Generic",
+        "autoGenerated": "Auto-generated"
     },
     "subtitleList": {
         "startTime-tooltip": "Beginning of the segment",
@@ -242,28 +258,30 @@
         "overviewTimelineTooltip": "Timeline overview"
     },
     "keyboardControls": {
-        "header": "Keyboard Controls",
+        "header": "Shortcuts",
         "defaultGroupName": "General",
         "missingLabel": "Unknown",
         "groupVideoPlayer": "Video Player",
         "groupCuttingView": "Knippen",
         "groupCuttingViewScrubber": "Timeline",
         "groupSubtitleList": "Subtitles",
-        "sequenceSeperator": "or",
+        "sequenceSeparator": "or",
         "genericError": "Failed to load overview",
         "videoPlayButton": "Play/Pause Video",
         "scrubberLeft": "Move left",
         "scrubberRight": "Move right",
-        "scubberIncrease": "Move faster",
+        "scrubberIncrease": "Move faster",
         "scrubberDecrease": "Move slower"
     },
     "theme": {
         "appearance": "Appearance",
-        "selectThemesLabel": "Appearances",
-        "darkmode": "Dark mode",
-        "lightmode": "Light mode",
-        "system": "System design",
-        "high-contrast-dark": "High contrast (Dark mode)",
-        "high-contrast-light": "High contrast (Light mode)"
+        "dark": "Dark",
+        "light": "Light",
+        "auto": "Auto",
+        "dark-high-contrast": "Dark (High contrast)",
+        "light-high-contrast": "Light (High contrast)"
+    },
+    "language": {
+        "language": "Taal"
     }
 }

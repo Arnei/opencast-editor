@@ -1,21 +1,24 @@
 {
     "mainMenu": {
-        "cutting-button": "Cutting",
-        "finish-button": "Finish",
-        "select-tracks-button": "Tracks",
-        "subtitles-button": "Subtitles",
-        "thumbnail-button": "Thumbnail",
-        "metadata-button": "Metadata",
-        "keyboard-controls-button": "Keyboard Controls",
-        "tooltip-aria": "Main Navigation"
+        "cutting-button": "裁剪",
+        "finish-button": "完成",
+        "select-tracks-button": "轨道",
+        "subtitles-button": "字幕",
+        "thumbnail-button": "缩略图",
+        "metadata-button": "元数据",
+        "keyboard-controls-button": "键盘设置",
+        "tooltip-aria": "主导航"
     },
     "cuttingActions": {
-        "cut-button": "Cut",
+        "cut-button": "切段",
         "cut-tooltip": "Split the segment at the current timeline marker position. Hotkey: {{hotkeyName}}",
         "cut-tooltip-aria": "Cut. Split the segment at the current timeline marker position. Hotkey: {{hotkeyName}}.",
         "delete-button": "Delete",
         "delete-restore-tooltip": "Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotkeyName}}",
         "delete-restore-tooltip-aria": "Delete and Restore. Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotKeyName}}.",
+        "merge-all-button": "Merge All",
+        "merge-all-tooltip": "Combine all segments into a single segment.",
+        "merge-all-tooltip-aria": "Merge All. Combine all segments into a single segment.",
         "restore-button": "Restore",
         "mergeLeft-button": "Merge Left",
         "mergeLeft-tooltip": "Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}",
@@ -34,8 +37,13 @@
         "time-duration-tooltip": "Video duration",
         "duration-aria": "Duration",
         "time-aria": "Current time",
+        "mutebutton-tooltip": "Mute video",
+        "unmutebutton-tooltip": "Unmute video",
+        "volume-tooltip": "Adjust volume: {{current}}%",
+        "volumeSlider-aria": "Adjust the volume level of the video.",
         "comError-text": "A problem occurred during communication with Opencast.",
         "loadError-text": "An error has occurred loading this video.",
+        "durationError-text": "Opencast failed to provide the video duration.",
         "title-tooltip": "Video Title",
         "presenter-tooltip": "Video Presenters"
     },
@@ -53,7 +61,9 @@
         "info-text": "The video will not be processed but all cutting information will be stored in Opencast. You can continue your edit later.",
         "success-text": "Changes saved successfully! You can now close the editor or continue working.",
         "success-tooltip-aria": "Saved successfully",
-        "saveArea-tooltip": "Save Area"
+        "saveArea-tooltip": "Save Area",
+        "confirm-success": "Okay",
+        "cancel-save": "Don't save"
     },
     "discard": {
         "headline-text": "Discard changes",
@@ -69,7 +79,7 @@
     "workflowSelection": {
         "saveAndProcess-text": "Save and Process",
         "selectWF-text": "Select a workflow",
-        "noWorkflows-text": "A problem occurred, there are no workflows to process your changes with.<3/> Please save your changes and contact an Opencast Administrator.\n",
+        "noWorkflows-text": "There are no workflows to process your changes with. Please save your changes and contact an administrator.\n",
         "oneWorkflow-text": "The video will be cut and processed with the workflow \"{{workflow}}\". <3/> This will take some time.\n",
         "manyWorkflows-text": "Select which workflow Opencast should use for processing.",
         "startProcessing-button": "Start processing",
@@ -80,7 +90,7 @@
     "timeline": {
         "generateWaveform-text": "Generating Waveform",
         "segment-tooltip": "Segment {{segment}}",
-        "scrubber-text-aria": "Timeline marker. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the timeline marker. {{increase}} and {{decrease}} to increase/decrase the move delta.\n",
+        "scrubber-text-aria": "Timeline marker. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the timeline marker. {{increase}} and {{decrease}} to increase/decrease the move delta.\n",
         "segments-text-aria": "Segment {{index}}. {{segmentStatus}}. Start: {{start}}. End: {{end}}.\n"
     },
     "workflowConfig": {
@@ -120,7 +130,7 @@
         },
         "language": {
             "LANGUAGES-SLOVENIAN": "Slovenian",
-            "LANGUAGES-PORTUGESE": "Portugese",
+            "LANGUAGES-PORTUGESE": "Portuguese",
             "LANGUAGES-ROMANSH": "Romansh",
             "LANGUAGES-ARABIC": "Arabic",
             "LANGUAGES-POLISH": "Polish",
@@ -198,10 +208,12 @@
     "various": {
         "error-details-text": "Details: {{errorMessage}}\n",
         "error-text": "An error has occurred. Please wait a bit and try again.",
-        "goBack-button": "No, take me back"
+        "goBack-button": "No, take me back",
+        "callback-button-system": "Back to {{system}}",
+        "callback-button-generic": "Back to previous system"
     },
     "trackSelection": {
-        "description": "Select or deselect which tracks are used for processing and publication.",
+        "title": "Select track(s) for processing",
         "trackInactive": "inactive",
         "deleteTrackText": "Delete Track",
         "restoreTrackText": "Restore Track",
@@ -217,12 +229,16 @@
         "createSubtitleButton-clicked-tooltip-aria": "Contains a dialog for creating new subtitles",
         "createSubtitleButton-createButton": "Create",
         "createSubtitleButton-createButton-tooltip": "Start a new subtitle file with the chosen title.",
+        "createSubtitleButton-createButton-disabled-tooltip": "Please pick a language from the dropdown above.",
         "createSubtitleDropdown-label": "Pick a language",
         "backButton": "Back",
         "backButton-tooltip": "Return to subtitle selection",
+        "downloadButton-title": "Download",
+        "downloadButton-tooltip": "Download subtitle as vtt file",
         "editTitle": "Subtitle Editor - {{title}}",
         "editTitle-loading": "Loading",
-        "generic": "Generic"
+        "generic": "Generic",
+        "autoGenerated": "Auto-generated"
     },
     "subtitleList": {
         "startTime-tooltip": "Beginning of the segment",
@@ -242,28 +258,30 @@
         "overviewTimelineTooltip": "Timeline overview"
     },
     "keyboardControls": {
-        "header": "Keyboard Controls",
+        "header": "Shortcuts",
         "defaultGroupName": "General",
         "missingLabel": "Unknown",
         "groupVideoPlayer": "Video Player",
-        "groupCuttingView": "Cutting",
+        "groupCuttingView": "裁剪",
         "groupCuttingViewScrubber": "Timeline",
-        "groupSubtitleList": "Subtitles",
-        "sequenceSeperator": "or",
+        "groupSubtitleList": "字幕",
+        "sequenceSeparator": "or",
         "genericError": "Failed to load overview",
         "videoPlayButton": "Play/Pause Video",
         "scrubberLeft": "Move left",
         "scrubberRight": "Move right",
-        "scubberIncrease": "Move faster",
+        "scrubberIncrease": "Move faster",
         "scrubberDecrease": "Move slower"
     },
     "theme": {
         "appearance": "Appearance",
-        "selectThemesLabel": "Appearances",
-        "darkmode": "Dark mode",
-        "lightmode": "Light mode",
-        "system": "System design",
-        "high-contrast-dark": "High contrast (Dark mode)",
-        "high-contrast-light": "High contrast (Light mode)"
+        "dark": "Dark",
+        "light": "Light",
+        "auto": "Auto",
+        "dark-high-contrast": "Dark (High contrast)",
+        "light-high-contrast": "Light (High contrast)"
+    },
+    "language": {
+        "language": "Language"
     }
 }
