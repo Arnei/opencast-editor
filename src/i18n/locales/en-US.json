@@ -17,9 +17,6 @@
       "delete-button": "Delete",
       "delete-restore-tooltip": "Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotkeyName}}",
       "delete-restore-tooltip-aria": "Delete and Restore. Mark or unmark the segment at the current position as to be deleted. Hotkey: {{hotKeyName}}.",
-      "merge-all-button": "Merge All",
-      "merge-all-tooltip": "Combine all segments into a single segment.",
-      "merge-all-tooltip-aria": "Merge All. Combine all segments into a single segment.",
       "restore-button": "Restore",
       "mergeLeft-button": "Merge Left",
       "mergeLeft-tooltip": "Combine the currently active segment with the segment to its left. Hotkey: {{hotkeyName}}",
@@ -39,13 +36,8 @@
       "time-duration-tooltip": "Video duration",
       "duration-aria": "Duration",
       "time-aria": "Current time",
-      "mutebutton-tooltip": "Mute video",
-      "unmutebutton-tooltip": "Unmute video",
-      "volume-tooltip": "Adjust volume: {{current}}%",
-      "volumeSlider-aria": "Adjust the volume level of the video.",
       "comError-text": "A problem occurred during communication with Opencast.",
       "loadError-text": "An error has occurred loading this video.",
-      "durationError-text": "Opencast failed to provide the video duration.",
       "title-tooltip": "Video Title",
       "presenter-tooltip": "Video Presenters"
     },
@@ -65,9 +57,7 @@
       "info-text": "The video will not be processed but all cutting information will be stored in Opencast. You can continue your edit later.",
       "success-text": "Changes saved successfully! You can now close the editor or continue working.",
       "success-tooltip-aria": "Saved successfully",
-      "saveArea-tooltip": "Save Area",
-      "confirm-success": "Okay",
-      "cancel-save": "Don't save"
+      "saveArea-tooltip": "Save Area"
     },
 
     "discard": {
@@ -86,7 +76,7 @@
     "workflowSelection": {
       "saveAndProcess-text": "Save and Process",
       "selectWF-text": "Select a workflow",
-      "noWorkflows-text": "There are no workflows to process your changes with. Please save your changes and contact an administrator.\n",
+      "noWorkflows-text": "A problem occurred, there are no workflows to process your changes with.<3/> Please save your changes and contact an Opencast Administrator.\n",
       "oneWorkflow-text": "The video will be cut and processed with the workflow \"{{workflow}}\". <3/> This will take some time.\n",
       "manyWorkflows-text": "Select which workflow Opencast should use for processing.",
       "startProcessing-button": "Start processing",
@@ -98,7 +88,7 @@
     "timeline": {
       "generateWaveform-text": "Generating Waveform",
       "segment-tooltip": "Segment {{segment}}",
-      "scrubber-text-aria": "Timeline marker. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the timeline marker. {{increase}} and {{decrease}} to increase/decrease the move delta.\n",
+      "scrubber-text-aria": "Timeline marker. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the timeline marker. {{increase}} and {{decrease}} to increase/decrase the move delta.\n",
       "segments-text-aria": "Segment {{index}}. {{segmentStatus}}. Start: {{start}}. End: {{end}}.\n"
     },
 
@@ -140,7 +130,7 @@
       },
       "language": {
         "LANGUAGES-SLOVENIAN": "Slovenian",
-        "LANGUAGES-PORTUGESE": "Portuguese",
+        "LANGUAGES-PORTUGESE": "Portugese",
         "LANGUAGES-ROMANSH": "Romansh",
         "LANGUAGES-ARABIC": "Arabic",
         "LANGUAGES-POLISH": "Polish",
@@ -223,13 +213,11 @@
     "various": {
       "error-details-text": "Details: {{errorMessage}}\n",
       "error-text": "An error has occurred. Please wait a bit and try again.",
-      "goBack-button": "No, take me back",
-      "callback-button-system": "Back to {{system}}",
-      "callback-button-generic": "Back to previous system"
+      "goBack-button": "No, take me back"
     },
 
     "trackSelection": {
-      "title": "Select track(s) for processing",
+      "description": "Select or deselect which tracks are used for processing and publication.",
       "trackInactive": "inactive",
       "deleteTrackText": "Delete Track",
       "restoreTrackText": "Restore Track",
@@ -246,16 +234,12 @@
       "createSubtitleButton-clicked-tooltip-aria": "Contains a dialog for creating new subtitles",
       "createSubtitleButton-createButton": "Create",
       "createSubtitleButton-createButton-tooltip": "Start a new subtitle file with the chosen title.",
-      "createSubtitleButton-createButton-disabled-tooltip": "Please pick a language from the dropdown above.",
       "createSubtitleDropdown-label": "Pick a language",
       "backButton": "Back",
       "backButton-tooltip": "Return to subtitle selection",
-      "downloadButton-title": "Download",
-      "downloadButton-tooltip": "Download subtitle as vtt file",
       "editTitle": "Subtitle Editor - {{title}}",
       "editTitle-loading": "Loading",
-      "generic": "Generic",
-      "autoGenerated": "Auto-generated"
+      "generic": "Generic"
     },
 
     "subtitleList": {
@@ -279,32 +263,29 @@
     },
 
     "keyboardControls": {
-      "header": "Shortcuts",
+      "header": "Keyboard Controls",
       "defaultGroupName": "General",
       "missingLabel": "Unknown",
       "groupVideoPlayer": "Video Player",
       "groupCuttingView": "Cutting",
       "groupCuttingViewScrubber": "Timeline",
       "groupSubtitleList": "Subtitles",
-      "sequenceSeparator": "or",
+      "sequenceSeperator": "or",
       "genericError": "Failed to load overview",
       "videoPlayButton": "Play/Pause Video",
       "scrubberLeft": "Move left",
       "scrubberRight": "Move right",
-      "scrubberIncrease": "Move faster",
+      "scubberIncrease": "Move faster",
       "scrubberDecrease": "Move slower"
     },
 
     "theme": {
       "appearance": "Appearance",
-      "dark": "Dark",
-      "light": "Light",
-      "auto": "Auto",
-      "dark-high-contrast": "Dark (High contrast)",
-      "light-high-contrast": "Light (High contrast)"
-    },
-
-    "language": {
-      "language": "Language"
+      "selectThemesLabel": "Appearances",
+      "darkmode": "Dark mode",
+      "lightmode": "Light mode",
+      "system": "System design",
+      "high-contrast-dark": "High contrast (Dark mode)",
+      "high-contrast-light": "High contrast (Light mode)"
     }
   }

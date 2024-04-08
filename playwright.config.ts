@@ -2,23 +2,21 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
 
-  reporter: [
-    [process.env.CI ? 'github' : 'list'],
-    ['html', { outputFolder: 'playwright-report' }],
-  ],
+  reporter: [ [process.env.CI ? 'github' : 'list',],
+            ['html', { outputFolder: 'playwright-report' }]],
   testIgnore: '**/redux/**',
   retries: 1,
   timeout: 60 * 1000,
 
   use: {
-    baseURL: 'http://localhost:5173/',
+    baseURL: 'http://localhost:3000/',
     headless: true,
     screenshot: 'only-on-failure',
   },
 
   webServer: {
     command: 'npm run start',
-    port: 5173,
+    port: 3000,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },

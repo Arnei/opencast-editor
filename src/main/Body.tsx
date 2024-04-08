@@ -1,37 +1,34 @@
 import React from "react";
 
-import MainMenu from "./MainMenu";
-import MainContent from "./MainContent";
-import TheEnd from "./TheEnd";
-import Error from "./Error";
+import MainMenu from './MainMenu';
+import MainContent from './MainContent';
+import TheEnd from './TheEnd';
+import Error from './Error';
 import Landing from "./Landing";
-import Lock from "./Lock";
 
-import { css } from "@emotion/react";
+import { css } from '@emotion/react'
 
-import { useAppSelector } from "../redux/store";
-import { selectIsEnd } from "../redux/endSlice";
+import { useSelector } from 'react-redux';
+import { selectIsEnd } from '../redux/endSlice'
 import { selectIsError } from "../redux/errorSlice";
-import { settings } from "../config";
+import { settings } from '../config';
 
-const Body: React.FC = () => {
 
-  const isEnd = useAppSelector(selectIsEnd);
-  const isError = useAppSelector(selectIsError);
+const Body: React.FC<{}> = () => {
 
-  // If we"re in a special state, display a special page
+  const isEnd = useSelector(selectIsEnd)
+  const isError = useSelector(selectIsError)
+
+  // If we're in a special state, display a special page
   // Otherwise display the normal page
   const main = () => {
     if (!settings.id) {
       return (
         <Landing />
-      );
+      )
     } else if (isEnd) {
       return (
-        <div>
-          <Lock />
-          <TheEnd />
-        </div>
+        <TheEnd />
       );
     } else if (isError) {
       return (
@@ -40,18 +37,17 @@ const Body: React.FC = () => {
     } else {
       return (
         <div css={bodyStyle}>
-          <Lock />
           <MainMenu />
           <MainContent />
         </div>
       );
     }
-  };
+  }
 
   const bodyStyle = css({
-    display: "flex",
-    flexDirection: "row",
-    height: "calc(100% - 64px)",
+    display: 'flex',
+    flexDirection: 'row',
+    height: '100%',
   });
 
   return (

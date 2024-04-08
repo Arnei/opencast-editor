@@ -11,14 +11,11 @@
     },
     "cuttingActions": {
         "cut-button": "Cortar",
-        "cut-tooltip": "Dividir el segmento en la posición actual del marcador en la línea de tiempo. Acceso Rápido:: {{hotkeyName}}",
-        "cut-tooltip-aria": "Cortar. Dividir el segmento en la posición actual del marcador en la línea de tiempo. Acceso Rápido: {{hotkeyName}}.",
+        "cut-tooltip": "Split the segment at the current timeline marker position. Hotkey: {{hotkeyName}}",
+        "cut-tooltip-aria": "Cut. Split the segment at the current timeline marker position. Hotkey: {{hotkeyName}}.",
         "delete-button": "Borrar",
         "delete-restore-tooltip": "Marcar o desmarcar el segmento en la posición actual para ser eliminado. Acceso Rápido: {{hotkeyName}}",
         "delete-restore-tooltip-aria": "Marcar o desmarcar el segmento en la posición actual para ser eliminado. Acceso Rápido:: {{hotKeyName}}.",
-        "merge-all-button": "Combinarlo todo",
-        "merge-all-tooltip": "Combina todos los segmentos en un solo segmento.",
-        "merge-all-tooltip-aria": "Combinarlo todo. Combina todos los segmentos en un solo segmento.",
         "restore-button": "Restaurar",
         "mergeLeft-button": "Fusionar a la izquierda",
         "mergeLeft-tooltip": "Combina el segmento actualmente activo con el segmento a su izquierda. Acceso rápido: {{hotkeyName}}",
@@ -37,13 +34,8 @@
         "time-duration-tooltip": "Duración del vídeo",
         "duration-aria": "Duración",
         "time-aria": "Tiempo actual",
-        "mutebutton-tooltip": "Silenciar vídeo",
-        "unmutebutton-tooltip": "Activar sonido del vídeo",
-        "volume-tooltip": "Ajustar el volumen: {{current}}%",
-        "volumeSlider-aria": "Ajustar el volumen del video.",
         "comError-text": "Se ha producido un error al establecer comunicación con Opencast.",
         "loadError-text": "Ocurrió un error al cargar el video.",
-        "durationError-text": "Opencast falló al proporcionar la duracion del vídeo.",
         "title-tooltip": "Título del vídeo",
         "presenter-tooltip": "Presentadores"
     },
@@ -61,17 +53,15 @@
         "info-text": "El vídeo no será procesado, pero toda la información de corte será almacenada en Opencast. Puede continuar su edición más tarde.",
         "success-text": "¡Cambios guardados con éxito! Ahora puede cerrar el editor o continuar trabajando.",
         "success-tooltip-aria": "Guardado con éxito",
-        "saveArea-tooltip": "Guardar área",
-        "confirm-success": "De acuerdo",
-        "cancel-save": "No guardar"
+        "saveArea-tooltip": "Guardar área"
     },
     "discard": {
         "headline-text": "Descartar cambios",
         "confirm-button": "Sí, descartar cambios",
-        "info-text": "¿Está seguro de que desea descartar los cambios? ¡Esto no se puede deshacer!"
+        "info-text": "Are you sure you want to discard your changes? This cannot be undone!"
     },
     "theEnd": {
-        "discarded-text": "Sus cambios han sido descartados. Ahora puede cerrar el editor.",
+        "discarded-text": "Your changes have been discarded. You can now close the editor.",
         "startOver-button": "¡Déjame empezar de nuevo!",
         "startOver-tooltip": "Recargar la página para empezar de nuevo",
         "info-text": "Cambios guardados con éxito en Opencast. El procesamiento de los cambios puede tardar. Ahora puede cerrar el editor.\n"
@@ -79,7 +69,7 @@
     "workflowSelection": {
         "saveAndProcess-text": "Guardar y procesar",
         "selectWF-text": "Seleccione un flujo de trabajo",
-        "noWorkflows-text": "No hay ningún flujo de trabajo para procesar sus cambios. Guarde sus cambios y contacte con un administrador.\n",
+        "noWorkflows-text": "Ocurrió un problema, no hay flujos de trabajo con los que procesar sus cambios.<3/> Por favor, guarde sus cambios y póngase en contacto con su administrador de Opencast.\n",
         "oneWorkflow-text": "El vídeo se cortará y procesará con el flujo de trabajo \"{{workflow}}\". <3/> Esto tomará algún tiempo.\n",
         "manyWorkflows-text": "Seleccione qué flujo de trabajo debe usar Opencast para procesar.",
         "startProcessing-button": "Iniciar proceso",
@@ -90,7 +80,7 @@
     "timeline": {
         "generateWaveform-text": "Generando forma de onda",
         "segment-tooltip": "Segmento {{segment}}",
-        "scrubber-text-aria": "Marca de tiempo. {{currentTime}}. Segmento activo: {{segment}}. {{segmentStatus}}. Controles: {{moveLeft}} y {{moveRight}} para mover la marca de tiempo. {{increase}} y {{decrease}} para incrementar/decrementar el movimiento delta.\n",
+        "scrubber-text-aria": "Timeline marker. {{currentTime}}. Active segment: {{segment}}. {{segmentStatus}}. Controls: {{moveLeft}} and {{moveRight}} to move the timeline marker. {{increase}} and {{decrease}} to increase/decrase the move delta.\n",
         "segments-text-aria": "Segmento {{index}}. {{segmentStatus}}. Inicio: {{start}}. Final: {{end}}.\n"
     },
     "workflowConfig": {
@@ -167,24 +157,24 @@
     },
     "thumbnail": {
         "title": "Editor de miniatura",
-        "noThumbnailAvailable": "No hay miniaturas disponibles",
-        "previewImageAlt": "Miniatura de la pista",
+        "noThumbnailAvailable": "No Thumbnail available",
+        "previewImageAlt": "Thumbnail for track",
         "buttonGenerate": "Generar",
-        "buttonGenerate-tooltip": "Generar una nueva miniatura desde la posición actual del control deslizante",
-        "buttonGenerate-tooltip-aria": "Generar una nueva miniatura desde la posición actual del control deslizante",
+        "buttonGenerate-tooltip": "Generate a new thumbnail from the current timeline marker position",
+        "buttonGenerate-tooltip-aria": "Generate a new thumbnail from the current timeline marker position",
         "buttonUpload": "Cargar",
         "buttonUpload-tooltip": "Cargar una imagen",
         "buttonUpload-tooltip-aria": "Cargar una imagen",
-        "buttonUseForOtherThumbnails": "Usar para todas las pistas",
-        "buttonUseForOtherThumbnails-tooltip": "Usar la miniatura para todas las pistas",
-        "buttonUseForOtherThumbnails-tooltip-aria": "Usar la miniatura para todas las pistas",
+        "buttonUseForOtherThumbnails": "Use for all tracks",
+        "buttonUseForOtherThumbnails-tooltip": "Use the thumbnail for all tracks",
+        "buttonUseForOtherThumbnails-tooltip-aria": "Use the thumbnail for all tracks",
         "buttonDiscard": "Descartar",
-        "buttonDiscard-tooltip": "Descartar la miniatura de esta pista",
-        "buttonDiscard-tooltip-aria": "Descartar la miniatura de esta pista",
+        "buttonDiscard-tooltip": "Discard the thumbnail for this track",
+        "buttonDiscard-tooltip-aria": "Discard the thumbnail for this track",
         "buttonGenerateAll": "Generar todo",
-        "buttonGenerateAll-tooltip": "Generar una nueva miniatura desde la posición actual del control deslizante",
-        "buttonGenerateAll-tooltip-aria": "Generar una nueva miniatura desde la posición actual del control deslizante",
-        "explanation": "Subir o generar una miniatura para cada pista.",
+        "buttonGenerateAll-tooltip": "Generate new thumbnails for all tracks from the current timeline marker position",
+        "buttonGenerateAll-tooltip-aria": "Generate new thumbnails for all tracks from the current timeline marker position",
+        "explanation": "Upload or generate a thumbnail for each track.",
         "primary": "Primario",
         "secondary": "Secundario"
     },
@@ -196,7 +186,7 @@
         "generic-message": "¡Un error critico ha ocurrido!",
         "details": "Detalles: ",
         "workflowActive-errorTitle": "No disponible temporalmente",
-        "workflowActive-errorMessage": "Este evento está siendo procesado. Por favor, espere hasta que el proceso haya terminado."
+        "workflowActive-errorMessage": "This event is being processed. Please wait until the process is finished."
     },
     "landing": {
         "main-heading": "Bienvenido al editor de vídeos",
@@ -208,12 +198,10 @@
     "various": {
         "error-details-text": "Detalles: {{errorMessage}}\n",
         "error-text": "Ha ocurrido un error. Por favor, espere un poco e inténtelo de nuevo.",
-        "goBack-button": "¡De ninguna manera! Volver atrás",
-        "callback-button-system": "Volver a {{system}}",
-        "callback-button-generic": "Back to previous system"
+        "goBack-button": "¡De ninguna manera! Volver atrás"
     },
     "trackSelection": {
-        "title": "Seleccionar la(s) pista(s) a procesar",
+        "description": "Seleccione qué pistas serán usadas para el procesamiento y publicación.",
         "trackInactive": "inactivo",
         "deleteTrackText": "Eliminar pista",
         "restoreTrackText": "Restaurar pista",
@@ -229,16 +217,12 @@
         "createSubtitleButton-clicked-tooltip-aria": "Contiene un diálogo para crear nuevos subtítulos",
         "createSubtitleButton-createButton": "Crear",
         "createSubtitleButton-createButton-tooltip": "Inicia un nuevo archivo de subtítulos con el título elegido.",
-        "createSubtitleButton-createButton-disabled-tooltip": "Please pick a language from the dropdown above.",
         "createSubtitleDropdown-label": "Seleccione un idioma",
         "backButton": "Atras",
         "backButton-tooltip": "Volver a la selección de subtítulos",
-        "downloadButton-title": "Descargar",
-        "downloadButton-tooltip": "Descargar subtítulo como un archivo vtt",
         "editTitle": "Editor de subtítulos - {{title}}",
         "editTitle-loading": "Cargando",
-        "generic": "Generico",
-        "autoGenerated": "Autogenerado"
+        "generic": "Generic"
     },
     "subtitleList": {
         "startTime-tooltip": "Inicio del segmento",
@@ -255,33 +239,31 @@
         "selectVideoLabel": "Sabores del vídeo"
     },
     "subtitleTimeline": {
-        "overviewTimelineTooltip": "Previsualización de la línea de tiempo"
+        "overviewTimelineTooltip": "Timeline overview"
     },
     "keyboardControls": {
-        "header": "Atajos",
+        "header": "Controles del teclado",
         "defaultGroupName": "General",
         "missingLabel": "Desconocido",
         "groupVideoPlayer": "Reproductor de vídeo",
         "groupCuttingView": "Dividir",
-        "groupCuttingViewScrubber": "Línea de tiempo",
+        "groupCuttingViewScrubber": "Timeline",
         "groupSubtitleList": "Subtítulos",
-        "sequenceSeparator": "o",
+        "sequenceSeperator": "o",
         "genericError": "Error al cargar la vista general",
         "videoPlayButton": "Reproducir/Pausar vídeo",
         "scrubberLeft": "Mover a la izquierda",
         "scrubberRight": "Mover a la derecha",
-        "scrubberIncrease": "Mover más rápido",
+        "scubberIncrease": "Mover más rápido",
         "scrubberDecrease": "Mover más lento"
     },
     "theme": {
         "appearance": "Apariencia",
-        "dark": "Oscuro",
-        "light": "Claro",
-        "auto": "Auto",
-        "dark-high-contrast": "Oscuro (alto contraste)",
-        "light-high-contrast": "Claro (alto contraste)"
-    },
-    "language": {
-        "language": "Idioma"
+        "selectThemesLabel": "Appearances",
+        "darkmode": "Modo oscuro",
+        "lightmode": "Modo claro",
+        "system": "Diseño del sistema",
+        "high-contrast-dark": "Alto contraste (modo oscuro)",
+        "high-contrast-light": "Alto contraste (modo claro)"
     }
 }

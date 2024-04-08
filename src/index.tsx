@@ -1,25 +1,16 @@
-import React from "react";
-import ReactDOMClient from "react-dom/client";
-import "./index.css";
-import App from "./App";
-import { Provider } from "react-redux";
-import store from "./redux/store";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import { Provider } from 'react-redux'
+import store from './redux/store'
 
-import { init } from "./config";
-import { sleep } from "./util/utilityFunctions";
+import { init } from './config'
+import { sleep } from './util/utilityFunctions'
 
-import "@fontsource-variable/roboto-flex";
-
-import "./i18n/config";
-
-import "@opencast/appkit/dist/colors.css";
-import { ColorSchemeProvider } from "@opencast/appkit";
-
-const container = document.getElementById("root");
-if (!container) {
-  throw new Error("Failed to find the root element");
-}
-const root = ReactDOMClient.createRoot(container);
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { GlobalHotKeys } from 'react-hotkeys';
 
 
 // Load config here
@@ -27,25 +18,33 @@ const root = ReactDOMClient.createRoot(container);
 // server.
 const initialize = Promise.race([
   init(),
-  sleep(600),
+  sleep(300),
 ]);
+
+const render = (body: JSX.Element) => {
+  ReactDOM.render(body, document.getElementById('root'));
+};
 
 initialize.then(
 
   () => {
-    root.render(
+    ReactDOM.render(
       <React.StrictMode>
-        <Provider store={store}>
-          <ColorSchemeProvider>
-            <App />
-          </ColorSchemeProvider>
-        </Provider>
+          <Provider store={store}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              {/* Workaround for getApplicationKeyMap based on https://github.com/greena13/react-hotkeys/issues/228 */}
+              <GlobalHotKeys>
+                <App />
+              </GlobalHotKeys>
+            </MuiPickersUtilsProvider>
+          </Provider>
       </React.StrictMode>,
+      document.getElementById('root')
     );
   },
 
   // This error case is vey unlikely to occur.
-  e => root.render(<p>
+  e => render(<p>
     {`Fatal error while loading app: ${e.message}`}
     <br />
     This might be caused by a incorrect configuration by the system administrator.
