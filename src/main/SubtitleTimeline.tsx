@@ -3,186 +3,157 @@ import { css } from "@emotion/react";
 import { SegmentsList as CuttingSegmentsList, Waveforms } from "./Timeline";
 import {
   selectCurrentlyAt,
-  selectSelectedSubtitleById,
-  selectSelectedSubtitleId,
+  selectSelectedSubtitleByFlavor,
+  selectSelectedSubtitleFlavor,
   setClickTriggered,
   setCueAtIndex,
   setCurrentlyAt,
   setFocusSegmentId,
   setFocusSegmentTriggered,
   setFocusSegmentTriggered2,
-} from "../redux/subtitleSlice";
-import { useAppDispatch, useAppSelector } from "../redux/store";
+} from '../redux/subtitleSlice'
+import { useDispatch, useSelector } from "react-redux";
 import useResizeObserver from "use-resize-observer";
 import { selectDuration } from "../redux/videoSlice";
-import Draggable, { DraggableEventHandler } from "react-draggable";
+import Draggable, { DraggableEvent } from "react-draggable";
 import { SubtitleCue } from "../types";
-import { Resizable, ResizableProps } from "react-resizable";
+import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
+import { GlobalHotKeys } from "react-hotkeys";
+import { scrubberKeyMap } from "../globalKeys";
 import ScrollContainer, { ScrollEvent } from "react-indiana-drag-scroll";
-import { useTheme } from "../themes";
+import { selectTheme } from "../redux/themeSlice";
 import { ThemedTooltip } from "./Tooltip";
-import { useTranslation } from "react-i18next";
-import { useHotkeys } from "react-hotkeys-hook";
-import { KEYMAP } from "../globalKeys";
+import { t } from "i18next";
 
 /**
  * Copy-paste of the timeline in Video.tsx, so that we can make some small adjustments,
  * like adding in a list of subtitle segments
  */
-const SubtitleTimeline: React.FC = () => {
+ const SubtitleTimeline: React.FC<{}> = () => {
 
-  const { t } = useTranslation();
-  const theme = useTheme();
+  const theme = useSelector(selectTheme)
 
   // Init redux variables
-  const dispatch = useAppDispatch();
-  const duration = useAppSelector(selectDuration);
-  const currentlyAt = useAppSelector(selectCurrentlyAt);
+  const dispatch = useDispatch();
+  const duration = useSelector(selectDuration)
+  const currentlyAt = useSelector(selectCurrentlyAt)
 
-  const { ref, width = 1 } = useResizeObserver<HTMLDivElement>();
-  const refTop = useRef<HTMLElement>(null);
-  const { ref: refMini, width: widthMiniTimeline = 1 } = useResizeObserver<HTMLDivElement>();
+  const { ref, width = 1, } = useResizeObserver<HTMLDivElement>();
+  const refTop = useRef<ScrollContainer>(null);
+  const { ref: refMini, width: widthMiniTimeline = 1, } = useResizeObserver<HTMLDivElement>();
 
-  // How much of the timeline should be visible in milliseconds. Aka a specific zoom level
-  const timelineCutoutInMs = 10000;
+  const timelineCutoutInMs = 10000    // How much of the timeline should be visible in milliseconds. Aka a specific zoom level
 
   const timelineStyle = css({
-    position: "relative",     // Need to set position for Draggable bounds to work
-    width: ((duration / timelineCutoutInMs)) * 100 + "%",    // Total length of timeline based on number of cutouts
-    paddingLeft: "50%",
-    paddingRight: "50%",
+    position: 'relative',     // Need to set position for Draggable bounds to work
+    width: ((duration / timelineCutoutInMs)) * 100 + '%',    // Total length of timeline based on number of cutouts
+    paddingLeft: '50%',
+    paddingRight: '50%',
   });
 
   const setCurrentlyAtToClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    dispatch(setClickTriggered(true));
-    dispatch(setCurrentlyAt((offsetX / widthMiniTimeline) * (duration)));
-  };
+    let rect = e.currentTarget.getBoundingClientRect()
+    let offsetX = e.clientX - rect.left
+    dispatch(setClickTriggered(true))
+    dispatch(setCurrentlyAt((offsetX / widthMiniTimeline) * (duration)))
+  }
 
   // Apply horizonal scrolling when scrolled from somewhere else
   useEffect(() => {
     if (currentlyAt !== undefined && refTop.current) {
-      const scrollLeftMax = (refTop.current.scrollWidth - refTop.current.clientWidth);
-      refTop.current.scrollTo(Math.round((currentlyAt / duration) * scrollLeftMax), 0);
+      const scrollLeftMax = (refTop.current.getElement().scrollWidth - refTop.current.getElement().clientWidth)
+      refTop.current.getElement().scrollTo(Math.round((currentlyAt / duration) * scrollLeftMax), 0)
     }
   }, [currentlyAt, duration, width]);
 
-  const [keyboardJumpDelta, setKeyboardJumpDelta] = useState(1000);  // In milliseconds. For keyboard navigation
+  const [keyboardJumpDelta, setKeyboardJumpDelta] = useState(1000)  // In milliseconds. For keyboard navigation
 
   // Callbacks for keyboard controls
   // TODO: Better increases and decreases than ten intervals
   // TODO: Additional helpful controls (e.g. jump to start/end of segment/next segment)
-  useHotkeys(
-    KEYMAP.timeline.left.key,
-    () => dispatch(setCurrentlyAt(Math.max(currentlyAt - keyboardJumpDelta, 0))),
-    {}, [currentlyAt, keyboardJumpDelta]
-  );
-  useHotkeys(
-    KEYMAP.timeline.right.key,
-    () => dispatch(setCurrentlyAt(Math.min(currentlyAt + keyboardJumpDelta, duration))),
-    {}, [currentlyAt, keyboardJumpDelta, duration]
-  );
-  useHotkeys(
-    KEYMAP.timeline.increase.key,
-    () => setKeyboardJumpDelta(keyboardJumpDelta => Math.min(keyboardJumpDelta * 10, 1000000)),
-    {}, [keyboardJumpDelta]
-  );
-  useHotkeys(
-    KEYMAP.timeline.decrease.key,
-    () => setKeyboardJumpDelta(keyboardJumpDelta => Math.max(keyboardJumpDelta / 10, 1)),
-    {}, [keyboardJumpDelta]
-  );
+  const handlers = {
+    left: () => dispatch(setCurrentlyAt(Math.max(currentlyAt - keyboardJumpDelta, 0))),
+    right: () => dispatch(setCurrentlyAt(Math.min(currentlyAt + keyboardJumpDelta, duration))),
+    increase: () => setKeyboardJumpDelta(keyboardJumpDelta => Math.min(keyboardJumpDelta * 10, 1000000)),
+    decrease: () => setKeyboardJumpDelta(keyboardJumpDelta => Math.max(keyboardJumpDelta / 10, 1))
+  }
 
   // Callback for the scroll container
   const onEndScroll = (e: ScrollEvent) => {
     // If scrolled by user
     if (!e.external && refTop && refTop.current) {
-      const offsetX = refTop.current.scrollLeft;
-      const scrollLeftMax = (refTop.current.scrollWidth - refTop.current.clientWidth);
-      dispatch(setCurrentlyAt((offsetX / scrollLeftMax) * (duration)));
+      const offsetX = refTop.current.getElement().scrollLeft
+      const scrollLeftMax = (refTop.current.getElement().scrollWidth - refTop.current.getElement().clientWidth)
+      dispatch(setCurrentlyAt((offsetX / scrollLeftMax) * (duration)))
     }
-  };
+  }
 
   return (
-    <div css={{ position: "relative", width: "100%", height: "250px" }}>
+    <div css={{position: 'relative', width: '100%', height: '250px'}}>
       {/* "Scrubber". Sits smack dab in the middle and does not move */}
       <div
         css={{
-          position: "absolute",
-          width: "2px",
-          height: "200px",
-          ...(refTop.current) && { left: (refTop.current.clientWidth / 2) },
-          top: "10px",
+          position: 'absolute',
+          width: '2px',
+          height: '190px',
+          ...(refTop.current) && {left: (refTop.current.getElement().clientWidth / 2)},
+          top: '10px',
           background: `${theme.text}`,
           zIndex: 100,
         }}
       />
       {/* Scrollable timeline container. Has width of parent*/}
-      <ScrollContainer innerRef={refTop} css={{ overflow: "hidden", width: "100%", height: "215px" }}
+      <ScrollContainer ref={refTop} css={{overflow: 'hidden', width: '100%', height: '215px'}}
         vertical={false}
         horizontal={true}
         onEndScroll={onEndScroll}
-        // dom elements with this id in the container will not trigger scrolling when dragged
-        ignoreElements={"#no-scrolling"}
+        ignoreElements={"#no-scrolling"}  // dom elements with this id in the container will not trigger scrolling when dragged
       >
         {/* Container. Overflows. Width based on parent times zoom level*/}
         <div ref={ref} css={timelineStyle}>
-          {/* Fake padding. TODO: Figure out a better way to pad absolutely positioned elements*/}
-          <div css={{ height: "10px" }} />
-          <TimelineSubtitleSegmentsList timelineWidth={width} />
-          <div css={{ position: "relative", height: "100px" }} >
-            <Waveforms timelineHeight={120} />
-            <CuttingSegmentsList
-              timelineWidth={width}
-              timelineHeight={120}
-              styleByActiveSegment={false}
-              tabable={false}
-            />
+          <div css={{height: '10px'}} />    {/* Fake padding. TODO: Figure out a better way to pad absolutely positioned elements*/}
+          <TimelineSubtitleSegmentsList timelineWidth={width}/>
+          <div css={{position: 'relative', height: '100px'}} >
+            <Waveforms timelineHeight={120}/>
+            <CuttingSegmentsList timelineWidth={width} timelineHeight={120} styleByActiveSegment={false} tabable={false}/>
           </div>
         </div>
       </ScrollContainer>
       {/* Mini Timeline. Makes it easier to understand position in scrollable timeline */}
-      <ThemedTooltip title={t("subtitleTimeline.overviewTimelineTooltip")}>
-        <div
-          onMouseDown={e => setCurrentlyAtToClick(e)}
-          css={{
-            position: "relative",
-            width: "100%",
-            height: "15px",
-            background: `linear-gradient(to right, grey ${(currentlyAt / duration) * 100}%,
-              lightgrey ${(currentlyAt / duration) * 100}%)`,
-            borderRadius: "3px",
-          }}
-          ref={refMini}
-        >
+      <GlobalHotKeys keyMap={scrubberKeyMap} handlers={handlers} allowChanges={true}>
+        <ThemedTooltip title={t('subtitleTimeline.overviewTimelineTooltip')}>
           <div
+            onMouseDown={e => setCurrentlyAtToClick(e)}
             css={{
-              position: "absolute",
-              width: "2px",
-              height: "100%",
-              left: (currentlyAt / duration) * (widthMiniTimeline),
-              top: 0,
-              background: "black",
+              position: 'relative',
+              width: '100%',
+              height: '15px',
+              background: `linear-gradient(to right, grey ${(currentlyAt / duration) * 100}%, lightgrey ${(currentlyAt / duration) * 100}%)`,
+              borderRadius: '3px',
             }}
-          />
-        </div>
-      </ThemedTooltip>
+            ref={refMini}
+          >
+            <div
+              css={{position: 'absolute', width: '2px', height: '100%', left: (currentlyAt / duration) * (widthMiniTimeline), top: 0, background: 'black'}}
+            />
+          </div>
+        </ThemedTooltip>
+      </GlobalHotKeys>
     </div>
 
 
 
-  // <div className="layoutRoot absoluteLayout">
-  //   {/* <Example /> */}
-  //   <Example2 />
-  //   {/* <TimelineSubtitleSegment
-  //   timelineWidth={width}
-  //   cue={{id: "42", text:"HI", startTime: 1000, endTime: 5000, tree:{children: [{type: "", value: ""}]}}}
-  //   index={0}
-  //   height={80}
-  //   /> */}
-  // </div>
+    // <div className="layoutRoot absoluteLayout">
+    //   {/* <Example /> */}
+    //   <Example2 />
+    //   {/* <TimelineSubtitleSegment
+    //   timelineWidth={width}
+    //   cue={{id: '42', text:"HI", startTime: 1000, endTime: 5000, tree:{children: [{type: "", value: ""}]}}}
+    //   index={0}
+    //   height={80}
+    //   /> */}
+    // </div>
   );
 };
 
@@ -190,34 +161,28 @@ const SubtitleTimeline: React.FC = () => {
 /**
  * Displays subtitle segments as a row of boxes
  */
-const TimelineSubtitleSegmentsList: React.FC<{ timelineWidth: number; }> = ({ timelineWidth }) => {
+const TimelineSubtitleSegmentsList: React.FC<{timelineWidth: number}> = ({timelineWidth}) => {
 
-  const arbitraryHeight = 80;
-  const subtitle = useAppSelector(selectSelectedSubtitleById);
+  const arbitraryHeight = 80
+  const subtitle = useSelector(selectSelectedSubtitleByFlavor)
 
   const segmentsListStyle = css({
-    position: "relative",
-    width: "100%",
+    position: 'relative',
+    width: '100%',
     height: `${arbitraryHeight}px`,
-    overflow: "hidden",
-  });
+    overflow: 'hidden',
+  })
 
   return (
     <div css={segmentsListStyle}>
-      {subtitle?.cues?.map((item, i) => {
+      {subtitle?.map((item, i) => {
         return (
-          <TimelineSubtitleSegment
-            timelineWidth={timelineWidth}
-            cue={item}
-            height={arbitraryHeight}
-            key={item.idInternal}
-            index={i}
-          />
-        );
+          <TimelineSubtitleSegment timelineWidth={timelineWidth} cue={item} height={arbitraryHeight} key={item.id} index={i}/>
+        )
       })}
     </div>
   );
-};
+}
 
 /**
  * A single segments for the timeline subtitle segments list
@@ -226,144 +191,143 @@ const TimelineSubtitleSegment: React.FC<{
   timelineWidth: number,
   cue: SubtitleCue,
   index: number,
-  height: number;
+  height: number
 }> = React.memo(props => {
 
   // Redux
-  const dispatch = useAppDispatch();
-  const selectedId = useAppSelector(selectSelectedSubtitleId);
-  const duration = useAppSelector(selectDuration);
+  const dispatch = useDispatch()
+  const selectedFlavor = useSelector(selectSelectedSubtitleFlavor)
+  const duration = useSelector(selectDuration)
 
   // Dimensions and position offsets in px. Required for resizing
-  const [absoluteWidth, setAbsoluteWidth] = useState(0);
-  const [absoluteHeight, setAbsoluteHeight] = useState(0);
-  const [absoluteLeft, setAbsoluteLeft] = useState(0);
-  const [absoluteTop, setAbsoluteTop] = useState(0);
+  const [absoluteWidth, setAbsoluteWidth] = useState(0)
+  const [absoluteHeight, setAbsoluteHeight] = useState(0)
+  const [absoluteLeft, setAbsoluteLeft] = useState(0)
+  const [absoluteTop, setAbsoluteTop] = useState(0)
 
-  const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
-  const [isGrabbed, setIsGrabbed] = useState(false);
+  const [controlledPosition, setControlledPosition] = useState({x: 0, y: 0})
+  const [isGrabbed, setIsGrabbed] = useState(false)
   const nodeRef = React.useRef(null); // For supressing "ReactDOM.findDOMNode() is deprecated" warning
 
-  const theme = useTheme();
+  const theme = useSelector(selectTheme);
   // Reposition scrubber when the current x position was changed externally
   useEffect(() => {
-    setControlledPosition({ x: (props.cue.startTime / duration) * (props.timelineWidth), y: 0 });
-  }, [props.cue.startTime, duration, props.timelineWidth]);
+    setControlledPosition({x: (props.cue.startTime / duration) * (props.timelineWidth), y: 0});
+  },[props.cue.startTime, duration, props.timelineWidth])
 
   // Set width and reset any resizing that may have happened meanwhile
   useEffect(() => {
-    setAbsoluteWidth(((props.cue.endTime - props.cue.startTime) / duration) * props.timelineWidth);
-    setAbsoluteHeight(props.height);
-    setAbsoluteLeft(0);
-    setAbsoluteTop(0);
-  }, [duration, props.cue.endTime, props.cue.startTime, props.height, props.timelineWidth]);
+    setAbsoluteWidth(((props.cue.endTime - props.cue.startTime) / duration) * props.timelineWidth)
+    setAbsoluteHeight(props.height)
+    setAbsoluteLeft(0)
+    setAbsoluteTop(0)
+  },[duration, props.cue.endTime, props.cue.startTime, props.height, props.timelineWidth])
 
   // Check for impossible timestamps and update state in redux
   const dispatchNewTimes = (newStartTime: number, newEndTime: number) => {
     if (newStartTime < 0) {
-      newStartTime = 0;
+      newStartTime = 0
     }
     if (newEndTime < newStartTime) {
-      newEndTime = newStartTime;
+      newEndTime = newStartTime
     }
 
     dispatch(setCueAtIndex({
-      identifier: selectedId,
+      identifier: selectedFlavor,
       cueIndex: props.index,
       newCue: {
         id: props.cue.id,
-        idInternal: props.cue.idInternal,
         text: props.cue.text,
         startTime: newStartTime,
         endTime: newEndTime,
-        tree: props.cue.tree,
-      },
-    }));
-  };
+        tree: props.cue.tree
+      }
+    }))
+  }
 
   // Resizable does not support resizing in the west/north directions out of the box,
   // so additional calculations are necessary.
   // Adapted from Resizable example code
-  const onResizeAbsolute: ResizableProps["onResize"] = (_event, { size, handle }) => {
+  const onResizeAbsolute = (event: any, {element, size, handle}: any) => {
     // Possible TODO: Find a way to stop resizing a segment beyond 0ms here instead of later
     let newLeft = absoluteLeft;
     let newTop = absoluteTop;
     const deltaHeight = size.height - absoluteHeight;
     const deltaWidth = size.width - absoluteWidth;
-    if (handle[0] === "n") {
+    if (handle[0] === 'n') {
       newTop -= deltaHeight;
-    } else if (handle[0] === "s") {
+    } else if (handle[0] === 's') {
       newTop += deltaHeight;
     }
-    if (handle[handle.length - 1] === "w") {
+    if (handle[handle.length - 1] === 'w') {
       newLeft -= deltaWidth;
-    } else if (handle[handle.length - 1] === "e") {
+    } else if (handle[handle.length - 1] === 'e') {
       newLeft += deltaWidth;
     }
 
-    setAbsoluteWidth(size.width);
-    setAbsoluteHeight(size.height);
-    setAbsoluteLeft(newLeft);
-    setAbsoluteTop(newTop);
+    setAbsoluteWidth(size.width)
+    setAbsoluteHeight(size.height)
+    setAbsoluteLeft(newLeft)
+    setAbsoluteTop(newTop)
   };
 
   // Update redux state based on the resize
-  const onResizeStop: ResizableProps["onResizeStop"] = (_event, { handle }) => {
+  const onResizeStop = (event: any, {element, size, handle}: any) => {
     // Calc new width, factoring in offset
-    const newWidth = absoluteWidth;
+    const newWidth = absoluteWidth
 
-    const newSegmentDuration = (newWidth / props.timelineWidth) * duration;
-    const timeDiff = (props.cue.endTime - props.cue.startTime) - newSegmentDuration;
+    const newSegmentDuration = (newWidth / props.timelineWidth) * duration
+    const timeDiff = (props.cue.endTime - props.cue.startTime) - newSegmentDuration
 
-    let newStartTime = props.cue.startTime;
-    let newEndTime = props.cue.endTime;
+    let newStartTime = props.cue.startTime
+    let newEndTime = props.cue.endTime
     // if handle === left, update startTime
-    if (handle === "w") {
-      newStartTime = props.cue.startTime + timeDiff;
+    if (handle === 'w') {
+      newStartTime = props.cue.startTime + timeDiff
     }
     // if handle === right, update endTime
-    if (handle === "e") {
-      newEndTime = props.cue.endTime + timeDiff;
+    if (handle === 'e') {
+      newEndTime = props.cue.endTime + timeDiff
     }
 
-    dispatchNewTimes(newStartTime, newEndTime);
+    dispatchNewTimes(newStartTime, newEndTime)
 
     // Reset resizing
     // Required when resizing beyond 0 multiple times,
     // because the time does not change, so the reset in useEffect does not trigger
-    setAbsoluteWidth(((props.cue.endTime - props.cue.startTime) / duration) * props.timelineWidth);
-    setAbsoluteHeight(props.height);
-    setAbsoluteLeft(0);
-    setAbsoluteTop(0);
-  };
+    setAbsoluteWidth(((props.cue.endTime - props.cue.startTime) / duration) * props.timelineWidth)
+    setAbsoluteHeight(props.height)
+    setAbsoluteLeft(0)
+    setAbsoluteTop(0)
+  }
 
-  const onStartDrag: DraggableEventHandler = _e => {
-    setIsGrabbed(true);
-  };
+  const onStartDrag = (e: DraggableEvent) => {
+    setIsGrabbed(true)
+  }
 
-  const onStopDrag: DraggableEventHandler = (_e, position) => {
+  const onStopDrag = (e: DraggableEvent, position: any) => {
     // Update position and thereby start/end times in redux
-    const { x } = position;
+    const {x} = position
     dispatchNewTimes(
       (x / props.timelineWidth) * (duration),
       (x / props.timelineWidth) * (duration) + (props.cue.endTime - props.cue.startTime)
-    );
+    )
 
-    setIsGrabbed(false);
-  };
+    setIsGrabbed(false)
+  }
 
   const onClick = () => {
     // Scroll to segment start
-    dispatch(setCurrentlyAt(props.cue.startTime));
+    dispatch(setCurrentlyAt(props.cue.startTime))
 
     // Inform list view which segment was clicked
-    dispatch(setFocusSegmentTriggered(true));
-    dispatch(setFocusSegmentId(props.cue.idInternal));
-    dispatch(setFocusSegmentTriggered2(true));
-  };
+    dispatch(setFocusSegmentTriggered(true))
+    dispatch(setFocusSegmentId(props.cue.id))
+    dispatch(setFocusSegmentTriggered2(true))
+  }
 
   const segmentStyle = css({
-    position: "absolute",
+    position: 'absolute',
 
     // Apply resizable calculations
     width: absoluteWidth,
@@ -372,60 +336,60 @@ const TimelineSubtitleSegment: React.FC<{
 
     background: `${theme.subtitle_segment_bg}`,
     border: `${theme.subtitle_segment_border}`,
-    borderRadius: "5px",
-    boxSizing: "border-box",
+    borderRadius: '5px',
+    boxSizing: 'border-box',
     zIndex: 1,
 
     cursor: isGrabbed ? "grabbing" : "grab",
 
     // Center text
-    display: "flex",
-    alignItems: "center",
-  });
+    display: 'flex',
+    alignItems: 'center',
+  })
 
   const textStyle = css({
-    overflow: "hidden",
+    overflow: 'hidden',
     whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    padding: "8px",
-    color: `${theme.subtitle_segment_text}`,
-  });
+    textOverflow: 'ellipsis',
+    padding: '8px',
+    color: `${theme.subtitle_segment_text}`
+  })
 
   return (
-    <Draggable
-      onStart={onStartDrag}
-      onStop={onStopDrag}
-      defaultPosition={{ x: 10, y: 10 }}
-      position={controlledPosition}
-      axis="x"
-      bounds="parent"
-      nodeRef={nodeRef}
-      cancel={".react-resizable-handle"}
-    >
-      <Resizable
-        height={absoluteHeight}
-        width={absoluteWidth}
-        onResize={onResizeAbsolute}
-        onResizeStop={onResizeStop}
-        // TODO: The "e" handle is currently NOT WORKING CORRECTLY!
-        //  The errounous behaviour can already be seens with a minimal
-        //  draggable + resizable example.
-        //  Fix most likely requires changes in one of those modules
-        resizeHandles={["w"]}
+      <Draggable
+        onStart={onStartDrag}
+        onStop={onStopDrag}
+        defaultPosition={{ x: 10, y: 10 }}
+        position={controlledPosition}
+        axis="x"
+        bounds="parent"
+        nodeRef={nodeRef}
+        cancel={".react-resizable-handle"}
       >
-        <div css={segmentStyle} ref={nodeRef} onClick={onClick} id="no-scrolling">
-          <span css={textStyle}>{props.cue.text}</span>
-        </div>
-      </Resizable>
-    </Draggable>
-  );
-});
+        <Resizable
+          height={absoluteHeight}
+          width={absoluteWidth}
+          onResize={onResizeAbsolute}
+          onResizeStop={onResizeStop}
+          // TODO: The 'e' handle is currently NOT WORKING CORRECTLY!
+          //  The errounous behaviour can already be seens with a minimal
+          //  draggable + resizable example.
+          //  Fix most likely requires changes in one of those modules
+          resizeHandles={['w']}
+        >
+          <div css={ segmentStyle } ref={nodeRef} onClick={onClick} id="no-scrolling">
+            <span css={textStyle}>{props.cue.text}</span>
+          </div>
+        </Resizable>
+      </Draggable>
+  )
+})
 
 // /**
 //  * For debugging
 //  * Minimal example: Resizable
 //  */
-//  const Example: React.FC = () => {
+//  const Example: React.FC<{}> = () => {
 
 //   const [absoluteWidth, setAbsoluteWidth] = useState(200)
 //   const [absoluteHeight, setAbsoluteHeight] = useState(200)
@@ -438,14 +402,14 @@ const TimelineSubtitleSegment: React.FC<{
 //     let newTop = absoluteTop;
 //     const deltaHeight = size.height - absoluteHeight;
 //     const deltaWidth = size.width - absoluteWidth;
-//     if (handle[0] === "n") {
+//     if (handle[0] === 'n') {
 //       newTop -= deltaHeight;
-//     } else if (handle[0] === "s") {
+//     } else if (handle[0] === 's') {
 //       newTop += deltaHeight;
 //     }
-//     if (handle[handle.length - 1] === "w") {
+//     if (handle[handle.length - 1] === 'w') {
 //       newLeft -= deltaWidth;
-//     } else if (handle[handle.length - 1] === "e") {
+//     } else if (handle[handle.length - 1] === 'e') {
 //       newLeft += deltaWidth;
 //     }
 
@@ -461,7 +425,7 @@ const TimelineSubtitleSegment: React.FC<{
 //       height={absoluteHeight}
 //       width={absoluteWidth}
 //       onResize={onResizeAbsolute}
-//       resizeHandles={["sw", "se", "nw", "ne", "w", "e", "n", "s"]}
+//       resizeHandles={['sw', 'se', 'nw', 'ne', 'w', 'e', 'n', 's']}
 //     >
 //       <div
 //         // className="box"
@@ -471,10 +435,7 @@ const TimelineSubtitleSegment: React.FC<{
 //           margin: `${absoluteTop}px 0px 0px ${absoluteLeft}px`,
 //         }}
 //       >
-//         <span className="text">
-//           {"Raw use of <Resizable> element with controlled position.
-//           Resize and reposition in all directions" + absoluteLeft}
-//         </span>
+//         <span className="text">{"Raw use of <Resizable> element with controlled position. Resize and reposition in all directions" + absoluteLeft}</span>
 //       </div>
 //     </Resizable>
 //   );
@@ -485,7 +446,7 @@ const TimelineSubtitleSegment: React.FC<{
 //  * Minimal example: Draggable + Resizable
 //  * Erratic behaviour when resizing the east handle for smallish widths
 //  */
-// const Example2: React.FC = () => {
+// const Example2: React.FC<{}> = () => {
 
 //   const [absoluteWidth, setAbsoluteWidth] = useState(200)
 //   const [absoluteHeight, setAbsoluteHeight] = useState(200)
@@ -498,14 +459,14 @@ const TimelineSubtitleSegment: React.FC<{
 //     let newTop = absoluteTop;
 //     const deltaHeight = size.height - absoluteHeight;
 //     const deltaWidth = size.width - absoluteWidth;
-//     if (handle[0] === "n") {
+//     if (handle[0] === 'n') {
 //       newTop -= deltaHeight;
-//     } else if (handle[0] === "s") {
+//     } else if (handle[0] === 's') {
 //       newTop += deltaHeight;
 //     }
-//     if (handle[handle.length - 1] === "w") {
+//     if (handle[handle.length - 1] === 'w') {
 //       newLeft -= deltaWidth;
-//     } else if (handle[handle.length - 1] === "e") {
+//     } else if (handle[handle.length - 1] === 'e') {
 //       newLeft += deltaWidth;
 //     }
 
@@ -533,7 +494,7 @@ const TimelineSubtitleSegment: React.FC<{
 //           height={absoluteHeight}
 //           width={absoluteWidth}
 //           onResize={onResizeAbsolute}
-//           resizeHandles={["sw", "se", "nw", "ne", "w", "e", "n", "s"]}
+//           resizeHandles={['sw', 'se', 'nw', 'ne', 'w', 'e', 'n', 's']}
 //         >
 //           <div style={ leStyle }>
 //             test
@@ -544,4 +505,4 @@ const TimelineSubtitleSegment: React.FC<{
 //   )
 // }
 
-export default SubtitleTimeline;
+export default SubtitleTimeline

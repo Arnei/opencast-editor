@@ -34,7 +34,10 @@ jobs:
 
       - name: update language list
         working-directory: src/i18n/locales
-        run: ./.github/generate-lngs.sh > ../lngs-generated.ts
+        run: |
+          echo -n '[ "' > locales.json
+          echo -n ??-??.json | sed 's/  */", "/g' >> locales.json
+          echo '" ]' >> locales.json
 
       - name: upload translations
         run: |

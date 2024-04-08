@@ -33,24 +33,16 @@ export interface TimelineState {
 }
 
 export interface SubtitlesFromOpencast {
-  id: string,
+  flavor: Flavor,
   subtitle: string,
-  tags: string[],
-}
-
-export interface SubtitlesInEditor {
-  cues: SubtitleCue[],
-  tags: string[],
 }
 
 export interface SubtitleCue {
-  id?: string,              // Actually not useful as an identifier, as it is not guaranteed to exist
-  idInternal: string,       // Identifier for internal use. Has nothing to do with the webvtt parser.
+  id: string,
   text: string,
   startTime: number,
   endTime: number,
-  // Odditiy of the webvtt parser. Changes to text also need to be applied to tree.children[0].value
-  tree: {children: [{type: string, value: string}]}
+  tree: {children: [{type: string, value: string}]}   // Odditiy of the webvtt parser. Changes to text also need to be applied to tree.children[0].value
   // And many more
 }
 
@@ -67,7 +59,7 @@ export interface ExtendedSubtitleCue extends SubtitleCue {
 export interface PostEditArgument {
   segments: Segment[]
   tracks: Track[]
-  subtitles: SubtitlesFromOpencast[]
+  subtitles: {flavor: Flavor, subtitle: string}[]
 }
 
 export interface PostAndProcessEditArgument extends PostEditArgument{
@@ -86,7 +78,7 @@ export enum MainMenuStateNames {
 }
 
 export interface httpRequestState {
-  status: "idle" | "loading" | "success" | "failed",
+  status: 'idle' | 'loading' | 'success' | 'failed',
   error: string | undefined,
-  errorReason: "unknown" | "workflowActive"
+  errorReason: 'unknown' | 'workflowActive'
 }
