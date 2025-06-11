@@ -40,6 +40,7 @@ import { backgroundBoxStyle, basicButtonStyle } from "../cssStyles";
 import { BaseReactPlayerProps } from "react-player/base";
 import { ErrorBox } from "@opencast/appkit";
 import { LuFullscreen } from "react-icons/lu";
+import { isSafari } from "react-device-detect";
 
 const VideoPlayers: React.FC<{
   refs?: React.MutableRefObject<(VideoPlayerForwardRef | null)[]>,
@@ -420,10 +421,37 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
 
     const shouldHide = fullscreenPlayerIndex !== undefined && fullscreenPlayerIndex !== dataKey;
 
+    // Because of Safari and the fact that it is not able to read and occupy based on rendered aspect ratio,
+    // We need to toggle the display, in order for Safari to update itself!
+    const initialVideoPlayerWrapperDisplay = isSafari ? "none" : "flex";
+    const [videoPlayerWrapperDisplay, setVideoPlayerWrapperDisplay] = useState(initialVideoPlayerWrapperDisplay);
+
+    useEffect(() => {
+      if (ready && isSafari) {
+        const timeout = setTimeout(() => {
+          setVideoPlayerWrapperDisplay("flex");
+        }, 10);
+        return () => clearTimeout(timeout);
+      }
+    }, [ready]);
+
+    // Watch fullscreenPlayerIndex and toggle display briefly, in order for Safari to update itself!
+    useEffect(() => {
+      if (fullscreenPlayerIndex !== undefined && isSafari) {
+        setVideoPlayerWrapperDisplay("none");
+        const timeout = setTimeout(() => {
+          setVideoPlayerWrapperDisplay("flex");
+        }, 10);
+        return () => clearTimeout(timeout);
+      }
+    }, [fullscreenPlayerIndex]);
+
     const videoPlayerWrapperStyles = css({
       height: "100%",
       width: "100%",
-      display: shouldHide ? "none" : "flex",
+      display: shouldHide ? "none" : videoPlayerWrapperDisplay,
+
+      flexGrow: "1",
 
       // For single video, center!
       ...(first && last) && { justifyContent: "center" },
@@ -450,7 +478,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
               <ReactPlayer url={url}
                 // css={[backgroundBoxStyle(theme), reactPlayerStyle]}  // moved to wrapper
                 ref={ref}
-                width="unset"
+                width="100%"
                 height="100%"
                 playing={isPlaying}
                 volume={volume}
