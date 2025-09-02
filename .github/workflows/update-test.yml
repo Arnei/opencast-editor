@@ -19,7 +19,7 @@ jobs:
       id: build-path
 
     - name: Checkout Sources
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{github.event.pull_request.head.ref}}
         repository: ${{github.event.pull_request.head.repo.full_name}}
@@ -138,7 +138,7 @@ jobs:
 
     steps:
     - name: Checkout Sources
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Get changed locale files
       uses: dorny/paths-filter@v3
