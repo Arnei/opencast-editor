@@ -23,6 +23,7 @@ import { useTheme } from "../themes";
 import Thumbnail from "./Thumbnail";
 import Cutting from "./Cutting";
 import Chapter from "./Chapter";
+import InteractiveElements from "./InteractiveElements";
 
 /**
  * A container for the main functionality
@@ -125,6 +126,12 @@ const MainContent: React.FC = () => {
       return (
         <div css={[mainContentStyle, thumbnailSelectStyle]} role="main">
           <Thumbnail />
+        </div>
+      );
+    } else if (mainMenuState === MainMenuStateNames.interactiveElements) {
+      return (
+        <div css={[mainContentStyle, subtitleSelectStyle]} role="main">
+          <InteractiveElements />
         </div>
       );
     } else if (mainMenuState === MainMenuStateNames.finish) {

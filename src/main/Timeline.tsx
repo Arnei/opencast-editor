@@ -41,6 +41,7 @@ import {
   selectActiveSegmentIndex as chapterSelectActiveSegmentIndex,
   moveCut as chapterMoveCut,
 } from "../redux/chapterSlice";
+import InteractiveElementsTimeline from "./InteractiveElementsTimeline";
 
 /**
  * A container for visualizing the cutting of the video, as well as for controlling
@@ -57,6 +58,7 @@ const Timeline: React.FC<{
   setCurrentlyAt: ActionCreatorWithPayload<number, string>,
   setIsPlaying: ActionCreatorWithPayload<boolean, string>,
   isChapters?: boolean,
+  isInteractiveElements?: boolean,
 }> = ({
   timelineHeight = 200,
   styleByActiveSegment = true,
@@ -66,6 +68,7 @@ const Timeline: React.FC<{
   setCurrentlyAt,
   setIsPlaying,
   isChapters = false,
+  isInteractiveElements = false,
 }) => {
 
   // Init redux variables
@@ -141,7 +144,7 @@ const Timeline: React.FC<{
   return (
     <ScrollContainer
       innerRef={scrollContainerRef}
-      css={{ overflowY: "hidden", width: "100%", height: `${timelineHeight + topOffset}px` }}
+      css={{ overflowY: "hidden", width: "100%", height: `${timelineHeight + topOffset}px`, flexShrink: 0 }}
       vertical={false}
       horizontal={true}
       // dom elements with this id in the container will not trigger scrolling when dragged
@@ -174,6 +177,12 @@ const Timeline: React.FC<{
                 selectSegments={chapterSelectSegments}
                 selectActiveSegmentIndex={chapterSelectActiveSegmentIndex}
                 moveCut={chapterMoveCut}
+              />
+            }
+            {isInteractiveElements &&
+              <InteractiveElementsTimeline
+                timelineWidth={width}
+                timelineHeight={timelineHeight}
               />
             }
             <SegmentsList

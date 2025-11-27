@@ -6,6 +6,7 @@ import { Segment, httpRequestState, Track, Workflow, SubtitlesFromOpencast } fro
 import { roundToDecimalPlace } from "../util/utilityFunctions";
 import { settings } from "../config";
 import { createAppAsyncThunk } from "./createAsyncThunkWithTypes";
+import { InteractiveElementFromOpencast } from "./interactiveElementsSlice";
 
 export interface video {
   isPlaying: boolean,             // Are videos currently playing?
@@ -21,6 +22,8 @@ export interface video {
   customizedTrackSelection: boolean, // Did user select tracks for processing
   subtitlesFromOpencast: SubtitlesFromOpencast[],
   chaptersFromOpencast: SubtitlesFromOpencast[],
+  textBoxesFromOpencast: InteractiveElementFromOpencast | undefined,
+  quizzesFromOpencast: InteractiveElementFromOpencast | undefined,
   activeSegmentIndex: number,     // Index of the segment that is currenlty hovered
   selectedWorkflowId: string,     // Id of the currently selected workflow
   aspectRatios: { width: number, height: number; }[],  // Aspect ratios of every video
@@ -58,6 +61,8 @@ export const initialState: video & httpRequestState = {
   customizedTrackSelection: false,
   subtitlesFromOpencast: [],
   chaptersFromOpencast: [],
+  textBoxesFromOpencast: undefined,
+  quizzesFromOpencast: undefined,
   activeSegmentIndex: 0,
   selectedWorkflowId: "",
   previewTriggered: false,
@@ -345,6 +350,8 @@ const videoSlice = createSlice({
           state.subtitlesFromOpencast = payload.subtitles : [];
         state.chaptersFromOpencast = payload.chapters ?
           state.chaptersFromOpencast = payload.chapters : [];
+        state.textBoxesFromOpencast = payload.textboxes ? payload.textboxes : undefined;
+        state.quizzesFromOpencast = payload.quizzes ? payload.quizzes : undefined;
         state.duration = payload.duration;
         state.title = payload.title;
         state.segments = parseSegments(payload.segments, payload.duration);
@@ -421,6 +428,9 @@ const videoSlice = createSlice({
       }
       return undefined;
     },
+    selectTextBoxesFromOpencast: state => state.textBoxesFromOpencast,
+    selectQuizzesFromOpencast: state => state.quizzesFromOpencast,
+    dummy: () => undefined,
   },
 });
 
@@ -606,7 +616,10 @@ export const {
   selectSubtitlesFromOpencastById,
   selectChaptersFromOpencast,
   selectChaptersFromOpencastById,
+  selectTextBoxesFromOpencast,
+  selectQuizzesFromOpencast,
   selectVideos,
+  dummy,
 } = videoSlice.selectors;
 
 export default videoSlice.reducer;
