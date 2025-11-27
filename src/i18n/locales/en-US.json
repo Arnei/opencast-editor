@@ -6,6 +6,7 @@
       "subtitles-button": "Subtitles",
       "chapters-button": "Chapters",
       "thumbnail-button": "Thumbnail",
+      "interactiveElements-button": "Interactive Elements",
       "metadata-button": "Metadata",
       "keyboard-controls-button": "Keyboard Controls",
       "tooltip-aria": "Main Navigation"
@@ -334,6 +335,39 @@
 
     "chapters": {
       "editTitle": "Chapter Editor"
+    },
+
+    "interactiveElements" : {
+      "title": "Interactive Elements Editor",
+      "addTextbox": "Add Textbox",
+      "addTextbox-tooltip": "Add a textbox at the current timeline marker position.",
+      "addTextbox-tooltip-aria": "Add. Add a textbox at the current timeline marker position.",
+      "addQuiz": "Add Quiz",
+      "addQuiz-tooltip": "Add a quiz at the current timeline marker position.",
+      "addQuiz-tooltip-aria": "Add. Add a quiz at the current timeline marker position.",
+      "editElement-tooltip": "Edit the current element",
+      "editElement-tooltip-aria": "Edit the current element",
+      "deleteElement-tooltip": "Delete the current element",
+      "deleteElement-tooltip-aria": "Delete the current element"
+    },
+
+    "interactiveElementsEditor": {
+      "title": {
+        "textbox": "Textbox Editor",
+        "quiz": "Quiz Editor"
+      },
+      "start": "Start",
+      "submit": "Submit",
+      "textbox": {
+        "text": "Text",
+        "link": "Link"
+      },
+      "quiz": {
+        "question": "Question",
+        "answers": "Answers",
+        "answerCorrect": "Correct",
+        "answerIncorrect": "Incorrect"
+      }
     },
 
     "keyboardControls": {
