@@ -19,6 +19,7 @@ import {
   updateStartAtIndex,
 } from "../redux/interactiveElementsSlice";
 import InteractiveElementsEditor from "./InteractiveElementEditor";
+import { selectSegments } from "../redux/videoSlice";
 
 /**
  * Displays an overview of interactive elements and assorted actions
@@ -126,6 +127,15 @@ const ListItem: React.FC<{
 
   const modalRef = useRef<ModalHandle>(null);
 
+  const segments = useAppSelector(selectSegments);
+  let wouldBeDeleted = false;
+
+  for (const segment of segments) {
+    if (segment.start < item.start && segment.end > item.start) {
+      wouldBeDeleted = segment.deleted;
+    }
+  }
+
   const updateStartTime = (value: number) => {
     dispatch(updateStartAtIndex({
       index: props.index,
@@ -159,7 +169,7 @@ const ListItem: React.FC<{
   const typeStyle = css({
     width: "32px",
     height: "32px",
-    background: `${theme.element_bg}`,
+    background: wouldBeDeleted ? "rgba(200, 0, 0, 1)" : `${theme.element_bg}`,
     border: "1px solid #ccc",
     zIndex: "1000",
     display: "flex",
