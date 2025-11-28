@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { css } from "@emotion/react";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { selectDuration } from "../redux/videoSlice";
+import { selectDuration, selectSegments } from "../redux/videoSlice";
 import Draggable, { DraggableEventHandler } from "react-draggable";
 import { useTheme } from "../themes";
 import { InteractiveElement, selectInteractiveElements, updateStartAtIndex } from "../redux/interactiveElementsSlice";
@@ -54,12 +54,20 @@ const InteractiveElementSegment: React.FC<{
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const duration = useAppSelector(selectDuration);
+  const segments = useAppSelector(selectSegments);
+  let wouldBeDeleted = false;
 
   const modalRef = useRef<ModalHandle>(null);
   const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [isGrabbed, setIsGrabbed] = useState(false);
   const nodeRef = useRef(null); // For supressing "ReactDOM.findDOMNode() is deprecated" warning
   const draggedRef = useRef<boolean>(false); // For preventing onClicks when done dragging
+
+  for (const segment of segments) {
+    if (segment.start < props.item.start && segment.end > props.item.start) {
+      wouldBeDeleted = segment.deleted;
+    }
+  }
 
   useEffect(() => {
     setControlledPosition({ x: (props.item.start / duration) * (props.timelineWidth), y: 0 });
@@ -90,7 +98,7 @@ const InteractiveElementSegment: React.FC<{
     position: "absolute",
     width: "32px",
     height: "32px",
-    background: `${theme.element_bg}`,
+    background: wouldBeDeleted ? "rgba(200, 0, 0, 1)" : `${theme.element_bg}`,
     border: "1px solid #ccc",
     zIndex: "1000",
     display: "flex",
