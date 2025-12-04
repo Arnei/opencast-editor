@@ -343,7 +343,9 @@
       "editElement-tooltip": "Edit the current element",
       "editElement-tooltip-aria": "Edit the current element",
       "deleteElement-tooltip": "Delete the current element",
-      "deleteElement-tooltip-aria": "Delete the current element"
+      "deleteElement-tooltip-aria": "Delete the current element",
+      "deleteElement-warning-header": "Caution!",
+      "deleteElement-warning": "This will remove the element! Are you sure?"
     },
 
     "interactiveElementsEditor": {

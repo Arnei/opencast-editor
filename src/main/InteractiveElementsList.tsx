@@ -6,7 +6,7 @@ import { css } from "@emotion/react";
 import { TimeInput } from "./SubtitleListEditor";
 import { memoize } from "lodash";
 import { useTranslation } from "react-i18next";
-import { ModalHandle, ProtoButton, useColorScheme } from "@opencast/appkit";
+import { ConfirmationModal, ConfirmationModalHandle, ModalHandle, ProtoButton, useColorScheme } from "@opencast/appkit";
 import { useTheme } from "../themes";
 import { convertMsToReadableString } from "../util/utilityFunctions";
 import { LuFileQuestion, LuPen, LuSquareSigma, LuTrash } from "react-icons/lu";
@@ -126,6 +126,7 @@ const ListItem: React.FC<{
   const { scheme } = useColorScheme();
 
   const modalRef = useRef<ModalHandle>(null);
+  const deleteModalRef = useRef<ConfirmationModalHandle>(null);
 
   const segments = useAppSelector(selectSegments);
   let wouldBeDeleted = false;
@@ -236,8 +237,7 @@ const ListItem: React.FC<{
       <ThemedTooltip title={t("interactiveElements.deleteElement-tooltip")}>
         <ProtoButton
           aria-label={t("interactiveElements.deleteElement-tooltip-aria")}
-          onClick={deleteItem}
-          onKeyDown={makeEnterSpaceHandler(deleteItem)}
+          onClick={() => deleteModalRef.current?.open()}
           css={[basicButtonStyle(theme), segmentButtonStyle]}
         >
           <LuTrash />
@@ -247,6 +247,22 @@ const ListItem: React.FC<{
         element={item}
         modalRef={modalRef}
       />
+      <ConfirmationModal
+        title={t("interactiveElements.deleteElement-warning-header")}
+        buttonContent={t("modal.confirm")}
+        onSubmit={() => {
+          deleteModalRef.current?.done();
+          deleteItem();
+        }}
+        ref={deleteModalRef}
+        text={{
+          cancel: t("modal.cancel"),
+          close: t("modal.close"),
+          areYouSure: t("modal.areYouSure"),
+        }}
+      >
+        {t("interactiveElements.deleteElement-warning")}
+      </ConfirmationModal>
     </div>
   );
 });
