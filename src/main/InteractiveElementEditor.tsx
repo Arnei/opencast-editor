@@ -90,6 +90,13 @@ const TextboxEditor: React.FC<{
     });
   };
 
+  const updateLink = (value: string) => {
+    setTextbox({
+      ...textbox,
+      link: value,
+    });
+  };
+
   const submit = () => {
     dispatch(addInteractiveElement(textbox));
     modalRef.current?.close?.();
@@ -129,7 +136,7 @@ const TextboxEditor: React.FC<{
         <input
           css={timeInputStyle(theme)}
           value={textbox.link}
-          onChange={e => updateText(e.target.value)}
+          onChange={e => updateLink(e.target.value)}
         />
       </div>
       <ProtoButton
