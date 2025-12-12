@@ -164,7 +164,10 @@ const QuizEditor: React.FC<{
     idInternal: nanoid(),
     start: 0,
     question: "",
-    answers: [],
+    answers: [
+      { text: "", correct: true },
+      { text: "", correct: true },
+    ],
     type: "Quiz",
     ...element,
   });
