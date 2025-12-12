@@ -168,7 +168,7 @@ const Timeline: React.FC<{
   };
 
   return (
-    <CuttingActionsContextMenu>
+    <CuttingActionsContextMenu isChapters={isChapters} isInteractiveElements={isInteractiveElements}>
       <div css={css({ position: "absolute" })}>
         <TimelineStamps
           durationMs={duration}
