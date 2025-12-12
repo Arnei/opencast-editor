@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ConfirmationModal, ConfirmationModalHandle, ModalHandle, ProtoButton, useColorScheme } from "@opencast/appkit";
 import { useTheme } from "../themes";
 import { convertMsToReadableString } from "../util/utilityFunctions";
-import { LuFileQuestion, LuPen, LuSquareSigma, LuTrash } from "react-icons/lu";
+import { LuFileQuestion, LuPen, LuType, LuTrash } from "react-icons/lu";
 import { ThemedTooltip } from "./Tooltip";
 import { basicButtonStyle, timeInputStyle } from "../cssStyles";
 import {
@@ -210,7 +210,7 @@ const ListItem: React.FC<{
       zIndex: "1000",
     }]}>
       <div css={typeStyle}>
-        {item.type === "Textbox" ? <LuSquareSigma /> : undefined}
+        {item.type === "Textbox" ? <LuType /> : undefined}
         {item.type === "Quiz" ? <LuFileQuestion /> : undefined}
       </div>
       <TimeInput

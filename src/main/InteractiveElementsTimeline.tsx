@@ -5,7 +5,7 @@ import { selectDuration, selectSegments } from "../redux/videoSlice";
 import Draggable, { DraggableEventHandler } from "react-draggable";
 import { useTheme } from "../themes";
 import { InteractiveElement, selectInteractiveElements, updateStartAtIndex } from "../redux/interactiveElementsSlice";
-import { LuFileQuestion, LuSquareSigma } from "react-icons/lu";
+import { LuFileQuestion, LuType } from "react-icons/lu";
 import InteractiveElementsEditor from "./InteractiveElementEditor";
 import { ModalHandle } from "@opencast/appkit";
 
@@ -122,7 +122,7 @@ const InteractiveElementSegment: React.FC<{
         cancel={".react-resizable-handle"}
       >
         <div css={segmentStyle} ref={nodeRef} onClick={editItem} className="prevent-drag-scroll">
-          {props.item.type === "Textbox" ? <LuSquareSigma /> : undefined}
+          {props.item.type === "Textbox" ? <LuType /> : undefined}
           {props.item.type === "Quiz" ? <LuFileQuestion /> : undefined}
         </div>
       </Draggable>
