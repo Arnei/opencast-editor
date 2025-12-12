@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 
 import { BREAKPOINTS, basicButtonStyle, undisplay } from "../cssStyles";
 
-import { LuFileQuestion, LuSquareSigma } from "react-icons/lu";
+import { LuFileQuestion, LuType } from "react-icons/lu";
 
 import { css } from "@emotion/react";
 
@@ -98,7 +98,7 @@ const InteractiveElementsActions: React.FC = () => {
           }}
           css={[basicButtonStyle(theme), cuttingActionButtonStyle]}
         >
-          <LuSquareSigma />
+          <LuType />
           <span css={undisplay(BREAKPOINTS.medium)}>{t("interactiveElements.addTextbox")}</span>
         </ProtoButton>
       </ThemedTooltip>
