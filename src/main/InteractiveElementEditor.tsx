@@ -243,7 +243,8 @@ const QuizEditor: React.FC<{
   });
 
   const segmentButtonStyle = css({
-    height: "32px",
+    height: "100%",
+    width: "44px",
     boxShadow: `${theme.boxShadow}`,
     background: `${theme.element_bg}`,
   });
@@ -279,6 +280,11 @@ const QuizEditor: React.FC<{
         />
         <label>{t("interactiveElementsEditor.quiz.answers")}</label>
         <div css={answersStyle}>
+          <div css={answerStyle}>
+            <div css={{ paddingLeft: "15px" }}>{t("interactiveElementsEditor.quiz.answer")}</div>
+            <div>{t("interactiveElementsEditor.quiz.answerCorrect")}</div>
+            <div>{t("interactiveElementsEditor.quiz.answerDelete")}</div>
+          </div>
           { quiz.answers.map((answer, i) => {
             return (
               <div key={i} css={answerStyle}>
@@ -287,14 +293,12 @@ const QuizEditor: React.FC<{
                   value={answer.text}
                   onChange={e => updateAnswerText(i, e.target.value)}
                 />
-                <ProtoButton
-                  css={[basicButtonStyle(theme), segmentButtonStyle]}
-                  onClick={() => updateAnswerCorrect(i, !answer.correct)}
-                >
-                  {answer.correct
-                    ? t("interactiveElementsEditor.quiz.answerCorrect")
-                    : t("interactiveElementsEditor.quiz.answerIncorrect")}
-                </ProtoButton>
+                <input
+                  type={"checkbox"}
+                  css={basicButtonStyle(theme)}
+                  checked={answer.correct}
+                  onChange={e => updateAnswerCorrect(i, e.target.checked)}
+                />
                 <ProtoButton
                   css={[basicButtonStyle(theme), segmentButtonStyle]}
                   onClick={() => removeAnswer(i)}

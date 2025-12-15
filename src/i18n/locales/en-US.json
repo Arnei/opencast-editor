@@ -367,8 +367,9 @@
       "quiz": {
         "question": "Question",
         "answers": "Answers",
+        "answer": "Answer",
         "answerCorrect": "Correct",
-        "answerIncorrect": "Incorrect"
+        "answerDelete": "Remove"
       }
     },
 
