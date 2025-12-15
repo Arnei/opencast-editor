@@ -189,7 +189,6 @@ const ListItem: React.FC<{
   const textFieldStyle = css({
     flexGrow: "7",
     minWidth: "100px",
-    maxWidth: "200px",
     height: "32px",
     background: `${theme.element_bg}`,
     border: "1px solid #ccc",
@@ -238,7 +237,7 @@ const ListItem: React.FC<{
         <ProtoButton
           aria-label={t("interactiveElements.deleteElement-tooltip-aria")}
           onClick={() => deleteModalRef.current?.open()}
-          css={[basicButtonStyle(theme), segmentButtonStyle]}
+          css={[basicButtonStyle(theme), segmentButtonStyle, { marginRight: "2px" }]}
         >
           <LuTrash />
         </ProtoButton>
