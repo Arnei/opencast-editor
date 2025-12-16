@@ -105,6 +105,11 @@ const TextboxEditor: React.FC<{
   const modalStyle = css({
     display: "flex",
     flexDirection: "column",
+    gap: "10px",
+  });
+
+  const descriptionStyle = css({
+    maxWidth: "400px",
   });
 
   const fieldsStyle = css({
@@ -117,6 +122,9 @@ const TextboxEditor: React.FC<{
 
   return (
     <div css={modalStyle}>
+      <div css={descriptionStyle}>
+        {t("interactiveElementsEditor.textbox.description")}
+      </div>
       <div css={fieldsStyle}>
         <label>{t("interactiveElementsEditor.start")}</label>
         <TimeInput
@@ -232,6 +240,11 @@ const QuizEditor: React.FC<{
   const modalStyle = css({
     display: "flex",
     flexDirection: "column",
+    gap: "10px",
+  });
+
+  const descriptionStyle = css({
+    maxWidth: "480px",
   });
 
   const fieldsStyle = css({
@@ -263,6 +276,9 @@ const QuizEditor: React.FC<{
 
   return (
     <div css={modalStyle}>
+      <div css={descriptionStyle}>
+        {t("interactiveElementsEditor.quiz.description")}
+      </div>
       <div css={fieldsStyle}>
         <label>{t("interactiveElementsEditor.start")}</label>
         <TimeInput

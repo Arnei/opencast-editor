@@ -96,7 +96,8 @@ const InteractiveElementSegment: React.FC<{
 
   const segmentStyle = css({
     position: "absolute",
-    width: "32px",
+    width: props.item.type === "Textbox" ? `${(10000 / duration) * 100}%` : "32px",
+    minWidth: "32px",
     height: "32px",
     background: wouldBeDeleted ? "rgba(200, 0, 0, 1)" : `${theme.element_bg}`,
     border: "1px solid #ccc",
