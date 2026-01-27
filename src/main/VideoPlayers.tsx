@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useImperativeHandle } from "react";
 
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 
 import { AppDispatch, useAppDispatch, useAppSelector } from "../redux/store";
 import {
@@ -125,6 +125,7 @@ interface VideoPlayerProps {
   subtitleUrl: string,
   first: boolean,
   last: boolean,
+  overwritePlayerCSS?: SerializedStyles,
   selectIsPlaying: (state: RootState) => boolean,
   selectIsMuted: (state: RootState) => boolean,
   selectVolume: (state: RootState) => number,
@@ -167,6 +168,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       subtitleUrl,
       first,
       last,
+      overwritePlayerCSS,
       selectCurrentlyAtInSeconds,
       selectPreviewTriggered,
       selectClickTriggered,
@@ -408,6 +410,8 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       height: "100%",
       width: "100%",
       display: "flex",
+      flex: "1 1 0",
+      minHeight: "0",
 
       // For single video, center!
       ...(first && last) && { justifyContent: "center" },
@@ -427,7 +431,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
         return (
           <div css={videoPlayerWrapperStyles}>
             <ReactPlayer url={url}
-              css={[backgroundBoxStyle(theme), reactPlayerStyle]}
+              css={overwritePlayerCSS ?? [backgroundBoxStyle(theme), reactPlayerStyle]}
               ref={ref}
               width="unset"
               height="100%"

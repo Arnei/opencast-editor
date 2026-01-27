@@ -201,10 +201,10 @@
       "title": "Thumbnail Editor",
       "noThumbnailAvailable": "No Thumbnail available",
       "previewImageAlt": "Thumbnail for track",
-      "buttonGenerate": "Generate",
+      "buttonGenerate": "Generate from frame",
       "buttonGenerate-tooltip": "Generate a new thumbnail from the current timeline marker position",
       "buttonGenerate-tooltip-aria": "Generate a new thumbnail from the current timeline marker position",
-      "buttonUpload": "Upload",
+      "buttonUpload": "Upload image",
       "buttonUpload-tooltip": "Upload an image",
       "buttonUpload-tooltip-aria": "Upload an image",
       "buttonUseForOtherThumbnails": "Use for all tracks",
@@ -218,7 +218,9 @@
       "buttonGenerateAll-tooltip-aria": "Generate new thumbnails for all tracks from the current timeline marker position",
       "explanation": "Upload or generate a thumbnail for each track.",
       "primary": "Primary",
-      "secondary": "Secondary"
+      "secondary": "Secondary",
+      "backButton": "Back",
+      "backButton-tooltip": "Return to thumbnail selection"
     },
 
     "thumbnailSimple": {

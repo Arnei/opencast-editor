@@ -446,6 +446,15 @@ const videoSlice = createSlice({
       const displayDuration = (1 - state.timelineZoom) * (durationInSeconds - minDisplayTime) + minDisplayTime;
       return displayDuration;
     },
+    selectPrimaryThumbnailTrack: state => {
+      const videos = state.tracks.filter((track: Track) => track.video_stream.available === true);
+      const primaryTrack = videos.reduce<Track | undefined>((min, curr) => {
+        if (curr.thumbnailPriority < 0) { return min; }
+        if (!min || curr.thumbnailPriority < min.thumbnailPriority) { return curr; }
+        return min;
+      }, undefined);
+      return primaryTrack;
+    },
   },
 });
 
@@ -633,6 +642,7 @@ export const {
   selectChaptersFromOpencastById,
   selectVideos,
   selectDisplayDuration,
+  selectPrimaryThumbnailTrack,
 } = videoSlice.selectors;
 
 export default videoSlice.reducer;
