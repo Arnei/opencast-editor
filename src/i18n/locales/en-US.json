@@ -332,7 +332,7 @@
     },
 
     "keyboardControls": {
-      "header": "Shortcuts",
+      "header": "Hotkeys",
       "defaultGroupName": "General",
       "missingLabel": "Unknown",
       "groupVideoPlayer": "Video Player",
