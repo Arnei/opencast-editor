@@ -162,8 +162,7 @@ const PreviewMode: React.FC<{
 
   return (
     <ThemedTooltip
-      title={t("video.previewButton-tooltip", {
-        status: (isPlayPreview ? "on" : "off"),
+      title={t(isPlayPreview ? "video.previewButton-tooltip-on" : "video.previewButton-tooltip-off", {
         hotkeyName: rewriteKeys(KEYMAP.videoPlayer.preview.key),
       })}
     >
