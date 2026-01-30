@@ -27,6 +27,8 @@ const Error: React.FC = () => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+
+    fontSize: "small",
   });
 
   const theEndStyle = css({
@@ -35,6 +37,8 @@ const Error: React.FC = () => {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingRight: "20px",
+    paddingLeft: "20px",
     gap: "10px",
   });
 

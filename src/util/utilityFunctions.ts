@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { WebVTTParser, WebVTTSerializer } from "webvtt-parser";
 import { ExtendedSubtitleCue, SubtitleCue } from "../types";
 import { useEffect, useState, useRef } from "react";
-import i18next from "i18next";
+import i18next, { TFunction } from "i18next";
 
 export const roundToDecimalPlace = (num: number, decimalPlace: number) => {
   const decimalFactor = Math.pow(10, decimalPlace);
@@ -221,3 +221,16 @@ export const isJson = (text: string) => {
     return false;
   }
 };
+
+// Error message depending on the http error code
+export function readableErrorMessage(t: TFunction, errorMessage?: string) {
+  if (!errorMessage) {
+    return t("error.comError-text");
+  }
+
+  if (errorMessage.includes("403") || errorMessage.includes("401")) {
+    return t("error.unauthorizedError-text");
+  } else {
+    return t("error.comError-text");
+  }
+}
