@@ -73,6 +73,7 @@ interface iSettings {
     languages: { [key: string]: subtitleTags; } | undefined,
     icons: { [key: string]: string; } | undefined,
     defaultVideoFlavor: Flavor | undefined,
+    stopOnTyping: boolean,
   };
   chapters: {
     show: boolean,
@@ -118,6 +119,7 @@ const defaultSettings: iSettings = {
     languages: {},
     icons: undefined,
     defaultVideoFlavor: undefined,
+    stopOnTyping: false,
   },
   chapters: {
     show: false,
@@ -420,6 +422,7 @@ const SCHEMA = {
     languages: types.objectsWithinObjects,
     icons: types.map,
     defaultVideoFlavor: types.map,
+    stopOnTyping: types.boolean,
   },
   chapters: {
     show: types.boolean,

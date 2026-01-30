@@ -162,6 +162,7 @@ const Chapter: React.FC = () => {
               removeCue={removeCue}
               setCueAtIndex={setCueAtIndex}
               setCurrentlyAt={setCurrentlyAt}
+              setIsPlaying={setIsPlaying}
               setFocusSegmentTriggered={setFocusSegmentTriggered}
               setFocusSegmentTriggered2={setFocusSegmentTriggered2}
               setFocusToSegmentAboveId={setFocusToSegmentAboveId}
