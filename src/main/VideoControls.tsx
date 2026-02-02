@@ -11,7 +11,7 @@ import {
 } from "../redux/videoSlice";
 
 import { convertMsToReadableString } from "../util/utilityFunctions";
-import { BREAKPOINTS, basicButtonStyle, undisplayContainer } from "../cssStyles";
+import { BREAKPOINTS, basicButtonStyle, undisplay, undisplayContainer } from "../cssStyles";
 
 import { KEYMAP, rewriteKeys } from "../globalKeys";
 import { useTranslation } from "react-i18next";
@@ -35,6 +35,7 @@ const VideoControls: React.FC<{
   selectIsMuted: (state: RootState) => boolean,
   selectVolume: (state: RootState) => number,
   selectIsPlayPreview: (state: RootState) => boolean,
+  setCurrentlyAt: ActionCreatorWithPayload<number, string>,
   setIsPlaying: ActionCreatorWithPayload<boolean, string>,
   setIsMuted: ActionCreatorWithPayload<boolean, string>,
   setVolume: ActionCreatorWithPayload<number, string>,
@@ -47,6 +48,7 @@ const VideoControls: React.FC<{
   selectIsMuted,
   selectVolume,
   selectIsPlayPreview,
+  setCurrentlyAt,
   setIsPlaying,
   setIsMuted,
   setVolume,
@@ -76,6 +78,8 @@ const VideoControls: React.FC<{
     <div css={videoControlsRowStyle}>
       <TimeDisplay
         selectCurrentlyAt={selectCurrentlyAt}
+        setCurrentlyAt={setCurrentlyAt}
+        setIsPlaying={setIsPlaying}
       />
       {jumpToPreviousSegment && (
         <PreviousButton
@@ -331,21 +335,25 @@ const NextButton: React.FC<{
  */
 const TimeDisplay: React.FC<{
   selectCurrentlyAt: (state: RootState) => number,
+  setCurrentlyAt: ActionCreatorWithPayload<number, string>,
+  setIsPlaying: ActionCreatorWithPayload<boolean, string>,
 }> = ({
   selectCurrentlyAt,
+  setCurrentlyAt,
+  setIsPlaying,
 }) => {
 
   const { t } = useTranslation();
+  const theme = useTheme();
 
   // Init redux variables
-  const currentlyAt = useAppSelector(selectCurrentlyAt);
   const duration = useAppSelector(selectDuration);
-  const theme = useTheme();
 
   const timeDisplayStyle = css({
     display: "flex",
     flexDirection: "row",
     gap: "5px",
+    alignItems: "center",
   });
 
   const timeTextStyle = (theme: Theme) => css({
@@ -355,21 +363,115 @@ const TimeDisplay: React.FC<{
 
   return (
     <div css={timeDisplayStyle}>
-      <ThemedTooltip title={t("video.current-time-tooltip")}>
-        <time css={timeTextStyle(theme)}
-          tabIndex={0} role="timer" aria-label={t("video.time-aria") + ": " + convertMsToReadableString(currentlyAt)}>
-          {new Date((currentlyAt ? currentlyAt : 0)).toISOString().substr(11, 10)}
-        </time>
-      </ThemedTooltip>
-      <div css={undisplayContainer(BREAKPOINTS.medium)}>{" / "}</div>
+      <CurrentTime
+        selectCurrentlyAt={selectCurrentlyAt}
+        setCurrentlyAt={setCurrentlyAt}
+        setIsPlaying={setIsPlaying}
+      />
+      <div css={undisplay(BREAKPOINTS.medium)}>{" / "}</div>
       <ThemedTooltip title={t("video.time-duration-tooltip")}>
-        <div css={[timeTextStyle(theme), undisplayContainer(BREAKPOINTS.medium)]}
-          tabIndex={0} aria-label={t("video.duration-aria") + ": " + convertMsToReadableString(duration)}>
-          {new Date((duration ? duration : 0)).toISOString().substr(11, 10)}
+        <div css={[timeTextStyle(theme), undisplay(BREAKPOINTS.medium)]}
+          tabIndex={0}
+          aria-label={t("video.duration-aria") + ": " + convertMsToReadableString(duration)}
+        >
+          {formatMs(duration ? duration : 0)}
         </div>
       </ThemedTooltip>
     </div>
   );
+};
+
+const CurrentTime: React.FC<{
+  selectCurrentlyAt: (state: RootState) => number;
+  setCurrentlyAt: ActionCreatorWithPayload<number, string>,
+  setIsPlaying: ActionCreatorWithPayload<boolean, string>,
+}> = ({
+  selectCurrentlyAt,
+  setCurrentlyAt,
+  setIsPlaying,
+}) => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const currentlyAt = useAppSelector(selectCurrentlyAt);
+
+  const [editing, setEditing] = React.useState(false);
+  const [value, setValue] = React.useState(formatMs(currentlyAt));
+
+  const parseTime = (value: string) => {
+    const parts = value.split(":").map(Number);
+    if (parts.some(isNaN)) {
+      return null;
+    }
+
+    const [hh = 0, mm = 0, ss = 0] = parts;
+    return ((hh * 60 + mm) * 60 + ss) * 1000;
+  };
+
+  React.useEffect(() => {
+    if (!editing) {
+      setValue(formatMs(currentlyAt));
+    }
+  }, [currentlyAt, editing]);
+
+  const commit = () => {
+    const parsedTime = parseTime(value);
+    if (parsedTime) {
+      dispatch(setCurrentlyAt(parsedTime));
+    }
+    setEditing(false);
+  };
+
+  const cancel = () => {
+    setValue(formatMs(currentlyAt));
+    setEditing(false);
+  };
+
+  const inputStyle = css({
+    maxWidth: "77px",
+  });
+
+  return (
+    <ThemedTooltip title={t("video.current-time-tooltip")}>
+      {editing ? (
+        <input
+          autoFocus
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onBlur={commit}
+          onKeyDown={e => {
+            if (e.key === "Enter") { commit(); }
+            if (e.key === "Escape") { cancel(); }
+          }}
+          aria-label={t("video.time-aria")}
+          css={inputStyle}
+        />
+      ) : (
+        <time
+          tabIndex={0}
+          role="timer"
+          onClick={() => {
+            setEditing(true);
+            dispatch(setIsPlaying(false));
+          }}
+          onKeyDown={e => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setEditing(true);
+              dispatch(setIsPlaying(false));
+            }
+          }}
+          aria-label={t("video.time-aria") + ": " + convertMsToReadableString(currentlyAt)}
+        >
+          {formatMs(currentlyAt)}
+        </time>
+      )}
+    </ThemedTooltip>
+  );
+};
+
+const formatMs = (ms: number) => {
+  return new Date(ms).toISOString().substr(11, 10);
 };
 
 const VolumeSlider: React.FC<{

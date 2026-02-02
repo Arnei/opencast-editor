@@ -20,6 +20,7 @@ import VideoControls from "./VideoControls";
 import Select from "react-select";
 import { selectFieldStyle } from "../cssStyles";
 import { ActionCreatorWithPayload, AsyncThunk } from "@reduxjs/toolkit";
+import { setCurrentlyAt } from "../redux/subtitleSlice";
 
 /**
  * A part of the subtitle editor that displays a video and related controls
@@ -163,6 +164,7 @@ const SubtitleVideoArea: React.FC<{
             selectIsMuted={selectIsMuted}
             selectVolume={selectVolume}
             selectIsPlayPreview={selectIsPlayPreview}
+            setCurrentlyAt={setCurrentlyAt}
             setIsPlaying={setIsPlaying}
             setIsMuted={setIsMuted}
             setVolume={setVolume}
