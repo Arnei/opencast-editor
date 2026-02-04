@@ -64,7 +64,8 @@ export const subtitleListHotkeysDefaultOptions: object = {
 
 const cuttingZoomInSplitKey = ";";
 
-export const KEYMAP: IKeyMap = {
+
+export const DEFAULT_KEYMAP: IKeyMap = {
   videoPlayer: {
     play: {
       name: "keyboardControls.videoPlayButton",

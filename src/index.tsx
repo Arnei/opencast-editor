@@ -14,6 +14,8 @@ import "./i18n/config";
 
 import "@opencast/appkit/dist/colors.css";
 import { ColorSchemeProvider } from "@opencast/appkit";
+import { PersistGate } from "redux-persist/lib/integration/react";
+import { persistStore } from "redux-persist";
 
 const container = document.getElementById("root");
 if (!container) {
@@ -21,6 +23,8 @@ if (!container) {
 }
 const root = ReactDOMClient.createRoot(container);
 
+// Commenting persistent stuff out can help with debugging
+const persistor = persistStore(store);
 
 // Load config here
 // Load the rest of the application and try to fetch the settings file from the
@@ -36,9 +40,11 @@ initialize.then(
     root.render(
       <React.StrictMode>
         <Provider store={store}>
-          <ColorSchemeProvider>
-            <App />
-          </ColorSchemeProvider>
+          <PersistGate loading={<div>loading...</div>} persistor={persistor}>
+            <ColorSchemeProvider>
+              <App />
+            </ColorSchemeProvider>
+          </PersistGate>
         </Provider>
       </React.StrictMode>,
     );
