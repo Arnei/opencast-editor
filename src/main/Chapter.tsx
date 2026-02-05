@@ -154,6 +154,7 @@ const Chapter: React.FC = () => {
               isChapterInputs={true}
               selectSelectedSubtitleById={selectSelectedSubtitleById}
               selectSelectedSubtitleId={selectSelectedSubtitleId}
+              selectCurrentlyAt={selectCurrentlyAt}
               selectFocusSegmentId={selectFocusSegmentId}
               selectFocusSegmentTriggered={selectFocusSegmentTriggered}
               selectFocusSegmentTriggered2={selectFocusSegmentTriggered2}

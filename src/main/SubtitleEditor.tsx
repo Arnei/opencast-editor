@@ -176,6 +176,7 @@ const SubtitleEditor: React.FC = () => {
             <SubtitleListEditor
               selectSelectedSubtitleById={selectSelectedSubtitleById}
               selectSelectedSubtitleId={selectSelectedSubtitleId}
+              selectCurrentlyAt={selectCurrentlyAt}
               selectFocusSegmentId={selectFocusSegmentId}
               selectFocusSegmentTriggered={selectFocusSegmentTriggered}
               selectFocusSegmentTriggered2={selectFocusSegmentTriggered2}
