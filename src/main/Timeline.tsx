@@ -1,5 +1,5 @@
 import { debounce } from "lodash";
-import React, { useState, useRef, useEffect, RefObject } from "react";
+import React, { useState, useRef, useEffect, RefObject, useLayoutEffect } from "react";
 
 import Draggable, { DraggableEventHandler } from "react-draggable";
 
@@ -42,6 +42,7 @@ import {
   selectActiveSegmentIndex as chapterSelectActiveSegmentIndex,
   moveCut as chapterMoveCut,
 } from "../redux/chapterSlice";
+import TimelineStamps from "./TimelineStamps";
 
 /**
  * A container for visualizing the cutting of the video, as well as for controlling
@@ -81,10 +82,15 @@ const Timeline: React.FC<{
   const { ref, width = 1 } = useResizeObserver<HTMLDivElement>();
   const scrollContainerRef = useRef<HTMLElement>(null);
   const { width: scrollContainerWidth = 1 } = useResizeObserver<HTMLElement>({ ref: scrollContainerRef });
-  const topOffset = 20;
 
   const currentlyScrolling = useRef(false);
   const zoomCenter = useRef(0);
+
+  // Vars for timelineStamps
+  const timelineStampsHeight = 20;
+  const waveformHeight = timelineHeight - timelineStampsHeight;
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [visibleWidth, setVisibleWidth] = useState(0);
 
   const updateScroll = () => {
     if (currentlyScrolling.current) {
@@ -98,6 +104,16 @@ const Timeline: React.FC<{
     const scrubberVisible = scrollLeft <= scrubberPosition && scrubberPosition <= scrollLeft + clientWidth;
 
     zoomCenter.current = (scrubberVisible ? scrubberPosition : centerPosition) / width;
+
+  };
+
+  const updateScrollMetrics = () => {
+    if (!scrollContainerRef.current) {
+      return;
+    }
+    const el = scrollContainerRef.current;
+    setScrollLeft(el.scrollLeft);
+    setVisibleWidth(el.clientWidth);
   };
 
   const displayPercentage = (durationInSeconds / displayDuration);
@@ -105,6 +121,11 @@ const Timeline: React.FC<{
     return baseWidth * displayPercentage;
   };
   const zoomedWidth = getWaveformWidth(scrollContainerWidth);
+
+  // Make sure visibleWidth is set so canvas is drawn on first render
+  useLayoutEffect(() => {
+    updateScrollMetrics();
+  }, [width, duration]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(updateScroll, [currentlyAt, timelineZoom, width, scrollContainerWidth]);
@@ -124,7 +145,6 @@ const Timeline: React.FC<{
     position: "relative",     // Need to set position for Draggable bounds to work
     height: timelineHeight + "px",
     width: `${zoomedWidth}px`,    // Width modified by zoom
-    top: `${topOffset}px`,
   });
 
   // Update the current time based on the position clicked on the timeline
@@ -136,17 +156,31 @@ const Timeline: React.FC<{
   };
 
   return (
-    <ScrollContainer
-      innerRef={scrollContainerRef}
-      css={{ overflowY: "hidden", width: "100%", height: `${timelineHeight + topOffset}px` }}
-      vertical={false}
-      horizontal={true}
-      // dom elements with this id in the container will not trigger scrolling when dragged
-      ignoreElements={".prevent-drag-scroll"}
-      hideScrollbars={false}            // ScrollContainer hides scrollbars per default
-      onEndScroll={updateScroll}
-    >
-      <CuttingActionsContextMenu>
+    <CuttingActionsContextMenu>
+      <div css={css({ position: "absolute" })}>
+        <TimelineStamps
+          durationMs={duration}
+          zoomedWidth={zoomedWidth}
+          scrollLeft={scrollLeft}
+          visibleWidth={visibleWidth}
+          height={timelineStampsHeight}
+        />
+      </div>
+      <ScrollContainer
+        innerRef={scrollContainerRef}
+        css={{
+          overflowY: "hidden",
+          width: "100%",
+          height: `${timelineHeight}px`,
+        }}
+        vertical={false}
+        horizontal={true}
+        // dom elements with this id in the container will not trigger scrolling when dragged
+        ignoreElements={".prevent-drag-scroll"}
+        hideScrollbars={false}            // ScrollContainer hides scrollbars per default
+        onScroll={updateScrollMetrics}
+        onEndScroll={updateScroll}
+      >
         <div ref={ref} css={timelineStyle} onMouseDown={e => setCurrentlyAtToClick(e)}>
           <Scrubber
             ref={scrubberRef}
@@ -157,15 +191,15 @@ const Timeline: React.FC<{
             setCurrentlyAt={setCurrentlyAt}
             setIsPlaying={setIsPlaying}
           />
-          <div css={{ position: "relative", height: timelineHeight + "px" }}>
+          <div css={{ position: "relative", height: timelineHeight + "px", top: `${timelineStampsHeight}px` }}>
             <Waveforms
-              timelineHeight={!isChapters ? timelineHeight : (timelineHeight / 4) * 3}
-              topOffset={!isChapters ? undefined : (timelineHeight / 4) * 1}
+              timelineHeight={!isChapters ? waveformHeight : (waveformHeight / 4) * 3}
+              topOffset={!isChapters ? undefined : (waveformHeight / 4) * 1}
             />
             {isChapters &&
               <SegmentsList
                 timelineWidth={width}
-                timelineHeight={(timelineHeight / 4) * 1}
+                timelineHeight={(waveformHeight / 4) * 1}
                 styleByActiveSegment={styleByActiveSegment}
                 tabable={true}
                 selectSegments={chapterSelectSegments}
@@ -175,7 +209,7 @@ const Timeline: React.FC<{
             }
             <SegmentsList
               timelineWidth={width}
-              timelineHeight={!isChapters ? timelineHeight : (timelineHeight / 4) * 3}
+              timelineHeight={!isChapters ? waveformHeight : (waveformHeight / 4) * 3}
               styleByActiveSegment={!isChapters ? styleByActiveSegment : false}
               tabable={true}
               selectSegments={selectSegments}
@@ -184,8 +218,8 @@ const Timeline: React.FC<{
             />
           </div>
         </div>
-      </CuttingActionsContextMenu>
-    </ScrollContainer>
+      </ScrollContainer>
+    </CuttingActionsContextMenu>
   );
 };
 
@@ -310,12 +344,11 @@ export const Scrubber = React.forwardRef<HTMLDivElement, ScrubberProps>((props, 
     height: timelineHeight + 20 + "px", //    TODO: CHECK IF height: "100%",
     width: "1px",
     position: "absolute",
-    zIndex: 2,
+    zIndex: 20,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
-    top: "-20px",
   });
 
   const scrubberDragHandleStyle = css({
