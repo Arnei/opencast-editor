@@ -110,29 +110,11 @@ How to cut a release for Opencast with the Github UI
 5. Merge the upstream issue that the workflow above filed in [Opencast's main repository](https://github.com/opencast/opencast)
 
 
-How to cut a release for Opencast manually with git
----------------------------------------------------
+Editor releases
+---------------
 
-1. (Optional) Run the [Update translations](https://github.com/opencast/opencast-editor/actions/workflows/update-translations.yml) workflow, to make sure all changes from crowdin are included in the next release.
-
-2. Switch to the commit you want to turn into the release - make sure this is the on `develop` or an `r/N.x` branch
-
-3. Create and push a new tag
-   ```bash
-    BRANCH=N.x (make sure the version you write here matches the branch you have checked out)
-    DATE=$(date +%Y-%m-%d)
-    git tag -sm "Release $BRANCH-$DATE" -s "$BRANCH-$DATE"
-    git push upstream "$BRANCH-$DATE":"$BRANCH-$DATE"
-   ```
-
-3. Wait for the [Process release](https://github.com/opencast/opencast-editor/actions/workflows/process-release.yml)
-   workflow to finish
-    - It will create a new [GitHub release](https://github.com/opencast/opencast-editor/releases)
-      - Review the release and make sure the notes are right, update them if not.
-        - By selecting the previous release, Github can generate release notes automatically
-      - This review isn't required to happen prior to the next step!
-
-5. Merge the upstream issue that the workflow above filed in [Opencast's main repository](https://github.com/opencast/opencast)
+The editor module no longer cuts releases itself.  Opencast's release manager will create tags as appropriate and push
+as part of the release process.
 
 
 Opencast API used by the Editor
