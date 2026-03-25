@@ -72,7 +72,9 @@ jobs:
 
       - name: Commit new version
         run: |
-          git checkout -- public/editor-settings.toml
+          # Save the current assets from the main branch
+          mv .github/assets assets_temp
+          # Update and change to the gh-pages branch
           git fetch --unshallow origin gh-pages
           git checkout gh-pages
           # Update gh-pages
