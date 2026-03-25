@@ -1,35 +1,23 @@
-/*This contains Css for the generated index.html*/
 @media (prefers-color-scheme: light) {
     :root {
-        --header-color: #575757;
-        --bg-color: #F3F3F3;
+        --header-color: linear-gradient(to bottom,#388ed6,#2075b1);
+        --bg-color: #fafafa;
         --text-color: #0F0F0F;
-        --container-color: #fefefe;
+        --container-color: #fafafa;
         --boxShadow-color: #0000004d;
-        --item-color: #fefefe;
-        --item-border: #d6cbc9;
-        --item-hover: #f3f3f3;
+        --border-color: #1d3041;
+        --navbar-color: #24425c;
+        --item-color: #ebeef1;
+        --item-border: #c9d0d6;
+        --item-hover: linear-gradient(to bottom, #fafafa, #e8ebef);
+        --item-inner-boxShadow-color: #0000000d;
         --item-boxShadow-color: #96969626;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --header-color: #2E2E2E;
-        --bg-color: #1E1E1E;
-        --text-color: #FFF;
-        --container-color: #171717;
-        --boxShadow-color: #0000004d;
-        --item-color: #171717;
-        --item-border: #151515;
-        --item-hover: #2e2e2e;
-        --item-boxShadow-color: #0000004d;
     }
 }
 
 body {
     margin: 0px;
-    background: var(--bg-color, #F3F3F3);
+    background: var(--bg-color, #F8F4F1);
     font-family: Roboto Flex Variable, Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -42,7 +30,7 @@ body {
 
     /* Styling */
     border-radius: 5px;
-    background: var(--container-color, #fefefe);
+    background: var(--container-color, #F8F4F1);
     box-shadow: 0 1px 3px 1px var(--boxShadow-color, #0000004d);
 }
 .text-container > p {
@@ -55,14 +43,23 @@ body {
 /* Header */
 .head-container { 
     width: 100%;
-    height: 45px;
-    background: var(--header-color, #575757);
+    height: 50px;
+    box-shadow: 0 1px 3px 1px  var(--boxShadow-color, #0000004d);
+    position: relative;
+    border-bottom: 1px solid var(--border-color, #1d3041);
+    background: var(--header-color, linear-gradient(to bottom,#388ed6,#2075b1));
+
 }
 .head-container > img {
     /*Image Style*/
-    width: 180px;
-    height: 40px;
-    padding: 4px 10px 4px;
+    width: 100px;
+    height: 20px;
+    padding: 14px 20px 13px;
+}
+.navbar-container { 
+    width: 100%;
+    min-height: 80px;
+    background: var(--navbar-color, #24425c);
 }
 
 /* Version-List */
@@ -81,13 +78,13 @@ li {
     text-align: center;
     padding: 15px 10px;
     border-radius: 4px;
-    border: 1px solid var(--item-border, #d6cbc9);
-    background: var(--item-color, #fefefe);
-    box-shadow: 0px 5px 10px 0px var(--item-boxShadow-color, #96969626);
+    border: 1px solid var(--item-border, #c9d0d6);
+    background: var(--item-color, #ebeef1);
+    box-shadow: inset 0 3px 10px 2px var(--item-inner-boxShadow-color, #0000000d),  0px 5px 10px 0px var(--item-boxShadow-color, #96969626);
 }
 
 li:hover {
-    background-color: var(--item-hover, #f3f3f3);
+    background: var(--item-hover, linear-gradient(to bottom, #fafafa, #e8ebef));
 }
 
 li > a {

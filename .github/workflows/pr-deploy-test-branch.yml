@@ -90,7 +90,7 @@ jobs:
 
       - name: Clone repository
         run: |
-          git clone -b gh-pages "git@github.com:${{ github.repository_owner }}/opencast-editor-test.git" editor-test
+          git clone -b gh-pages "git@github.com:${{ github.repository_owner }}/editor-test.git" editor-test
 
       - name: Store build in the clone
         env:
@@ -104,8 +104,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          wget https://raw.githubusercontent.com/${{ github.repository_owner }}/opencast-editor-test/main/.github/scripts/cleanup-deployments.sh
-          bash cleanup-deployments.sh ${{ github.repository_owner }}/opencast-editor
+          wget https://raw.githubusercontent.com/${{ github.repository_owner }}/editor-test/main/.github/scripts/cleanup-deployments.sh
+          bash cleanup-deployments.sh ${{ github.repository_owner }}/editor
           rm -f cleanup-deployments.sh
           git add .
 
@@ -156,7 +156,7 @@ jobs:
     steps:
       - name: Check if user is Opencast developer
         id: is_developer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/opencast-editor' }}
+        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
         uses: TheModdingInquisition/actions-team-membership@v1.0
         with:
           team: developers
@@ -166,7 +166,7 @@ jobs:
 
       - name: Check if user is Opencast committer
         id: is_committer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/opencast-editor' }}
+        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
         uses: TheModdingInquisition/actions-team-membership@v1.0
         with:
           team: committers
