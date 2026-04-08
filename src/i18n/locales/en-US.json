@@ -45,7 +45,8 @@
 
     "video": {
       "previewButton": "Preview Mode",
-      "previewButton-tooltip": "Skips deleted segments when playing the video. Currently {{status}}. Hotkey: {{hotkeyName}}",
+      "previewButton-tooltip-on": "Skips deleted segments when playing the video. Currently on. Hotkey: {{hotkeyName}}",
+      "previewButton-tooltip-off": "Skips deleted segments when playing the video. Currently off. Hotkey: {{hotkeyName}}",
       "previewButton-aria": "Enable or disable preview mode. Hotkey: {{hotkeyName}}.",
       "playButton-tooltip": "Play video",
       "pauseButton-tooltip": "Pause video",
