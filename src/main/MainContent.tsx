@@ -90,7 +90,7 @@ const MainContent: React.FC = () => {
     padding: "20px",
   });
 
-  // Apply main focus to the current view for keyboard shortcuts.
+  // Apply main focus to the current view for keyboard hotkeys.
   const mainRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Auto-focus main content when route changes
