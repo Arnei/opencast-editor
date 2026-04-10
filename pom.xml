@@ -17,7 +17,7 @@
   </properties>
   <profiles>
     <profile>
-      <id>frontend-no-prebuild</id>
+      <id>frontend-no-prebuilt</id>
       <properties>
         <ui.include.resource>/editor=-build/</ui.include.resource>
       </properties>
@@ -62,6 +62,26 @@
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>buildnumber-maven-plugin</artifactId>
+            <version>3.3.0</version>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>create</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <doCheck>true</doCheck>
+              <doUpdate>false</doUpdate>
+              <failTheBuild>false</failTheBuild>
+              <shortRevisionLength>7</shortRevisionLength>
+              <buildNumberPropertyName>submoduleHash</buildNumberPropertyName>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -132,6 +152,26 @@
               </filesets>
             </configuration>
           </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>buildnumber-maven-plugin</artifactId>
+            <version>3.3.0</version>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>create</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <doCheck>true</doCheck>
+              <doUpdate>false</doUpdate>
+              <failTheBuild>false</failTheBuild>
+              <shortRevisionLength>7</shortRevisionLength>
+              <buildNumberPropertyName>submoduleHash</buildNumberPropertyName>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -149,7 +189,18 @@
         <configuration>
           <instructions>
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <!-- NOTE: This property is defined in the parent/main pom, at runtime.
+                 Building this module directly will leave this blank and thus it will be omitted from the built jar.
+                 Look up building specific maven project (-pl) if you need to build this module and care about this.
+             -->
             <Build-Number>${buildNumber}</Build-Number>
+            <Submodule-Hash>${submoduleHash}</Submodule-Hash>
+            <!-- NOTE: This flag is showing if there are any un-committed modifications in the submodule.
+                 It does *not* check to see if you have modified the submodule relative to the branch.
+                 Adopters modifying their local forks should expect that this reads false.
+                 Developers modifying their local copies for testing should expect this could read true.
+            -->
+            <Submodule-Tainted>${buildIsTainted}</Submodule-Tainted>
             <Include-Resource>${ui.include.resource}</Include-Resource>
             <!--<Private-Package>editor.*</Private-Package>-->
             <Http-Alias>/editor-ui</Http-Alias>
