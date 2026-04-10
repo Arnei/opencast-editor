@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { shallowEqual } from "react-redux";
 import { RootState, useAppDispatch, useAppSelector } from "../redux/store";
 import { basicButtonStyle } from "../cssStyles";
-import { KEYMAP } from "../globalKeys";
+import { KEYMAP, subtitleListHotkeysDefaultOptions } from "../globalKeys";
 import { SubtitleCue, SubtitlesInEditor } from "../types";
 import { convertMsToReadableString } from "../util/utilityFunctions";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
@@ -443,7 +443,7 @@ const SubtitleListSegment : React.FC<{
         deleteCue();
         break;
     }
-  }, { enableOnFormTags: ["input", "select", "textarea"], preventDefault: true }, [identifier, cue, props.index]);
+  }, subtitleListHotkeysDefaultOptions, [identifier, cue, props.index]);
 
   const hotkeyDivRef = hotkeyRef as React.RefObject<HTMLDivElement>;
 

@@ -283,25 +283,25 @@ export const Scrubber = React.forwardRef<HTMLDivElement, ScrubberProps>((props, 
   useHotkeys(
     KEYMAP.timeline.left.key,
     () => dispatch(setCurrentlyAt(Math.max(currentlyAt - keyboardJumpDelta, 0))),
-    {},
+    KEYMAP.timeline.left.options,
     [currentlyAt, keyboardJumpDelta],
   );
   useHotkeys(
     KEYMAP.timeline.right.key,
     () => dispatch(setCurrentlyAt(Math.min(currentlyAt + keyboardJumpDelta, duration))),
-    {},
+    KEYMAP.timeline.right.options,
     [currentlyAt, keyboardJumpDelta, duration],
   );
   useHotkeys(
     KEYMAP.timeline.increase.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.min(keyboardJumpDelta * 10, 1000000)),
-    { preventDefault: true },
+    KEYMAP.timeline.increase.options,
     [keyboardJumpDelta],
   );
   useHotkeys(
     KEYMAP.timeline.decrease.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.max(keyboardJumpDelta / 10, 1)),
-    { preventDefault: true },
+    KEYMAP.timeline.decrease.options,
     [keyboardJumpDelta],
   );
 

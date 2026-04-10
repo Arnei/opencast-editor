@@ -91,27 +91,32 @@ const SubtitleTimeline: React.FC = () => {
   useHotkeys(
     KEYMAP.timeline.left.key,
     () => dispatch(setCurrentlyAt(Math.max(currentlyAt - keyboardJumpDelta, 0))),
-    {}, [currentlyAt, keyboardJumpDelta],
+    KEYMAP.timeline.left.options,
+    [currentlyAt, keyboardJumpDelta],
   );
   useHotkeys(
     KEYMAP.timeline.right.key,
     () => dispatch(setCurrentlyAt(Math.min(currentlyAt + keyboardJumpDelta, duration))),
-    {}, [currentlyAt, keyboardJumpDelta, duration],
+    KEYMAP.timeline.right.options,
+    [currentlyAt, keyboardJumpDelta, duration],
   );
   useHotkeys(
     KEYMAP.timeline.increase.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.min(keyboardJumpDelta * 10, 1000000)),
-    {}, [keyboardJumpDelta],
+    KEYMAP.timeline.increase.options,
+    [keyboardJumpDelta],
   );
   useHotkeys(
     KEYMAP.timeline.decrease.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.max(keyboardJumpDelta / 10, 1)),
-    {}, [keyboardJumpDelta],
+    KEYMAP.timeline.decrease.options,
+    [keyboardJumpDelta],
   );
   useHotkeys(
     KEYMAP.subtitleList.addCue.key,
     () => addCue(currentlyAt),
-    {}, [currentlyAt],
+    KEYMAP.subtitleList.addCue.options,
+    [currentlyAt],
   );
 
   // Callback for the scroll container
