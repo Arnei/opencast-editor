@@ -28,8 +28,8 @@
             <artifactId>exec-maven-plugin</artifactId>
             <configuration>
               <environmentVariables>
-                <PUBLIC_PATH>/editor-ui</PUBLIC_PATH>
-                <SETTINGS_PATH>/ui/config/editor/editor-settings.toml</SETTINGS_PATH>
+                <PUBLIC_URL>/editor-ui</PUBLIC_URL>
+                <VITE_APP_SETTINGS_PATH>/ui/config/editor/editor-settings.toml</VITE_APP_SETTINGS_PATH>
               </environmentVariables>
             </configuration>
             <executions>
@@ -84,8 +84,8 @@
               <nodeVersion>${nodejs.version}</nodeVersion>
               <installDirectory>target</installDirectory>
               <environmentVariables>
-                <PUBLIC_PATH>/editor-ui</PUBLIC_PATH>
-                <SETTINGS_PATH>/ui/config/editor/editor-settings.toml</SETTINGS_PATH>
+                <PUBLIC_URL>/editor-ui</PUBLIC_URL>
+                <VITE_APP_SETTINGS_PATH>/ui/config/editor/editor-settings.toml</VITE_APP_SETTINGS_PATH>
               </environmentVariables>
             </configuration>
             <executions>
