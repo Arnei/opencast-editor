@@ -46,6 +46,7 @@ export const ThemedTooltip = ({ className, ...props }: TooltipProps) => {
             fontSize: "16px",
             lineHeight: "normal",
             fontFamily: "Roboto Flex Variable",
+            whiteSpace: "pre-line",
           },
         },
         arrow: {
