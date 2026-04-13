@@ -62,10 +62,6 @@
       "unmutebutton-tooltip": "Unmute video",
       "volume-tooltip": "Adjust volume: {{current}}%",
       "volumeSlider-aria": "Adjust the volume level of the video.",
-      "comError-text": "A problem occurred during communication with Opencast.",
-      "loadError-text": "An error has occurred loading this video.",
-      "durationError-text": "Opencast failed to provide the video duration.",
-      "noVideoError-text": "The editor does not support audio files yet!",
       "title-tooltip": "Video Title",
       "presenter-tooltip": "Video Presenters"
     },
@@ -231,9 +227,14 @@
 
     "error": {
       "generic-message": "A critical error has occurred!",
-      "details": "Details: ",
+      "details": "Technical Details: ",
       "workflowActive-errorTitle": "Temporarily unavailable",
-      "workflowActive-errorMessage": "This event is being processed. Please wait until the process is finished."
+      "workflowActive-errorMessage": "This event is being processed. Please wait until the process is finished.",
+      "unauthorizedError-text": "You are not allowed to edit this video",
+      "comError-text": "A problem occurred during communication with Opencast.",
+      "loadError-text": "An error has occurred loading this video.",
+      "durationError-text": "Opencast failed to provide the video duration.",
+      "noVideoError-text": "The editor does not support audio files yet!"
     },
 
     "landing": {

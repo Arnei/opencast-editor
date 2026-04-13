@@ -36,6 +36,7 @@ import { css } from "@emotion/react";
 import VideoPlayers from "./VideoPlayers";
 import VideoControls from "./VideoControls";
 import { fetchMetadata, selectGetStatus as selectMetadataGetStatus } from "../redux/metadataSlice";
+import { readableErrorMessage } from "../util/utilityFunctions";
 
 const Cutting: React.FC = () => {
 
@@ -69,7 +70,7 @@ const Cutting: React.FC = () => {
       } else {
         dispatch(setError({
           error: true,
-          errorMessage: t("video.comError-text"),
+          errorMessage: readableErrorMessage(t, error),
           errorDetails: error,
         }));
       }
@@ -78,14 +79,14 @@ const Cutting: React.FC = () => {
       if (videos === null || videos.length === 0) {
         dispatch(setError({
           error: true,
-          errorMessage: t("video.noVideoError-text"),
+          errorMessage: t("error.noVideoError-text"),
           errorDetails: error,
         }));
       }
       if (duration === null) {
         dispatch(setError({
           error: true,
-          errorMessage: t("video.durationError-text"),
+          errorMessage: t("error.durationError-text"),
           errorDetails: error,
         }));
       }

@@ -453,7 +453,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       } else {
         return (
           <ErrorBox>
-            {t("video.loadError-text")}
+            {t("error.loadError-text")}
           </ErrorBox>
         );
       }

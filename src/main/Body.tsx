@@ -35,7 +35,9 @@ const Body: React.FC = () => {
       );
     } else if (isError) {
       return (
-        <Error />
+        <div css={css({ height: "calc(100% - 64px)" })}>
+          <Error />
+        </div>
       );
     } else {
       return (
