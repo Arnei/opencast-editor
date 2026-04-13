@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { css } from "@emotion/react";
 import { SegmentsList as CuttingSegmentsList, Waveforms } from "./Timeline";
 import {
@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import { useHotkeys } from "react-hotkeys-hook";
 import { KEYMAP } from "../globalKeys";
 import { shallowEqual } from "react-redux";
+import TimelineStamps from "./TimelineStamps";
 
 /**
  * Copy-paste of the timeline in Video.tsx, so that we can make some small adjustments,
@@ -57,12 +58,23 @@ const SubtitleTimeline: React.FC = () => {
     paddingRight: "50%",
   });
 
+  // Vars for timelineStamps
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [visibleWidth, setVisibleWidth] = useState(0);
+  const paddingOffset = visibleWidth / 2;
+  const virtualScrollLeft = scrollLeft - paddingOffset;
+
   const setCurrentlyAtToClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     dispatch(setClickTriggered(true));
     dispatch(setCurrentlyAt((offsetX / widthMiniTimeline) * (duration)));
   };
+
+  // Make sure visibleWidth is set so canvas is drawn on first render
+  useLayoutEffect(() => {
+    updateScrollMetrics();
+  }, [width, duration]);
 
   // Apply horizonal scrolling when scrolled from somewhere else
   useEffect(() => {
@@ -114,6 +126,15 @@ const SubtitleTimeline: React.FC = () => {
     {}, [currentlyAt],
   );
 
+  const updateScrollMetrics = () => {
+    if (!refTop.current) {
+      return;
+    }
+    const el = refTop.current;
+    setScrollLeft(el.scrollLeft);
+    setVisibleWidth(el.clientWidth);
+  };
+
   // Callback for the scroll container
   const onEndScroll = (e: ScrollEvent) => {
     // If scrolled by user
@@ -135,7 +156,6 @@ const SubtitleTimeline: React.FC = () => {
   const subtitleTimelineStyle = css({
     position: "relative",
     width: "100%",
-    height: "250px",
     paddingBottom: "15px",
   });
 
@@ -146,25 +166,31 @@ const SubtitleTimeline: React.FC = () => {
         css={{
           position: "absolute",
           width: "2px",
-          height: "200px",
+          height: "222px",
           ...(refTop.current) && { left: (refTop.current.clientWidth / 2) },
-          top: "10px",
           background: `${theme.text}`,
           zIndex: 100,
         }}
+      />
+      {/* Time codes above the timeline */}
+      <TimelineStamps
+        durationMs={duration}
+        zoomedWidth={width}
+        scrollLeft={virtualScrollLeft}
+        visibleWidth={visibleWidth}
+        height={20}
       />
       {/* Scrollable timeline container. Has width of parent*/}
       <ScrollContainer innerRef={refTop} css={{ overflow: "hidden", width: "100%", height: "215px" }}
         vertical={false}
         horizontal={true}
         onEndScroll={onEndScroll}
+        onScroll={updateScrollMetrics}
         // dom elements with this id in the container will not trigger scrolling when dragged
         ignoreElements={".prevent-drag-scroll"}
       >
         {/* Container. Overflows. Width based on parent times zoom level*/}
         <div ref={ref} css={timelineStyle}>
-          {/* Fake padding. TODO: Figure out a better way to pad absolutely positioned elements*/}
-          <div css={{ height: "10px" }} />
           <TimelineSubtitleSegmentsList timelineWidth={width} />
           <div css={{ position: "relative", height: "100px" }} >
             <Waveforms timelineHeight={120} />
