@@ -7,6 +7,7 @@ import endReducer from "./endSlice";
 import metadataReducer from "./metadataSlice";
 import subtitleReducer from "./subtitleSlice";
 import chapterReducer from "./chapterSlice";
+import thumbnailReducer from "./thumbnailSlice";
 import errorReducer from "./errorSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
@@ -20,6 +21,7 @@ export const store = configureStore({
     metadataState: metadataReducer,
     subtitleState: subtitleReducer,
     chapterState: chapterReducer,
+    thumbnailState: thumbnailReducer,
     errorState: errorReducer,
   },
 });

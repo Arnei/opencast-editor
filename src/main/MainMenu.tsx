@@ -19,6 +19,7 @@ import { setIsPlaying } from "../redux/videoSlice";
 import { useTranslation } from "react-i18next";
 import { resetPostRequestState } from "../redux/workflowPostSlice";
 import { setIsDisplayEditView } from "../redux/subtitleSlice";
+import { setIsDisplayEditView as setIsDisplayEditViewThumbnail } from "../redux/thumbnailSlice";
 
 import { useTheme } from "../themes";
 import { ProtoButton } from "@opencast/appkit";
@@ -132,6 +133,9 @@ export const MainMenuButton: React.FC<mainMenuButtonInterface> = ({
     }
     if (stateName === MainMenuStateNames.subtitles) {
       dispatch(setIsDisplayEditView(false));
+    }
+    if (stateName === MainMenuStateNames.thumbnail) {
+      dispatch(setIsDisplayEditViewThumbnail(false));
     }
     // Halt ongoing events
     dispatch(setIsPlaying(false));
