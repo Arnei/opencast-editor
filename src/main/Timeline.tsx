@@ -155,6 +155,15 @@ const Timeline: React.FC<{
     dispatch(setCurrentlyAt((offsetX / width) * (duration)));
   };
 
+  // Scroll the scroll container by its width one time
+  // To be used when the scrubber moves out of sight while playing the video.
+  const scrollByOwnWidth = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = scrollContainerRef.current?.scrollLeft + scrollContainerWidth;
+      updateScroll();
+    }
+  };
+
   return (
     <CuttingActionsContextMenu>
       <div css={css({ position: "absolute" })}>
@@ -186,6 +195,9 @@ const Timeline: React.FC<{
             ref={scrubberRef}
             timelineWidth={width}
             timelineHeight={timelineHeight}
+            scrollContainerWidth={scrollContainerWidth}
+            scrollLeft={scrollContainerRef.current?.scrollLeft ?? 0}
+            scrollTheContainerbyOwnWidth={scrollByOwnWidth}
             selectCurrentlyAt={selectCurrentlyAt}
             selectIsPlaying={selectIsPlaying}
             setCurrentlyAt={setCurrentlyAt}
@@ -226,6 +238,9 @@ const Timeline: React.FC<{
 type ScrubberProps = {
   timelineWidth: number,
   timelineHeight: number,
+  scrollContainerWidth: number,
+  scrollLeft: number,
+  scrollTheContainerbyOwnWidth: () => void,
   selectCurrentlyAt: (state: RootState) => number,
   selectIsPlaying: (state: RootState) => boolean,
   setCurrentlyAt: ActionCreatorWithPayload<number, string>,
@@ -237,7 +252,8 @@ type ScrubberProps = {
  * @param param0
  */
 export const Scrubber = React.forwardRef<HTMLDivElement, ScrubberProps>((props, nodeRef) => {
-  const { timelineWidth, timelineHeight, selectCurrentlyAt, selectIsPlaying, setCurrentlyAt, setIsPlaying } = props;
+  const { timelineWidth, timelineHeight, scrollContainerWidth, scrollLeft, scrollTheContainerbyOwnWidth,
+    selectCurrentlyAt, selectIsPlaying, setCurrentlyAt, setIsPlaying } = props;
 
   const { t } = useTranslation();
 
@@ -273,6 +289,14 @@ export const Scrubber = React.forwardRef<HTMLDivElement, ScrubberProps>((props, 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timelineWidth]);
+
+  // Check when the scrubber moves out of sight (can happen when playing the video while zoomed in)
+  // and then scroll the container
+  useEffect(() => {
+    if (controlledPosition.x > (scrollLeft + scrollContainerWidth)) {
+      scrollTheContainerbyOwnWidth();
+    }
+  }, [controlledPosition.x, scrollContainerWidth, scrollLeft, scrollTheContainerbyOwnWidth]);
 
   // Callback for when the scrubber gets dragged by the user
   const onControlledDrag: DraggableEventHandler = debounce((_e, position: { x: number, y : number }) => {
