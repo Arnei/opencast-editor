@@ -1,6 +1,6 @@
 import { css, SerializedStyles } from "@emotion/react";
 import { IconType } from "react-icons";
-import { LuPlus, LuTrash } from "react-icons/lu";
+import { LuCopyPlus, LuPlus, LuTrash } from "react-icons/lu";
 import { memoize } from "lodash";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
@@ -34,6 +34,7 @@ const SubtitleListEditor: React.FC<{
   isChapterInputs?: boolean,
   selectSelectedSubtitleById: (state: RootState) => SubtitlesInEditor,
   selectSelectedSubtitleId: (state: RootState) => string,
+  selectCurrentlyAt: (state: RootState) => number,
   selectFocusSegmentId: (state: RootState) => string,
   selectFocusSegmentTriggered: (state: RootState) => boolean,
   selectFocusSegmentTriggered2: (state: RootState) => boolean,
@@ -60,6 +61,7 @@ const SubtitleListEditor: React.FC<{
   isChapterInputs = false,
   selectSelectedSubtitleById,
   selectSelectedSubtitleId,
+  selectCurrentlyAt,
   selectFocusSegmentId,
   selectFocusSegmentTriggered,
   selectFocusSegmentTriggered2,
@@ -145,6 +147,7 @@ const SubtitleListEditor: React.FC<{
         textAreaHeight={segmentTextHeight}
         isFunctionButtonEnabled={isFunctionButtonEnabled}
         isChapterInputs={isChapterInputs}
+        selectCurrentlyAt={selectCurrentlyAt}
         selectFocusSegmentId={selectFocusSegmentId}
         selectFocusSegmentTriggered2={selectFocusSegmentTriggered2}
         addCueAtIndex={addCueAtIndex}
@@ -162,6 +165,7 @@ const SubtitleListEditor: React.FC<{
       segmentTextHeight,
       isFunctionButtonEnabled,
       isChapterInputs,
+      selectCurrentlyAt,
       selectFocusSegmentId,
       selectFocusSegmentTriggered2,
       addCueAtIndex,
@@ -246,6 +250,7 @@ const SubtitleListSegment : React.FC<{
   textAreaHeight?: string,
   isFunctionButtonEnabled?: boolean,
   isChapterInputs?: boolean,
+  selectCurrentlyAt: (state: RootState) => number,
   selectFocusSegmentId: (state: RootState) => string,
   selectFocusSegmentTriggered2: (state: RootState) => boolean,
   addCueAtIndex: ActionCreatorWithPayload<{
@@ -272,6 +277,7 @@ const SubtitleListSegment : React.FC<{
   const textAreaHeight = props.textAreaHeight;
   const isFunctionButtonEnabled = props.isFunctionButtonEnabled;
   const isChapterInputs = props.isChapterInputs;
+  const selectCurrentlyAt = props.selectCurrentlyAt;
   const selectFocusSegmentId = props.selectFocusSegmentId;
   const selectFocusSegmentTriggered2 = props.selectFocusSegmentTriggered2;
   const addCueAtIndex = props.addCueAtIndex;
@@ -288,6 +294,7 @@ const SubtitleListSegment : React.FC<{
   const dispatch = useAppDispatch();
 
   const duration = useAppSelector(selectDuration);
+  const currentlyAt = useAppSelector(selectCurrentlyAt);
   // Unfortunately, the focus selectors will cause every element to rerender,
   // even if they are not the ones that are focused
   // However, since the number of list segments rendered is severly limited
@@ -512,6 +519,28 @@ const SubtitleListSegment : React.FC<{
     color: `${theme.text}`,
   });
 
+  const timeWrapperStyle = css({
+    display: "flex",
+  });
+
+  const timeInputStyle = css({
+    fontSize: "1em",
+    padding: "10px",
+    borderRight: "none",
+    borderRadius: "5px 0 0 5px",
+    background: `${theme.element_bg}`,
+    border: "1px solid #ccc",
+    color: `${theme.text}`,
+  });
+
+  const copyTimeButtonStyle = css({
+    padding: "0 8px",
+    border: "1px solid #ccc",
+    borderLeft: "none",
+    borderRadius: "0 5px 5px 0",
+    background: `${theme.element_bg}`,
+  });
+
   const textFieldStyle = css({
     flexGrow: "7",
     height: textAreaHeight, // 80% per default
@@ -549,22 +578,42 @@ const SubtitleListSegment : React.FC<{
 
       {!isChapterInputs ?
         <div css={timeAreaStyle}>
-          <TimeInput
-            generalFieldStyle={[fieldStyle,
-              css({ ...(cue.startTime > cue.endTime && { borderColor: "red", borderWidth: "2px" }) })]}
-            value={cue.startTime}
-            changeCallback={updateCueStart}
-            tooltip={t("subtitleList.startTime-tooltip")}
-            tooltipAria={t("subtitleList.startTime-tooltip-aria") + ": " + convertMsToReadableString(cue.startTime)}
-          />
-          <TimeInput
-            generalFieldStyle={[fieldStyle,
-              css({ ...(cue.startTime > cue.endTime && { borderColor: "red", borderWidth: "2px" }) })]}
-            value={cue.endTime}
-            changeCallback={updateCueEnd}
-            tooltip={t("subtitleList.endTime-tooltip")}
-            tooltipAria={t("subtitleList.endTime-tooltip-aria") + ": " + convertMsToReadableString(cue.endTime)}
-          />
+          <div css={timeWrapperStyle}>
+            <TimeInput
+              generalFieldStyle={[timeInputStyle,
+                css({ ...(cue.startTime > cue.endTime && { borderColor: "red", borderWidth: "2px" }) })]}
+              value={cue.startTime}
+              changeCallback={updateCueStart}
+              tooltip={t("subtitleList.startTime-tooltip")}
+              tooltipAria={t("subtitleList.startTime-tooltip-aria") + ": " + convertMsToReadableString(cue.startTime)}
+            />
+            <ThemedTooltip title={t("subtitleList.copyTime")}>
+              <ProtoButton
+                onClick={() => updateCueStart(currentlyAt)}
+                css={[basicButtonStyle(theme), copyTimeButtonStyle]}
+              >
+                <LuCopyPlus />
+              </ProtoButton>
+            </ThemedTooltip>
+          </div>
+          <div css={timeWrapperStyle}>
+            <TimeInput
+              generalFieldStyle={[timeInputStyle,
+                css({ ...(cue.startTime > cue.endTime && { borderColor: "red", borderWidth: "2px" }) })]}
+              value={cue.endTime}
+              changeCallback={updateCueEnd}
+              tooltip={t("subtitleList.endTime-tooltip")}
+              tooltipAria={t("subtitleList.endTime-tooltip-aria") + ": " + convertMsToReadableString(cue.endTime)}
+            />
+            <ThemedTooltip title={t("subtitleList.copyTime")}>
+              <ProtoButton
+                onClick={() => updateCueEnd(currentlyAt)}
+                css={[basicButtonStyle(theme), copyTimeButtonStyle]}
+              >
+                <LuCopyPlus />
+              </ProtoButton>
+            </ThemedTooltip>
+          </div>
         </div>
         :
         <TimeInput
@@ -719,8 +768,8 @@ const TimeInput: React.FC<{
   };
 
   const timeFieldStyle = css({
-    height: isChapterInputs ? "20px" : "20%",
-    width: "100px",
+    height: isChapterInputs ? "20px" : "16px",
+    width: "96px",
     ...(parsingError && { borderColor: "red", borderWidth: "2px" }),
   });
 
