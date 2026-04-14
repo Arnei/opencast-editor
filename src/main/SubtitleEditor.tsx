@@ -47,6 +47,7 @@ import { ThemedTooltip } from "./Tooltip";
 import { titleStyle, titleStyleBold } from "../cssStyles";
 import { generateButtonTitle } from "./SubtitleSelect";
 import { ConfirmationModal, ConfirmationModalHandle, Modal, ModalHandle, ProtoButton } from "@opencast/appkit";
+import { settings } from "../config";
 
 const topRightButtonsBreakpoint = 1100;
 
@@ -177,6 +178,7 @@ const SubtitleEditor: React.FC = () => {
           </div>
           <div css={subAreaStyle}>
             <SubtitleListEditor
+              isStopOnTyping={settings.subtitles.stopOnTyping}
               selectSelectedSubtitleById={selectSelectedSubtitleById}
               selectSelectedSubtitleId={selectSelectedSubtitleId}
               selectCurrentlyAt={selectCurrentlyAt}
@@ -187,6 +189,7 @@ const SubtitleEditor: React.FC = () => {
               removeCue={removeCue}
               setCueAtIndex={setCueAtIndex}
               setCurrentlyAt={setCurrentlyAt}
+              setIsPlaying={setIsPlaying}
               setFocusSegmentTriggered={setFocusSegmentTriggered}
               setFocusSegmentTriggered2={setFocusSegmentTriggered2}
               setFocusToSegmentAboveId={setFocusToSegmentAboveId}

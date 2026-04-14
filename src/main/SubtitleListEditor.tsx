@@ -32,6 +32,7 @@ const SubtitleListEditor: React.FC<{
   segmentTextHeight?: string,
   isFunctionButtonEnabled?: boolean,
   isChapterInputs?: boolean,
+  isStopOnTyping?: boolean,
   selectSelectedSubtitleById: (state: RootState) => SubtitlesInEditor,
   selectSelectedSubtitleId: (state: RootState) => string,
   selectCurrentlyAt: (state: RootState) => number,
@@ -48,6 +49,7 @@ const SubtitleListEditor: React.FC<{
   removeCue: ActionCreatorWithPayload<{ identifier: string, cue: SubtitleCue; }, string>,
   setCueAtIndex: ActionCreatorWithPayload<{ identifier: string, cueIndex: number, newCue: SubtitleCue; }, string>,
   setCurrentlyAt: ActionCreatorWithPayload<number, string>,
+  setIsPlaying: ActionCreatorWithPayload<boolean, string>,
   setFocusSegmentTriggered: ActionCreatorWithPayload<boolean, string>,
   setFocusSegmentTriggered2: ActionCreatorWithPayload<boolean, string>,
   setFocusToSegmentAboveId: ActionCreatorWithPayload<{ identifier: string, segmentId: string }, string>,
@@ -59,6 +61,7 @@ const SubtitleListEditor: React.FC<{
   segmentTextHeight = "80%",
   isFunctionButtonEnabled = true,
   isChapterInputs = false,
+  isStopOnTyping = false,
   selectSelectedSubtitleById,
   selectSelectedSubtitleId,
   selectCurrentlyAt,
@@ -69,6 +72,7 @@ const SubtitleListEditor: React.FC<{
   removeCue,
   setCueAtIndex,
   setCurrentlyAt,
+  setIsPlaying,
   setFocusSegmentTriggered,
   setFocusSegmentTriggered2,
   setFocusToSegmentAboveId,
@@ -148,12 +152,14 @@ const SubtitleListEditor: React.FC<{
         isFunctionButtonEnabled={isFunctionButtonEnabled}
         isChapterInputs={isChapterInputs}
         selectCurrentlyAt={selectCurrentlyAt}
+        isStopOnTyping={isStopOnTyping}
         selectFocusSegmentId={selectFocusSegmentId}
         selectFocusSegmentTriggered2={selectFocusSegmentTriggered2}
         addCueAtIndex={addCueAtIndex}
         removeCue={removeCue}
         setCueAtIndex={setCueAtIndex}
         setCurrentlyAt={setCurrentlyAt}
+        setIsPlaying={setIsPlaying}
         setFocusSegmentTriggered={setFocusSegmentTriggered}
         setFocusSegmentTriggered2={setFocusSegmentTriggered2}
         setFocusToSegmentAboveId={setFocusToSegmentAboveId}
@@ -166,12 +172,14 @@ const SubtitleListEditor: React.FC<{
       isFunctionButtonEnabled,
       isChapterInputs,
       selectCurrentlyAt,
+      isStopOnTyping,
       selectFocusSegmentId,
       selectFocusSegmentTriggered2,
       addCueAtIndex,
       removeCue,
       setCueAtIndex,
       setCurrentlyAt,
+      setIsPlaying,
       setFocusSegmentTriggered,
       setFocusSegmentTriggered2,
       setFocusToSegmentAboveId,
@@ -251,6 +259,7 @@ const SubtitleListSegment : React.FC<{
   isFunctionButtonEnabled?: boolean,
   isChapterInputs?: boolean,
   selectCurrentlyAt: (state: RootState) => number,
+  isStopOnTyping?: boolean,
   selectFocusSegmentId: (state: RootState) => string,
   selectFocusSegmentTriggered2: (state: RootState) => boolean,
   addCueAtIndex: ActionCreatorWithPayload<{
@@ -263,6 +272,7 @@ const SubtitleListSegment : React.FC<{
   removeCue: ActionCreatorWithPayload<{ identifier: string, cue: SubtitleCue; }, string>,
   setCueAtIndex: ActionCreatorWithPayload<{ identifier: string, cueIndex: number, newCue: SubtitleCue; }, string>,
   setCurrentlyAt: ActionCreatorWithPayload<number, string>,
+  setIsPlaying: ActionCreatorWithPayload<boolean, string>,
   setFocusSegmentTriggered: ActionCreatorWithPayload<boolean, string>,
   setFocusSegmentTriggered2: ActionCreatorWithPayload<boolean, string>,
   setFocusToSegmentAboveId: ActionCreatorWithPayload<{ identifier: string, segmentId: string }, string>,
@@ -278,12 +288,14 @@ const SubtitleListSegment : React.FC<{
   const isFunctionButtonEnabled = props.isFunctionButtonEnabled;
   const isChapterInputs = props.isChapterInputs;
   const selectCurrentlyAt = props.selectCurrentlyAt;
+  const isStopOnTyping = props.isStopOnTyping;
   const selectFocusSegmentId = props.selectFocusSegmentId;
   const selectFocusSegmentTriggered2 = props.selectFocusSegmentTriggered2;
   const addCueAtIndex = props.addCueAtIndex;
   const removeCue = props.removeCue;
   const setCueAtIndex = props.setCueAtIndex;
   const setCurrentlyAt = props.setCurrentlyAt;
+  const setIsPlaying = props.setIsPlaying;
   const setFocusSegmentTriggered = props.setFocusSegmentTriggered;
   const setFocusSegmentTriggered2 = props.setFocusSegmentTriggered2;
   const setFocusToSegmentAboveId = props.setFocusToSegmentAboveId;
@@ -314,6 +326,9 @@ const SubtitleListSegment : React.FC<{
   }, [cue.idInternal, dispatch, focusId2, focusTriggered2, setFocusSegmentTriggered2]);
 
   const updateCueText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (isStopOnTyping) {
+      dispatch(setIsPlaying(false));
+    }
     dispatch(setCueAtIndex({
       identifier: identifier,
       cueIndex: props.index,
