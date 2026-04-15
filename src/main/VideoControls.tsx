@@ -138,7 +138,7 @@ const PreviewMode: React.FC<{
   useHotkeys(
     KEYMAP.videoPlayer.preview.key,
     () => switchPlayPreview(undefined),
-    { preventDefault: true },
+    KEYMAP.videoPlayer.preview.options,
     [isPlayPreview],
   );
 
@@ -212,7 +212,12 @@ const PlayButton: React.FC<{
   };
 
   // Maps functions to hotkeys
-  useHotkeys(KEYMAP.videoPlayer.play.key, () => switchIsPlaying(), { preventDefault: true }, [isPlaying]);
+  useHotkeys(
+    KEYMAP.videoPlayer.play.key,
+    () => switchIsPlaying(),
+    KEYMAP.videoPlayer.play.options,
+    [isPlaying],
+  );
 
   const playButtonStyle = css({
     justifySelf: "center",
@@ -264,7 +269,11 @@ const PreviousButton: React.FC<{
     dispatch(jumpToPreviousSegment());
   };
 
-  useHotkeys(KEYMAP.videoPlayer.previous.key, () => jumpToPrevious(), { preventDefault: true });
+  useHotkeys(
+    KEYMAP.videoPlayer.previous.key,
+    () => jumpToPrevious(),
+    KEYMAP.videoPlayer.previous.options,
+  );
 
   const previousIconStyle = css({
     fontSize: 24,
@@ -306,7 +315,11 @@ const NextButton: React.FC<{
     dispatch(jumpToNextSegment());
   };
 
-  useHotkeys(KEYMAP.videoPlayer.next.key, () => jumpToNext(), { preventDefault: true });
+  useHotkeys(
+    KEYMAP.videoPlayer.next.key,
+    () => jumpToNext(),
+    KEYMAP.videoPlayer.next.options,
+  );
 
   const nextIconStyle = css({
     fontSize: 24,
@@ -473,6 +486,13 @@ const VolumeSlider: React.FC<{
           onChange={volumeOnChange}
           aria-label={t("video.volume-tooltip", { current: Math.trunc(volume * 100) })}
           valueLabelDisplay="off"
+          slotProps={
+            {
+              input: {
+                role: "slider",
+              },
+            }
+          }
         />
       </ThemedTooltip>
     </div>

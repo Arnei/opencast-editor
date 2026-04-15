@@ -94,37 +94,37 @@ const CuttingActions: React.FC<{
   useHotkeys(
     KEYMAP.cutting.cut.key,
     () => dispatchAction(cut),
-    { preventDefault: true },
+    KEYMAP.cutting.cut.options,
     [cut],
   );
   useHotkeys(
     KEYMAP.cutting.delete.key,
     () => dispatchAction(markAsDeletedOrAlive),
-    { preventDefault: true },
+    KEYMAP.cutting.delete.options,
     [markAsDeletedOrAlive],
   );
   useHotkeys(
     KEYMAP.cutting.mergeLeft.key,
     () => dispatchAction(mergeLeft),
-    { preventDefault: true },
+    KEYMAP.cutting.mergeLeft.options,
     [mergeLeft],
   );
   useHotkeys(
     KEYMAP.cutting.mergeRight.key,
     () => dispatchAction(mergeRight),
-    { preventDefault: true },
+    KEYMAP.cutting.mergeRight.options,
     [mergeRight],
   );
   useHotkeys(
     KEYMAP.cutting.zoomIn.key,
     () => dispatchAction(timelineZoomIn),
-    { preventDefault: true, splitKey: KEYMAP.cutting.zoomIn.splitKey, useKey: true },
+    KEYMAP.cutting.zoomIn.options,
     [timelineZoomIn],
   );
   useHotkeys(
     KEYMAP.cutting.zoomOut.key,
     () => dispatchAction(timelineZoomOut),
-    { preventDefault: true, useKey: true },
+    KEYMAP.cutting.zoomOut.options,
     [timelineZoomOut],
   );
 
@@ -446,6 +446,13 @@ const ZoomSlider : React.FC<ZoomSliderInterface> = ({
           onChange={zoomSliderOnChange}
           aria-label={ariaLabelText}
           valueLabelDisplay="off"
+          slotProps={
+            {
+              input: {
+                role: "slider",
+              },
+            }
+          }
         />
       </div>
     </ThemedTooltip>

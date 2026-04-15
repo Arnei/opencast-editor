@@ -48,97 +48,161 @@ export interface IKeyGroup {
 export interface IKey {
   name: string;
   key: string;
+  options: object,
   splitKey?: string;
 }
+
+const hotkeysDefaultOptions: object = {
+  preventDefault: true,
+  enableOnFormTags: ["slider"],
+};
+
+export const subtitleListHotkeysDefaultOptions: object = {
+  preventDefault: true,
+  enableOnFormTags: ["input", "select", "textarea", "slider"],
+};
+
+const cuttingZoomInSplitKey = ";";
 
 export const KEYMAP: IKeyMap = {
   videoPlayer: {
     play: {
       name: "keyboardControls.videoPlayButton",
       key: "Shift+Alt+Space, Space",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
     previous: {
       name: "video.previousButton",
       key: "Shift+Alt+Left",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
     next: {
       name: "video.nextButton",
       key: "Shift+Alt+Right",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
     preview: {
       name: "video.previewButton",
       key: "Shift+Alt+p",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
   },
   cutting: {
     cut: {
       name: "cuttingActions.cut-button",
       key: "Shift+Alt+c",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
     delete: {
       name: "cuttingActions.delete-button",
       key: "Shift+Alt+d",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
     mergeLeft: {
       name: "cuttingActions.mergeLeft-button",
       key: "Shift+Alt+n",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
     mergeRight: {
       name: "cuttingActions.mergeRight-button",
       key: "Shift+Alt+m",
+      options: {
+        ...hotkeysDefaultOptions,
+      },
     },
     zoomIn: {
       name: "cuttingActions.zoomIn",
       key: "Shift;Alt;r, +",
-      splitKey: ";",
+      splitKey: cuttingZoomInSplitKey,
+      options: {
+        ...hotkeysDefaultOptions,
+        splitKey: cuttingZoomInSplitKey,
+        useKey: true,
+      },
     },
     zoomOut: {
       name: "cuttingActions.zoomOut",
       key: "Shift+Alt+e, -",
+      options: {
+        ...hotkeysDefaultOptions,
+        useKey: true,
+      },
     },
   },
   timeline: {
     left: {
       name: "keyboardControls.scrubberLeft",
       key: "Shift+Alt+j , Left",
+      options: {
+        preventDefault: true,
+      },
     },
     right: {
       name: "keyboardControls.scrubberRight",
       key: "Shift+Alt+l, Right",
+      options: {
+        preventDefault: true,
+      },
     },
     increase: {
       name: "keyboardControls.scrubberIncrease",
       key: "Shift+Alt+i, Up",
+      options: {
+        preventDefault: true,
+      },
     },
     decrease: {
       name: "keyboardControls.scrubberDecrease",
       key: "Shift+Alt+k, Down",
+      options: {
+        preventDefault: true,
+      },
     },
   },
   subtitleList: {
     addAbove: {
       name: "subtitleList.addSegmentAbove",
       key: "Shift+Alt+q",
+      options: {},
     },
     addBelow: {
       name: "subtitleList.addSegmentBelow",
       key: "Shift+Alt+a",
+      options: {},
     },
     jumpAbove: {
       name: "subtitleList.jumpToSegmentAbove",
       key: "Shift+Alt+w",
+      options: {},
     },
     jumpBelow: {
       name: "subtitleList.jumpToSegmentBelow",
       key: "Shift+Alt+s",
+      options: {},
     },
     delete: {
       name: "subtitleList.deleteSegment",
       key: "Shift+Alt+d",
+      options: {},
     },
     addCue: {
       name: "subtitleList.addCue",
       key: "Shift+Alt+e",
+      options: {},
     },
   },
 };
