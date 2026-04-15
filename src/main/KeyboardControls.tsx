@@ -4,18 +4,19 @@ import { ParseKeys } from "i18next";
 import { useTranslation, Trans } from "react-i18next";
 import { getGroupName, IKey, IKeyGroup, rewriteKeys } from "../globalKeys";
 import { Theme, useTheme } from "../themes";
-import { basicButtonStyle, titleStyle, titleStyleBold } from "../cssStyles";
+import { basicButtonStyle, deactivatedButtonStyle, titleStyle, titleStyleBold } from "../cssStyles";
 import { useRecordHotkeys } from "react-hotkeys-hook";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { selectKeymap, setHotkey } from "../redux/hotkeySlice";
 import { Modal, ModalHandle, ProtoButton } from "@opencast/appkit";
-import { LuPen } from "react-icons/lu";
+import { LuPen, LuTrash } from "react-icons/lu";
 
 const Group: React.FC<{
   id: string
   entries: IKeyGroup
   openEditModal: (group: string, action: string, actionTitle: string) => void
-}> = ({ id, entries, openEditModal }) => {
+  openDeleteModal: (group: string, action: string, actionTitle: string) => void
+}> = ({ id, entries, openEditModal, openDeleteModal }) => {
 
   const { t } = useTranslation();
   const theme = useTheme();
@@ -47,6 +48,7 @@ const Group: React.FC<{
           entry={value}
           groupId={id}
           openEditModal={openEditModal}
+          openDeleteModal={openDeleteModal}
         />,
       )}
     </div>
@@ -58,7 +60,8 @@ const Entry: React.FC<{
   entry: IKey
   groupId: string
   openEditModal: (group: string, action: string, actionTitle: string) => void
-}> = ({ id, entry, groupId, openEditModal }) => {
+  openDeleteModal: (group: string, action: string, actionTitle: string) => void
+}> = ({ id, entry, groupId, openEditModal, openDeleteModal }) => {
 
   const { t } = useTranslation();
   const theme = useTheme();
@@ -136,31 +139,43 @@ const Entry: React.FC<{
     <div css={entryStyle}>
       <div css={labelStyle}><Trans>{entry.name || t("keyboardControls.missingLabel")}</Trans></div>
       <div css={entryContentStyle}>
-        <div css={sequencesStyle}>
-          {formatEntry(entry).map((sequence, index, arr) => (
-            <div css={sequenceStyle} key={index}>
-              {sequence.map((singleKey, index) => (
-                <div key={index} css={sequenceStyle}>
-                  <div css={singleKeyStyle}>
-                    {singleKey}
+        {entry.key === "" ?
+          <div>{t("keyboardControls.keyUndefined")}</div>
+          :
+          <div css={sequencesStyle}>
+            {formatEntry(entry).map((sequence, index, arr) => (
+              <div css={sequenceStyle} key={index}>
+                {sequence.map((singleKey, index) => (
+                  <div key={index} css={sequenceStyle}>
+                    <div css={singleKeyStyle}>
+                      {singleKey}
+                    </div>
+                    {sequence.length - 1 !== index &&
+                      <div css={orStyle}>+</div>
+                    }
                   </div>
-                  {sequence.length - 1 !== index &&
-                    <div css={orStyle}>+</div>
-                  }
-                </div>
-              ))}
-              <div css={orStyle}><Trans>
-                {arr.length - 1 !== index && t("keyboardControls.sequenceSeparator")}
-              </Trans></div>
-            </div>
-          ))}
+                ))}
+                <div css={orStyle}><Trans>
+                  {arr.length - 1 !== index && t("keyboardControls.sequenceSeparator")}
+                </Trans></div>
+              </div>
+            ))}
+          </div>
+        }
+        <div>
+          <ProtoButton
+            css={[basicButtonStyle(theme), editButtonStyle]}
+            onClick={() => openEditModal(groupId, id, t(entry.name as ParseKeys))}
+          >
+            <LuPen />
+          </ProtoButton>
+          <ProtoButton
+            css={[basicButtonStyle(theme), editButtonStyle]}
+            onClick={() => openDeleteModal(groupId, id, t(entry.name as ParseKeys))}
+          >
+            <LuTrash />
+          </ProtoButton>
         </div>
-        <ProtoButton
-          css={[basicButtonStyle(theme), editButtonStyle]}
-          onClick={() => openEditModal(groupId, id, t(entry.name as ParseKeys))}
-        >
-          <LuPen />
-        </ProtoButton>
       </div>
     </div>
   );
@@ -174,6 +189,7 @@ const KeyboardControls: React.FC = () => {
 
   const [keys, { start, stop, resetKeys }] = useRecordHotkeys(true);
   const modalRef = React.useRef<ModalHandle>(null);
+  const modalRefDelete = React.useRef<ModalHandle>(null);
   const [editGroup, setEditGroup] = React.useState<string>("");
   const [editAction, setEditAction] = React.useState<string>("");
   const [editActionTitle, setEditActionTitle] = React.useState<string>("");
@@ -188,6 +204,16 @@ const KeyboardControls: React.FC = () => {
 
     if (modalRef.current) {
       modalRef.current?.open();
+    }
+  };
+
+  const openDeleteModal = (group: string, action: string, actionTitle: string) => {
+    setEditGroup(group);
+    setEditAction(action);
+    setEditActionTitle(actionTitle);
+
+    if (modalRefDelete.current) {
+      modalRefDelete.current?.open();
     }
   };
 
@@ -209,6 +235,7 @@ const KeyboardControls: React.FC = () => {
           id={groupId}
           entries={group}
           openEditModal={openEditModal}
+          openDeleteModal={openDeleteModal}
         />);
       });
 
@@ -240,6 +267,13 @@ const KeyboardControls: React.FC = () => {
         modalRef={modalRef}
         keys={keys}
         stop={stop}
+        group={editGroup}
+        action={editAction}
+        actionTitle={editActionTitle}
+      />
+
+      <DeleteHotkeyModal
+        modalRef={modalRefDelete}
         group={editGroup}
         action={editAction}
         actionTitle={editActionTitle}
@@ -318,22 +352,102 @@ const ChangeHotkeyModal: React.FC<{
         <br />
         <div css={buttonsStyle}>
           <ProtoButton
-            onClick={setNewKeys}
-            css={[basicButtonStyle(theme), buttonStyle(theme)]}
-          >
-            {t("keyboardControls.changeModal.save")}
-          </ProtoButton>
-          <ProtoButton
             onClick={modalRef.current?.close}
             css={[basicButtonStyle(theme), buttonStyle(theme)]}
           >
             {t("keyboardControls.changeModal.discard")}
           </ProtoButton>
+          <ProtoButton
+            onClick={setNewKeys}
+            css={keys.size !== 0
+              ? [basicButtonStyle(theme), buttonStyle(theme)]
+              : [deactivatedButtonStyle, buttonStyle(theme)]}
+            disabled={keys.size === 0}
+          >
+            {t("keyboardControls.changeModal.save")}
+          </ProtoButton>
         </div>
       </div>
     </Modal>
   );
-
 };
+
+const DeleteHotkeyModal: React.FC<{
+  modalRef: React.RefObject<ModalHandle>,
+  group: string,
+  action: string,
+  actionTitle: string,
+}> = ({
+  modalRef,
+  group,
+  action,
+  actionTitle,
+}) => {
+  const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+  const theme = useTheme();
+
+  const unsetHotkey = () => {
+    dispatch(setHotkey({
+      group: group,
+      action: action,
+      key: "",
+    }));
+
+    if (modalRef.current?.close) {
+      modalRef.current.close();
+    }
+  };
+
+  const modalContentStyle = css({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+  });
+
+  const buttonsStyle = css({
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+  });
+
+  const buttonStyle = (theme: Theme) => css({
+    fontSize: "16px",
+    padding: "12px 16px",
+    justifyContent: "space-around",
+    boxShadow: `${theme.boxShadow}`,
+    background: `${theme.element_bg}`,
+  });
+
+  return (
+    <Modal
+      ref={modalRef}
+      title={t("keyboardControls.deleteModal.title", { name: actionTitle, interpolation: { escapeValue: false } })}
+      text={{ close: t("modal.close") }}
+    >
+      <div css={modalContentStyle}>
+        <p>{t("keyboardControls.deleteModal.info")}</p>
+        <br />
+        <div css={buttonsStyle}>
+          <ProtoButton
+            onClick={modalRef.current?.close}
+            css={[basicButtonStyle(theme), buttonStyle(theme)]}
+          >
+            {t("keyboardControls.deleteModal.cancel")}
+          </ProtoButton>
+          <ProtoButton
+            onClick={unsetHotkey}
+            css={[basicButtonStyle(theme), buttonStyle(theme)]}
+          >
+            {t("keyboardControls.deleteModal.confirm")}
+          </ProtoButton>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
 
 export default KeyboardControls;

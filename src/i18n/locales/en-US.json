@@ -351,12 +351,19 @@
       "scrubberRight": "Move right",
       "scrubberIncrease": "Move faster",
       "scrubberDecrease": "Move slower",
+      "keyUndefined": "Undefined",
       "changeModal": {
         "title": "Change hotkey: {{name}}",
         "info": "Record a new hotkey sequence by pressing the keys you want.",
         "recordedKeys": "Recorded keys: ",
         "save": "Save",
         "discard": "Discard"
+      },
+      "deleteModal": {
+        "title": "Delete hotkey: {{name}}",
+        "info": "Unsets the hotkey, rendering it unusable.",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
       }
     },
 
