@@ -172,7 +172,7 @@ const KeyboardControls: React.FC = () => {
   const theme = useTheme();
   const keymap = useAppSelector(selectKeymap);
 
-  const [keys, { start, stop, resetKeys }] = useRecordHotkeys();
+  const [keys, { start, stop, resetKeys }] = useRecordHotkeys(true);
   const modalRef = React.useRef<ModalHandle>(null);
   const [editGroup, setEditGroup] = React.useState<string>("");
   const [editAction, setEditAction] = React.useState<string>("");
