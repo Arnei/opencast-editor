@@ -135,6 +135,7 @@ const Cutting: React.FC = () => {
           selectIsMuted={selectIsMuted}
           selectVolume={selectVolume}
           selectIsPlayPreview={selectIsPlayPreview}
+          setCurrentlyAt={setCurrentlyAt}
           setIsPlaying={setIsPlaying}
           setIsMuted={setIsMuted}
           setVolume={setVolume}
