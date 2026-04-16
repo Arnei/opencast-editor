@@ -348,8 +348,9 @@ const ChangeHotkeyModal: React.FC<{
     background: `${theme.element_bg}`,
   });
 
+  const containsPlus = keys.has("+");
   const keyIsAlreadyPresent = isKeyInKeymap(keymap, Array.from(keys));
-  const disabled = keys.size === 0 || keyIsAlreadyPresent;
+  const disabled = keys.size === 0 || keyIsAlreadyPresent || containsPlus;
 
   return (
     <Modal
@@ -362,6 +363,7 @@ const ChangeHotkeyModal: React.FC<{
         <p>{t("keyboardControls.changeModal.recordedKeys")}</p>
         <p css={css({ minHeight: "19px" })}>{Array.from(keys).join(" + ")}</p>
         {keyIsAlreadyPresent ? <p>{t("keyboardControls.alreadyInUse")}</p> : null}
+        {containsPlus ? <p>{t("keyboardControls.containsPlus")}</p> : null}
         <br />
         <div css={buttonsStyle}>
           <ProtoButton
