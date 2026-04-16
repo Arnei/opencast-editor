@@ -7,9 +7,9 @@ import { Theme, useTheme } from "../themes";
 import { basicButtonStyle, deactivatedButtonStyle, titleStyle, titleStyleBold } from "../cssStyles";
 import { useRecordHotkeys } from "react-hotkeys-hook";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { selectKeymap, setHotkey } from "../redux/hotkeySlice";
+import { resetHotkey, selectKeymap, setHotkey } from "../redux/hotkeySlice";
 import { Modal, ModalHandle, ProtoButton } from "@opencast/appkit";
-import { LuPen, LuTrash } from "react-icons/lu";
+import { LuPen, LuRotateCcw, LuTrash } from "react-icons/lu";
 
 const Group: React.FC<{
   id: string
@@ -65,6 +65,7 @@ const Entry: React.FC<{
 
   const { t } = useTranslation();
   const theme = useTheme();
+  const dispatch = useAppDispatch();
 
   const formatEntry = (entry: IKey) => {
     let formattedSequences: string[][] = [];
@@ -132,7 +133,7 @@ const Entry: React.FC<{
   });
 
   const editButtonStyle = css({
-    padding: "16px",
+    padding: "12px",
   });
 
   return (
@@ -174,6 +175,12 @@ const Entry: React.FC<{
             onClick={() => openDeleteModal(groupId, id, t(entry.name as ParseKeys))}
           >
             <LuTrash />
+          </ProtoButton>
+          <ProtoButton
+            css={[basicButtonStyle(theme), editButtonStyle]}
+            onClick={() => dispatch(resetHotkey({ group: groupId, action: id }))}
+          >
+            <LuRotateCcw />
           </ProtoButton>
         </div>
       </div>
