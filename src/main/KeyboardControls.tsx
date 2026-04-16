@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { ParseKeys } from "i18next";
 import { useTranslation, Trans } from "react-i18next";
-import { getGroupName, IKey, IKeyGroup, rewriteKeys } from "../globalKeys";
+import { getGroupName, IKey, IKeyGroup, IKeyMap, rewriteKeys } from "../globalKeys";
 import { Theme, useTheme } from "../themes";
 import { basicButtonStyle, deactivatedButtonStyle, titleStyle, titleStyleBold } from "../cssStyles";
 import { useRecordHotkeys } from "react-hotkeys-hook";
@@ -303,6 +303,8 @@ const ChangeHotkeyModal: React.FC<{
   const { t } = useTranslation();
   const theme = useTheme();
 
+  const keymap = useAppSelector(selectKeymap);
+
   const setNewKeys = () => {
     stop();
 
@@ -339,6 +341,9 @@ const ChangeHotkeyModal: React.FC<{
     background: `${theme.element_bg}`,
   });
 
+  const keyIsAlreadyPresent = isKeyInKeymap(keymap, Array.from(keys));
+  const disabled = keys.size === 0 || keyIsAlreadyPresent;
+
   return (
     <Modal
       ref={modalRef}
@@ -349,6 +354,7 @@ const ChangeHotkeyModal: React.FC<{
         <p>{t("keyboardControls.changeModal.info")}</p>
         <p>{t("keyboardControls.changeModal.recordedKeys")}</p>
         <p css={css({ minHeight: "19px" })}>{Array.from(keys).join(" + ")}</p>
+        {keyIsAlreadyPresent ? <p>{t("keyboardControls.alreadyInUse")}</p> : null}
         <br />
         <div css={buttonsStyle}>
           <ProtoButton
@@ -359,10 +365,10 @@ const ChangeHotkeyModal: React.FC<{
           </ProtoButton>
           <ProtoButton
             onClick={setNewKeys}
-            css={keys.size !== 0
+            css={!disabled
               ? [basicButtonStyle(theme), buttonStyle(theme)]
               : [deactivatedButtonStyle, buttonStyle(theme)]}
-            disabled={keys.size === 0}
+            disabled={disabled}
           >
             {t("keyboardControls.changeModal.save")}
           </ProtoButton>
@@ -448,6 +454,45 @@ const DeleteHotkeyModal: React.FC<{
     </Modal>
   );
 };
+
+function isKeyInKeymap(
+  keymap: IKeyMap,
+  targetKeys: string[],
+): boolean {
+  if (!targetKeys || targetKeys.length === 0) {
+    return false;
+  }
+
+  for (const group of Object.values(keymap)) {
+    for (const action of Object.values(group)) {
+      const sequenceSeparator = ",";
+      const sequences = action.key
+        .split(sequenceSeparator)
+        .map(k => k.trim());
+
+      const targetKeysTransformed = targetKeys
+        .map(v => v.toLowerCase())
+        .sort();
+
+      for (const sequence of sequences) {
+        const keySeparator = action.splitKey ?? "+";
+
+        const keys = sequence
+          .split(keySeparator)
+          .map(k => k.trim())
+          .map(k => k.toLowerCase());
+
+        const setKeys = new Set(keys);
+        const setTargetKeys = new Set(targetKeysTransformed);
+
+        if (setKeys.symmetricDifference(setTargetKeys).size === 0) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
 
 
 export default KeyboardControls;

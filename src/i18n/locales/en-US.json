@@ -352,6 +352,7 @@
       "scrubberIncrease": "Move faster",
       "scrubberDecrease": "Move slower",
       "keyUndefined": "Undefined",
+      "alreadyInUse": "Key sequence is already in use. Please choose a different sequence.",
       "changeModal": {
         "title": "Change hotkey: {{name}}",
         "info": "Record a new hotkey sequence by pressing the keys you want.",
