@@ -356,7 +356,7 @@
       "containsPlus": "The '+' character is not allowed. Please choose a different sequence",
       "changeModal": {
         "title": "Change hotkey: {{name}}",
-        "info": "Record a new hotkey sequence by pressing the keys you want.",
+        "info": "Record a new hotkey sequence by pressing the keys you want. Maximum are 3 keys.",
         "recordedKeys": "Recorded keys: ",
         "save": "Save",
         "discard": "Discard"

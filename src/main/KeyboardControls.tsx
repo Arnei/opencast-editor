@@ -312,6 +312,11 @@ const ChangeHotkeyModal: React.FC<{
 
   const keymap = useAppSelector(selectKeymap);
 
+  // Hard limit maximum amount of keys
+  if (keys.size >= 3) {
+    stop();
+  }
+
   const setNewKeys = () => {
     stop();
 
