@@ -498,6 +498,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
                   position: "absolute",
                   bottom: "10px",
                   right: "10px",
+                  cursor: "pointer",
                 })]}
                 onClick={() => {
                   if (fullscreenPlayerIndex === undefined) {
