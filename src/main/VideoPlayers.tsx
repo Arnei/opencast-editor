@@ -39,7 +39,7 @@ import { useTheme } from "../themes";
 import { backgroundBoxStyle, basicButtonStyle } from "../cssStyles";
 import { BaseReactPlayerProps } from "react-player/base";
 import { ErrorBox } from "@opencast/appkit";
-import { LuFullscreen } from "react-icons/lu";
+import { LuMaximize2, LuMinimize2 } from "react-icons/lu";
 import { isSafari } from "react-device-detect";
 
 const VideoPlayers: React.FC<{
@@ -500,6 +500,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
                   right: "10px",
                   cursor: "pointer",
                 })]}
+                aria-pressed={fullscreenPlayerIndex !== undefined}
                 onClick={() => {
                   if (fullscreenPlayerIndex === undefined) {
                     setFullscreenPlayerIndex(dataKey);
@@ -507,7 +508,9 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
                     setFullscreenPlayerIndex(undefined);
                   }
                 }}
-                ><LuFullscreen /></button>
+                >
+                  {fullscreenPlayerIndex === undefined ? <LuMaximize2 /> : <LuMinimize2 />}
+                </button>
               }
             </div>
           </div>
