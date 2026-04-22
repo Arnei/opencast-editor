@@ -25,9 +25,9 @@ import { useTheme } from "../themes";
 import { ThemedTooltip } from "./Tooltip";
 import { useTranslation } from "react-i18next";
 import { useHotkeys } from "react-hotkeys-hook";
-import { KEYMAP } from "../globalKeys";
 import { shallowEqual } from "react-redux";
 import TimelineStamps from "./TimelineStamps";
+import { selectKeymap } from "../redux/hotkeySlice";
 
 /**
  * Copy-paste of the timeline in Video.tsx, so that we can make some small adjustments,
@@ -40,6 +40,7 @@ const SubtitleTimeline: React.FC = () => {
 
   // Init redux variables
   const dispatch = useAppDispatch();
+  const keymap = useAppSelector(selectKeymap);
   const duration = useAppSelector(selectDuration);
   const currentlyAt = useAppSelector(selectCurrentlyAt);
   const subtitleId = useAppSelector(selectSelectedSubtitleId, shallowEqual);
@@ -101,33 +102,33 @@ const SubtitleTimeline: React.FC = () => {
   // TODO: Better increases and decreases than ten intervals
   // TODO: Additional helpful controls (e.g. jump to start/end of segment/next segment)
   useHotkeys(
-    KEYMAP.timeline.left.key,
+    keymap.timeline.left.key,
     () => dispatch(setCurrentlyAt(Math.max(currentlyAt - keyboardJumpDelta, 0))),
-    KEYMAP.timeline.left.options,
+    keymap.timeline.left.options,
     [currentlyAt, keyboardJumpDelta],
   );
   useHotkeys(
-    KEYMAP.timeline.right.key,
+    keymap.timeline.right.key,
     () => dispatch(setCurrentlyAt(Math.min(currentlyAt + keyboardJumpDelta, duration))),
-    KEYMAP.timeline.right.options,
+    keymap.timeline.right.options,
     [currentlyAt, keyboardJumpDelta, duration],
   );
   useHotkeys(
-    KEYMAP.timeline.increase.key,
+    keymap.timeline.increase.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.min(keyboardJumpDelta * 10, 1000000)),
-    KEYMAP.timeline.increase.options,
+    keymap.timeline.increase.options,
     [keyboardJumpDelta],
   );
   useHotkeys(
-    KEYMAP.timeline.decrease.key,
+    keymap.timeline.decrease.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.max(keyboardJumpDelta / 10, 1)),
-    KEYMAP.timeline.decrease.options,
+    keymap.timeline.decrease.options,
     [keyboardJumpDelta],
   );
   useHotkeys(
-    KEYMAP.subtitleList.addCue.key,
+    keymap.subtitleList.addCue.key,
     () => addCue(currentlyAt),
-    KEYMAP.subtitleList.addCue.options,
+    keymap.subtitleList.addCue.options,
     [currentlyAt],
   );
 

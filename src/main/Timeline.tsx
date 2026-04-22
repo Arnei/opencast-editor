@@ -26,7 +26,7 @@ import useResizeObserver from "use-resize-observer";
 
 import { Waveform } from "../util/waveform";
 import { convertMsToReadableString } from "../util/utilityFunctions";
-import { KEYMAP, rewriteKeys } from "../globalKeys";
+import { rewriteKeys } from "../globalKeys";
 
 import { useTranslation } from "react-i18next";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
@@ -43,6 +43,7 @@ import {
   moveCut as chapterMoveCut,
 } from "../redux/chapterSlice";
 import TimelineStamps from "./TimelineStamps";
+import { selectKeymap } from "../redux/hotkeySlice";
 
 /**
  * A container for visualizing the cutting of the video, as well as for controlling
@@ -259,6 +260,7 @@ export const Scrubber = React.forwardRef<HTMLDivElement, ScrubberProps>((props, 
 
   // Init redux variables
   const dispatch = useAppDispatch();
+  const keymap = useAppSelector(selectKeymap);
   const isPlaying = useAppSelector(selectIsPlaying);
   const currentlyAt = useAppSelector(selectCurrentlyAt);
   const duration = useAppSelector(selectDuration);
@@ -339,27 +341,27 @@ export const Scrubber = React.forwardRef<HTMLDivElement, ScrubberProps>((props, 
   // TODO: Better increases and decreases than ten intervals
   // TODO: Additional helpful controls (e.g. jump to start/end of segment/next segment)
   useHotkeys(
-    KEYMAP.timeline.left.key,
+    keymap.timeline.left.key,
     () => dispatch(setCurrentlyAt(Math.max(currentlyAt - keyboardJumpDelta, 0))),
-    KEYMAP.timeline.left.options,
+    keymap.timeline.left.options,
     [currentlyAt, keyboardJumpDelta],
   );
   useHotkeys(
-    KEYMAP.timeline.right.key,
+    keymap.timeline.right.key,
     () => dispatch(setCurrentlyAt(Math.min(currentlyAt + keyboardJumpDelta, duration))),
-    KEYMAP.timeline.right.options,
+    keymap.timeline.right.options,
     [currentlyAt, keyboardJumpDelta, duration],
   );
   useHotkeys(
-    KEYMAP.timeline.increase.key,
+    keymap.timeline.increase.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.min(keyboardJumpDelta * 10, 1000000)),
-    KEYMAP.timeline.increase.options,
+    keymap.timeline.increase.options,
     [keyboardJumpDelta],
   );
   useHotkeys(
-    KEYMAP.timeline.decrease.key,
+    keymap.timeline.decrease.key,
     () => setKeyboardJumpDelta(keyboardJumpDelta => Math.max(keyboardJumpDelta / 10, 1)),
-    KEYMAP.timeline.decrease.options,
+    keymap.timeline.decrease.options,
     [keyboardJumpDelta],
   );
 
@@ -427,10 +429,10 @@ export const Scrubber = React.forwardRef<HTMLDivElement, ScrubberProps>((props, 
               currentTime: convertMsToReadableString(currentlyAt),
               segment: activeSegmentIndex,
               segmentStatus: (activeSegment && activeSegment.deleted ? "Deleted" : "Alive"),
-              moveLeft: rewriteKeys(KEYMAP.timeline.left.key),
-              moveRight: rewriteKeys(KEYMAP.timeline.right.key),
-              increase: rewriteKeys(KEYMAP.timeline.increase.key),
-              decrease: rewriteKeys(KEYMAP.timeline.decrease.key),
+              moveLeft: rewriteKeys(keymap.timeline.left.key),
+              moveRight: rewriteKeys(keymap.timeline.right.key),
+              increase: rewriteKeys(keymap.timeline.increase.key),
+              decrease: rewriteKeys(keymap.timeline.decrease.key),
             })}
           tabIndex={0}>
           <LuMenu css={scrubberDragHandleIconStyle} />

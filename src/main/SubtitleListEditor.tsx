@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { shallowEqual } from "react-redux";
 import { RootState, useAppDispatch, useAppSelector } from "../redux/store";
 import { basicButtonStyle } from "../cssStyles";
-import { KEYMAP, subtitleListHotkeysDefaultOptions } from "../globalKeys";
+import { subtitleListHotkeysDefaultOptions } from "../globalKeys";
 import { SubtitleCue, SubtitlesInEditor } from "../types";
 import { convertMsToReadableString } from "../util/utilityFunctions";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
@@ -21,6 +21,7 @@ import { ProtoButton, useColorScheme } from "@opencast/appkit";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { setCues } from "../redux/chapterSlice";
 import { selectDuration } from "../redux/videoSlice";
+import { selectKeymap } from "../redux/hotkeySlice";
 
 /**
  * Displays everything needed to edit subtitles
@@ -305,6 +306,7 @@ const SubtitleListSegment : React.FC<{
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
+  const keymap = useAppSelector(selectKeymap);
   const duration = useAppSelector(selectDuration);
   const currentlyAt = useAppSelector(selectCurrentlyAt);
   // Unfortunately, the focus selectors will cause every element to rerender,
@@ -438,28 +440,28 @@ const SubtitleListSegment : React.FC<{
 
   // Maps functions to hotkeys
   const hotkeyRef = useHotkeys<HTMLDivElement>([
-    KEYMAP.subtitleList.addAbove.key,
-    KEYMAP.subtitleList.addBelow.key,
-    KEYMAP.subtitleList.jumpAbove.key,
-    KEYMAP.subtitleList.jumpBelow.key,
-    KEYMAP.subtitleList.delete.key,
+    keymap.subtitleList.addAbove.key,
+    keymap.subtitleList.addBelow.key,
+    keymap.subtitleList.jumpAbove.key,
+    keymap.subtitleList.jumpBelow.key,
+    keymap.subtitleList.delete.key,
   ], (_, handler) => {
     switch (handler.keys?.join("")) {
-      case KEYMAP.subtitleList.addAbove.key.split("+").pop():
+      case keymap.subtitleList.addAbove.key.split("+").pop():
         addCueAbove();
         break;
-      case KEYMAP.subtitleList.addBelow.key.split("+").pop():
+      case keymap.subtitleList.addBelow.key.split("+").pop():
         addCueBelow();
         break;
-      case KEYMAP.subtitleList.jumpAbove.key.split("+").pop():
+      case keymap.subtitleList.jumpAbove.key.split("+").pop():
         dispatch(setFocusSegmentTriggered(true));
         dispatch(setFocusToSegmentAboveId({ identifier: identifier, segmentId: cue.idInternal }));
         break;
-      case KEYMAP.subtitleList.jumpBelow.key.split("+").pop():
+      case keymap.subtitleList.jumpBelow.key.split("+").pop():
         dispatch(setFocusSegmentTriggered(true));
         dispatch(setFocusToSegmentBelowId({ identifier: identifier, segmentId: cue.idInternal }));
         break;
-      case KEYMAP.subtitleList.delete.key.split("+").pop():
+      case keymap.subtitleList.delete.key.split("+").pop():
         dispatch(setFocusSegmentTriggered(true));
         dispatch(setFocusToSegmentAboveId({ identifier: identifier, segmentId: cue.idInternal }));
         deleteCue();

@@ -350,7 +350,23 @@
       "scrubberLeft": "Move left",
       "scrubberRight": "Move right",
       "scrubberIncrease": "Move faster",
-      "scrubberDecrease": "Move slower"
+      "scrubberDecrease": "Move slower",
+      "keyUndefined": "Undefined",
+      "alreadyInUse": "Key sequence is already in use. Please choose a different sequence.",
+      "containsPlus": "The '+' character is not allowed. Please choose a different sequence",
+      "changeModal": {
+        "title": "Change hotkey: {{name}}",
+        "info": "Record a new hotkey sequence by pressing the keys you want. Maximum are 3 keys.",
+        "recordedKeys": "Recorded keys: ",
+        "save": "Save",
+        "discard": "Discard"
+      },
+      "deleteModal": {
+        "title": "Delete hotkey: {{name}}",
+        "info": "Unsets the hotkey, rendering it unusable.",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      }
     },
 
     "theme": {

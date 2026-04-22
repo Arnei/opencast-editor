@@ -13,7 +13,7 @@ import {
 import { convertMsToReadableString } from "../util/utilityFunctions";
 import { BREAKPOINTS, basicButtonStyle, undisplay, undisplayContainer } from "../cssStyles";
 
-import { KEYMAP, rewriteKeys } from "../globalKeys";
+import { rewriteKeys } from "../globalKeys";
 import { useTranslation } from "react-i18next";
 
 import { RootState } from "../redux/store";
@@ -24,6 +24,7 @@ import { Theme, useTheme } from "../themes";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Slider } from "@mui/material";
 import { ProtoButton } from "@opencast/appkit";
+import { selectKeymap } from "../redux/hotkeySlice";
 
 /**
  * Contains controls for manipulating multiple video players at once
@@ -125,6 +126,7 @@ const PreviewMode: React.FC<{
 
   // Init redux variables
   const dispatch = useAppDispatch();
+  const keymap = useAppSelector(selectKeymap);
   const isPlayPreview = useAppSelector(selectIsPlayPreview);
   const theme = useTheme();
 
@@ -140,9 +142,9 @@ const PreviewMode: React.FC<{
 
   // Maps functions to hotkeys
   useHotkeys(
-    KEYMAP.videoPlayer.preview.key,
+    keymap.videoPlayer.preview.key,
     () => switchPlayPreview(undefined),
-    KEYMAP.videoPlayer.preview.options,
+    keymap.videoPlayer.preview.options,
     [isPlayPreview],
   );
 
@@ -168,13 +170,13 @@ const PreviewMode: React.FC<{
   return (
     <ThemedTooltip
       title={t(isPlayPreview ? "video.previewButton-tooltip-on" : "video.previewButton-tooltip-off", {
-        hotkeyName: rewriteKeys(KEYMAP.videoPlayer.preview.key),
+        hotkeyName: rewriteKeys(keymap.videoPlayer.preview.key),
       })}
     >
       <div css={previewModeStyle}
         ref={ref}
         role="switch" aria-checked={isPlayPreview} tabIndex={0} aria-hidden={false}
-        aria-label={t("video.previewButton-aria", { hotkeyName: rewriteKeys(KEYMAP.videoPlayer.preview.key) })}
+        aria-label={t("video.previewButton-aria", { hotkeyName: rewriteKeys(keymap.videoPlayer.preview.key) })}
         onClick={() => switchPlayPreview(ref)}
         onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
           if (event.key === " ") {
@@ -207,6 +209,7 @@ const PlayButton: React.FC<{
 
   // Init redux variables
   const dispatch = useAppDispatch();
+  const keymap = useAppSelector(selectKeymap);
   const isPlaying = useAppSelector(selectIsPlaying);
   const theme = useTheme();
 
@@ -217,9 +220,9 @@ const PlayButton: React.FC<{
 
   // Maps functions to hotkeys
   useHotkeys(
-    KEYMAP.videoPlayer.play.key,
+    keymap.videoPlayer.play.key,
     () => switchIsPlaying(),
-    KEYMAP.videoPlayer.play.options,
+    keymap.videoPlayer.play.options,
     [isPlaying],
   );
 
@@ -268,15 +271,16 @@ const PreviousButton: React.FC<{
 
   const dispatch = useAppDispatch();
   const theme = useTheme();
+  const keymap = useAppSelector(selectKeymap);
 
   const jumpToPrevious = () => {
     dispatch(jumpToPreviousSegment());
   };
 
   useHotkeys(
-    KEYMAP.videoPlayer.previous.key,
+    keymap.videoPlayer.previous.key,
     () => jumpToPrevious(),
-    KEYMAP.videoPlayer.previous.options,
+    keymap.videoPlayer.previous.options,
   );
 
   const previousIconStyle = css({
@@ -285,11 +289,11 @@ const PreviousButton: React.FC<{
 
   return (
     <ThemedTooltip title={t("video.previousButton-tooltip", {
-      hotkeyName: rewriteKeys(KEYMAP.videoPlayer.previous.key),
+      hotkeyName: rewriteKeys(keymap.videoPlayer.previous.key),
     })}>
       <div css={[basicButtonStyle(theme)]}
         role="button" tabIndex={0} aria-hidden={false}
-        aria-label={t("video.previousButton-tooltip", { hotkeyName: rewriteKeys(KEYMAP.videoPlayer.previous.key) })}
+        aria-label={t("video.previousButton-tooltip", { hotkeyName: rewriteKeys(keymap.videoPlayer.previous.key) })}
         onClick={jumpToPrevious}
         onKeyDown={(event: React.KeyboardEvent) => {
           if (event.key === "Enter") {
@@ -314,15 +318,16 @@ const NextButton: React.FC<{
 
   const dispatch = useAppDispatch();
   const theme = useTheme();
+  const keymap = useAppSelector(selectKeymap);
 
   const jumpToNext = () => {
     dispatch(jumpToNextSegment());
   };
 
   useHotkeys(
-    KEYMAP.videoPlayer.next.key,
+    keymap.videoPlayer.next.key,
     () => jumpToNext(),
-    KEYMAP.videoPlayer.next.options,
+    keymap.videoPlayer.next.options,
   );
 
   const nextIconStyle = css({
@@ -330,9 +335,9 @@ const NextButton: React.FC<{
   });
 
   return (
-    <ThemedTooltip title={t("video.nextButton-tooltip", { hotkeyName: rewriteKeys(KEYMAP.videoPlayer.next.key) })}>
+    <ThemedTooltip title={t("video.nextButton-tooltip", { hotkeyName: rewriteKeys(keymap.videoPlayer.next.key) })}>
       <ProtoButton
-        aria-label={t("video.nextButton-tooltip", { hotkeyName: rewriteKeys(KEYMAP.videoPlayer.next.key) })}
+        aria-label={t("video.nextButton-tooltip", { hotkeyName: rewriteKeys(keymap.videoPlayer.next.key) })}
         aria-hidden={false}
         onClick={jumpToNext}
         css={[basicButtonStyle(theme)]}

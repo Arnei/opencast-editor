@@ -26,7 +26,7 @@ import {
   timelineZoomIn,
   timelineZoomOut,
 } from "../redux/videoSlice";
-import { KEYMAP, rewriteKeys } from "../globalKeys";
+import { rewriteKeys } from "../globalKeys";
 import { ActionCreatorWithoutPayload, ActionCreatorWithPayload, PayloadActionCreator } from "@reduxjs/toolkit";
 
 import { useTranslation } from "react-i18next";
@@ -36,6 +36,7 @@ import { Slider } from "@mui/material";
 import { useHotkeys } from "react-hotkeys-hook";
 import { ProtoButton } from "@opencast/appkit";
 import Select, { components, SingleValue } from "react-select";
+import { selectKeymap } from "../redux/hotkeySlice";
 
 /**
  * Defines the different actions a user can perform while in cutting mode
@@ -65,6 +66,8 @@ const CuttingActions: React.FC<{
   // Init redux variables
   const dispatch = useAppDispatch();
 
+  const keymap = useAppSelector(selectKeymap);
+
   /**
    * General action callback for cutting actions
    * @param event event triggered by click or button press
@@ -92,39 +95,39 @@ const CuttingActions: React.FC<{
 
   // Maps functions to hotkeys
   useHotkeys(
-    KEYMAP.cutting.cut.key,
+    keymap.cutting.cut.key,
     () => dispatchAction(cut),
-    KEYMAP.cutting.cut.options,
+    keymap.cutting.cut.options,
     [cut],
   );
   useHotkeys(
-    KEYMAP.cutting.delete.key,
+    keymap.cutting.delete.key,
     () => dispatchAction(markAsDeletedOrAlive),
-    KEYMAP.cutting.delete.options,
+    keymap.cutting.delete.options,
     [markAsDeletedOrAlive],
   );
   useHotkeys(
-    KEYMAP.cutting.mergeLeft.key,
+    keymap.cutting.mergeLeft.key,
     () => dispatchAction(mergeLeft),
-    KEYMAP.cutting.mergeLeft.options,
+    keymap.cutting.mergeLeft.options,
     [mergeLeft],
   );
   useHotkeys(
-    KEYMAP.cutting.mergeRight.key,
+    keymap.cutting.mergeRight.key,
     () => dispatchAction(mergeRight),
-    KEYMAP.cutting.mergeRight.options,
+    keymap.cutting.mergeRight.options,
     [mergeRight],
   );
   useHotkeys(
-    KEYMAP.cutting.zoomIn.key,
+    keymap.cutting.zoomIn.key,
     () => dispatchAction(timelineZoomIn),
-    KEYMAP.cutting.zoomIn.options,
+    keymap.cutting.zoomIn.options,
     [timelineZoomIn],
   );
   useHotkeys(
-    KEYMAP.cutting.zoomOut.key,
+    keymap.cutting.zoomOut.key,
     () => dispatchAction(timelineZoomOut),
-    KEYMAP.cutting.zoomOut.options,
+    keymap.cutting.zoomOut.options,
     [timelineZoomOut],
   );
 
@@ -152,8 +155,8 @@ const CuttingActions: React.FC<{
             action={cut}
             actionWithPayload={undefined}
             payload={undefined}
-            tooltip={t("cuttingActions.cut-tooltip", { hotkeyName: rewriteKeys(KEYMAP.cutting.cut.key) })}
-            ariaLabelText={t("cuttingActions.cut-tooltip-aria", { hotkeyName: rewriteKeys(KEYMAP.cutting.cut.key) })}
+            tooltip={t("cuttingActions.cut-tooltip", { hotkeyName: rewriteKeys(keymap.cutting.cut.key) })}
+            ariaLabelText={t("cuttingActions.cut-tooltip-aria", { hotkeyName: rewriteKeys(keymap.cutting.cut.key) })}
           />
           <div css={verticalLineStyle} />
         </>
@@ -166,8 +169,8 @@ const CuttingActions: React.FC<{
             action={add}
             actionWithPayload={undefined}
             payload={undefined}
-            tooltip={t("cuttingActions.add-tooltip", { hotkeyName: rewriteKeys(KEYMAP.cutting.cut.key) })}
-            ariaLabelText={t("cuttingActions.add-tooltip-aria", { hotkeyName: rewriteKeys(KEYMAP.cutting.cut.key) })}
+            tooltip={t("cuttingActions.add-tooltip", { hotkeyName: rewriteKeys(keymap.cutting.cut.key) })}
+            ariaLabelText={t("cuttingActions.add-tooltip-aria", { hotkeyName: rewriteKeys(keymap.cutting.cut.key) })}
           />
           <div css={verticalLineStyle} />
         </>
@@ -175,7 +178,7 @@ const CuttingActions: React.FC<{
       {!isDeleteButtonDisabled &&
         <>
           <MarkAsDeletedButton actionHandler={dispatchAction} action={markAsDeletedOrAlive}
-            hotKeyName={rewriteKeys(KEYMAP.cutting.delete.key)}
+            hotKeyName={rewriteKeys(keymap.cutting.delete.key)}
           />
           <div css={verticalLineStyle} />
         </>
@@ -188,9 +191,9 @@ const CuttingActions: React.FC<{
             action={deleteByMerge}
             actionWithPayload={undefined}
             payload={undefined}
-            tooltip={t("cuttingActions.deleteByMerge-tooltip", { hotkeyName: rewriteKeys(KEYMAP.cutting.delete.key) })}
+            tooltip={t("cuttingActions.deleteByMerge-tooltip", { hotkeyName: rewriteKeys(keymap.cutting.delete.key) })}
             ariaLabelText={t("cuttingActions.deleteByMerge-tooltip-aria",
-              { hotkeyName: rewriteKeys(KEYMAP.cutting.delete.key) })}
+              { hotkeyName: rewriteKeys(keymap.cutting.delete.key) })}
           />
           <div css={verticalLineStyle} />
         </>
@@ -203,9 +206,9 @@ const CuttingActions: React.FC<{
             action={mergeLeft}
             actionWithPayload={undefined}
             payload={undefined}
-            tooltip={t("cuttingActions.mergeLeft-tooltip", { hotkeyName: rewriteKeys(KEYMAP.cutting.mergeLeft.key) })}
+            tooltip={t("cuttingActions.mergeLeft-tooltip", { hotkeyName: rewriteKeys(keymap.cutting.mergeLeft.key) })}
             ariaLabelText={
-              t("cuttingActions.mergeLeft-tooltip-aria", { hotkeyName: rewriteKeys(KEYMAP.cutting.mergeLeft.key) })
+              t("cuttingActions.mergeLeft-tooltip-aria", { hotkeyName: rewriteKeys(keymap.cutting.mergeLeft.key) })
             }
           />
           <div css={verticalLineStyle} />
@@ -219,9 +222,9 @@ const CuttingActions: React.FC<{
             action={mergeRight}
             actionWithPayload={undefined}
             payload={undefined}
-            tooltip={t("cuttingActions.mergeRight-tooltip", { hotkeyName: rewriteKeys(KEYMAP.cutting.mergeRight.key) })}
+            tooltip={t("cuttingActions.mergeRight-tooltip", { hotkeyName: rewriteKeys(keymap.cutting.mergeRight.key) })}
             ariaLabelText={
-              t("cuttingActions.mergeRight-tooltip-aria", { hotkeyName: rewriteKeys(KEYMAP.cutting.mergeRight.key) })
+              t("cuttingActions.mergeRight-tooltip-aria", { hotkeyName: rewriteKeys(keymap.cutting.mergeRight.key) })
             }
           />
           <div css={verticalLineStyle} />
@@ -257,12 +260,12 @@ const CuttingActions: React.FC<{
       }
       <ZoomSlider actionHandler={dispatchAction}
         tooltip={t("cuttingActions.zoomSlider-tooltip", {
-          hotkeyNameIn: rewriteKeys(KEYMAP.cutting.zoomIn),
-          hotkeyNameOut: rewriteKeys(KEYMAP.cutting.zoomOut),
+          hotkeyNameIn: rewriteKeys(keymap.cutting.zoomIn),
+          hotkeyNameOut: rewriteKeys(keymap.cutting.zoomOut),
         })}
         ariaLabelText={t("cuttingActions.zoomSlider-aria", {
-          hotkeyNameIn: rewriteKeys(KEYMAP.cutting.zoomIn),
-          hotkeyNameOut: rewriteKeys(KEYMAP.cutting.zoomOut),
+          hotkeyNameIn: rewriteKeys(keymap.cutting.zoomIn),
+          hotkeyNameOut: rewriteKeys(keymap.cutting.zoomOut),
         })}
       />
       <ZoomDropdown />
