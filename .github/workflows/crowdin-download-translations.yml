@@ -26,7 +26,7 @@ jobs:
         env:
           CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
         run: |
-          crowdin download --config .crowdin.yaml -b main
+          crowdin download --config .crowdin.yaml -b "${GITHUB_REF##*/}"
       # TODO: Find a way to generate only languages that are above a certain threshold
       # - name: Update language list
       #   working-directory: src/i18n/locales
