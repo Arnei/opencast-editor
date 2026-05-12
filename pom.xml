@@ -13,7 +13,6 @@
   <properties>
     <opencast.basedir>${project.basedir}/../..</opencast.basedir>
     <checkstyle.skip>false</checkstyle.skip>
-    <nodejs.version>v20.10.0</nodejs.version>
   </properties>
   <profiles>
     <profile>
@@ -101,7 +100,7 @@
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <configuration>
-              <nodeVersion>${nodejs.version}</nodeVersion>
+              <nodeVersion>${node.version}</nodeVersion>
               <installDirectory>target</installDirectory>
               <environmentVariables>
                 <PUBLIC_URL>/editor-ui</PUBLIC_URL>
