@@ -6,6 +6,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    labels:
+      - type:infrastructure
 
   # Javascript
   - package-ecosystem: npm
