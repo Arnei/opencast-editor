@@ -46,10 +46,10 @@ const SubtitleTimeline: React.FC = () => {
   const subtitleId = useAppSelector(selectSelectedSubtitleId, shallowEqual);
 
   const ref = useRef<HTMLDivElement>(null);
-  const { width = 1 } = useResizeObserver({ ref });
+  const { width = 1 } = useResizeObserver<HTMLDivElement>({ ref: ref as React.RefObject<HTMLDivElement> });
   const refTop = useRef<HTMLElement>(null);
   const refMini = useRef<HTMLDivElement>(null);
-  const { width: widthMiniTimeline = 1 } = useResizeObserver({ ref: refMini });
+  const { width: widthMiniTimeline = 1 } = useResizeObserver({ ref: refMini as React.RefObject<HTMLDivElement> });
 
   // How much of the timeline should be visible in milliseconds. Aka a specific zoom level
   const timelineCutoutInMs = 10000;

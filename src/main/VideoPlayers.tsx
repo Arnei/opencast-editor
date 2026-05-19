@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useImperativeHandle } from "react";
+import React, { useState, useRef, useEffect, useImperativeHandle, JSX } from "react";
 
 import { css, SerializedStyles } from "@emotion/react";
 

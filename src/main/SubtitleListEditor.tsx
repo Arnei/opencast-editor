@@ -469,8 +469,6 @@ const SubtitleListSegment : React.FC<{
     }
   }, subtitleListHotkeysDefaultOptions, [identifier, cue, props.index]);
 
-  const hotkeyDivRef = hotkeyRef as React.RefObject<HTMLDivElement>;
-
   const setTimeToSegmentStart = () => {
     dispatch(setCurrentlyAt(cue.startTime));
   };
@@ -569,7 +567,7 @@ const SubtitleListSegment : React.FC<{
   });
 
   return (
-    <div ref={hotkeyDivRef} tabIndex={-1} css={[segmentStyle, {
+    <div ref={hotkeyRef} tabIndex={-1} css={[segmentStyle, {
       ...props.style,
       // Used for padding in the VariableSizeList
       top: props.style.top !== undefined ?

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { JSX, useEffect } from "react";
 
 import { css } from "@emotion/react";
 import { backOrContinueStyle } from "../cssStyles";

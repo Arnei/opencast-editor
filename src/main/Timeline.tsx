@@ -82,9 +82,11 @@ const Timeline: React.FC<{
 
   const scrubberRef = useRef<HTMLDivElement | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const { width = 1 } = useResizeObserver({ ref });
+  const { width = 1 } = useResizeObserver({ ref: ref as React.RefObject<HTMLDivElement> });
   const scrollContainerRef = useRef<HTMLElement>(null);
-  const { width: scrollContainerWidth = 1 } = useResizeObserver({ ref: scrollContainerRef });
+  const { width: scrollContainerWidth = 1 } = useResizeObserver({
+    ref: scrollContainerRef as React.RefObject<HTMLElement>,
+  });
 
   const currentlyScrolling = useRef(false);
   const zoomCenter = useRef(0);
