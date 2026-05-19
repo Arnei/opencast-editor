@@ -76,12 +76,12 @@
     "@types/react-resizable": "^3.0.8",
     "@types/react-virtualized-auto-sizer": "^1.0.4",
     "@types/react-window": "^1.8.8",
-    "@vitejs/plugin-react": "^4.6.0",
+    "@vitejs/plugin-react": "^6.0.2",
     "eslint": "^9.30.0",
     "jsdom": "^26.1.0",
     "typescript-eslint": "^8.35.1",
-    "vite": "^7.0.6",
+    "vite": "^8.0.13",
     "vite-plugin-svgr": "^4.3.0",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.6"
   }
 }
