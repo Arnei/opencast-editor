@@ -14,7 +14,6 @@ import {
   setFocusSegmentTriggered2,
 } from "../redux/subtitleSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import useResizeObserver from "use-resize-observer";
 import { moveCut, selectActiveSegmentIndex, selectDuration, selectSegments } from "../redux/videoSlice";
 import Draggable, { DraggableEventHandler } from "react-draggable";
 import { SubtitleCue } from "../types";
@@ -28,6 +27,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { shallowEqual } from "react-redux";
 import TimelineStamps from "./TimelineStamps";
 import { selectKeymap } from "../redux/hotkeySlice";
+import { useResizeObserver } from "usehooks-ts";
 
 /**
  * Copy-paste of the timeline in Video.tsx, so that we can make some small adjustments,
@@ -45,9 +45,11 @@ const SubtitleTimeline: React.FC = () => {
   const currentlyAt = useAppSelector(selectCurrentlyAt);
   const subtitleId = useAppSelector(selectSelectedSubtitleId, shallowEqual);
 
-  const { ref, width = 1 } = useResizeObserver<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
+  const { width = 1 } = useResizeObserver({ ref });
   const refTop = useRef<HTMLElement>(null);
-  const { ref: refMini, width: widthMiniTimeline = 1 } = useResizeObserver<HTMLDivElement>();
+  const refMini = useRef<HTMLDivElement>(null);
+  const { width: widthMiniTimeline = 1 } = useResizeObserver({ ref: refMini });
 
   // How much of the timeline should be visible in milliseconds. Aka a specific zoom level
   const timelineCutoutInMs = 10000;
