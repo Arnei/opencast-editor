@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import child from "child_process";
 import { configDefaults } from 'vitest/config'
+import babel from '@rolldown/plugin-babel'
 
 const commitHash = child.execSync("git rev-parse HEAD").toString().trim();
 
@@ -19,9 +20,9 @@ export default defineConfig(() => {
     plugins: [
       react({
         jsxImportSource: "@emotion/react",
-        babel: {
-          plugins: ["@emotion/babel-plugin"],
-        },
+      }),
+      babel({
+        plugins: ["@emotion/babel-plugin"],
       }),
       // svgr options: https://react-svgr.com/docs/options/
       svgr({ svgrOptions: { } }),
