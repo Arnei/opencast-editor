@@ -11,9 +11,9 @@ import { basicButtonStyle } from "../cssStyles";
 import { subtitleListHotkeysDefaultOptions } from "../globalKeys";
 import { SubtitleCue, SubtitlesInEditor } from "../types";
 import { convertMsToReadableString } from "../util/utilityFunctions";
-import { ListChildComponentProps, VariableSizeList } from "react-window";
+import { List, RowComponentProps, useListRef } from "react-window";
 import { CSSProperties } from "react";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { AutoSizer } from "react-virtualized-auto-sizer";
 import { useTheme } from "../themes";
 import { ThemedTooltip } from "./Tooltip";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -88,7 +88,7 @@ const SubtitleListEditor: React.FC<{
   const focusId = useAppSelector(selectFocusSegmentId, shallowEqual);
 
   const itemsRef = useRef<HTMLTextAreaElement[] | null[]>([]);
-  const listRef = useRef<VariableSizeList>(null);
+  const listRef = useListRef(null);
 
   // Update ref array size
   useEffect(() => {
@@ -103,13 +103,13 @@ const SubtitleListEditor: React.FC<{
       if (itemsRef && itemsRef.current && subtitle?.cues) {
         const itemIndex = subtitle?.cues.findIndex(item => item.idInternal === focusId);
         if (listRef && listRef.current) {
-          listRef.current.scrollToItem(itemIndex, "center");
+          listRef.current.scrollToRow({ index: itemIndex, align: "center" });
 
         }
       }
       dispatch(setFocusSegmentTriggered(false));
     }
-  }, [dispatch, focusId, focusTriggered, itemsRef, setFocusSegmentTriggered, subtitle?.cues]);
+  }, [dispatch, focusId, focusTriggered, itemsRef, listRef, setFocusSegmentTriggered, subtitle?.cues]);
 
   // Automatically create a segment if there are no segments
   useEffect(() => {
@@ -125,28 +125,18 @@ const SubtitleListEditor: React.FC<{
   }, [addCueAtIndex, defaultSegmentLength, dispatch, subtitle?.cues, subtitleId]);
 
   const listStyle = css({
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    width: "60%",
-    gap: "20px",
+    flex: "1 1 auto",
+    overflow: "auto",
   });
 
-  const calcEstimatedSize = React.useCallback(() => {
-    return segmentHeight;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const itemData = createItemData(subtitle?.cues, subtitleId, defaultSegmentLength);
-  type ItemData = ReturnType<typeof createItemData>
+  type ItemData = typeof itemData;
 
-  // useCallback to prevent new function objects getting created on every rerender
-  const renderSubtitleSegment = React.useCallback(
-    ({ index, data, style }: ListChildComponentProps<ItemData>) => (
-      <SubtitleListSegment
+  const RowComponent = React.useCallback(
+    ({ index, items, identifier, defaultSegmentLength, style }: RowComponentProps<ItemData>) => {
+      return <SubtitleListSegment
         index={index}
-        // @ts-expect-error: Type is not properly inferred for some reason
-        data={data}
+        data={{ items, identifier, defaultSegmentLength }}
         style={style}
         defaultText={defaultSegmentText}
         textAreaHeight={segmentTextHeight}
@@ -165,8 +155,8 @@ const SubtitleListEditor: React.FC<{
         setFocusSegmentTriggered2={setFocusSegmentTriggered2}
         setFocusToSegmentAboveId={setFocusToSegmentAboveId}
         setFocusToSegmentBelowId={setFocusToSegmentBelowId}
-      />
-    ),
+      />;
+    },
     [
       defaultSegmentText,
       segmentTextHeight,
@@ -188,29 +178,21 @@ const SubtitleListEditor: React.FC<{
     ],
   );
 
-
   return (
     <div css={listStyle}>
-      <AutoSizer>
-        {({ height, width }: { height: string | number, width: string | number; }) => (
-          <VariableSizeList
-            height={height ? height : 0}
-            itemCount={subtitle?.cues !== undefined ? subtitle?.cues.length : 0}
-            itemData={itemData}
-            itemSize={_index => segmentHeight}
-            // @ts-expect-error: Type is not properly inferred for some reason
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-            itemKey={(index, data) => data.items[index].idInternal}
-            width={width ? width : 0}
+      <AutoSizer renderProp={
+        ({ height = 600, width = 800 }) => {
+          return <List
+            style={{ height: height, width: width }}
+            rowComponent={RowComponent}
+            rowHeight={segmentHeight ? segmentHeight : 0}
+            rowCount={itemData.items.length}
+            rowProps={itemData}
             overscanCount={4}
-            estimatedItemSize={calcEstimatedSize()}
-            innerElementType={innerElementType}
-            ref={listRef}
-          >
-            {renderSubtitleSegment}
-          </VariableSizeList>
-        )}
-      </AutoSizer>
+            listRef={listRef}
+          />;
+        }
+      } />
     </div>
   );
 };
@@ -232,20 +214,6 @@ export const createItemData = memoize(ItemData);
  * Global variable to synchronize padding for react-window elements
  */
 const PADDING_SIZE = 20;
-
-// Used for padding in the VariableSizeList
-const innerElementType = React.forwardRef<HTMLDivElement, { style: CSSProperties; }>(({ style, ...rest }, ref) => (
-  <div
-    ref={ref}
-    style={{
-      ...style,
-      // height: `${parseFloat(style.height !== undefined ? style.height.toString() : "0") + PADDING_SIZE * 2}px`,
-      paddingTop: PADDING_SIZE + "px",
-      zIndex: "1000",
-    }}
-    {...rest}
-  />
-));
 
 /**
  * A single subtitle segment
@@ -481,6 +449,7 @@ const SubtitleListSegment : React.FC<{
     justifyContent: "space-around",
     alignItems: "center",
     gap: "20px",
+    paddingTop: "10px",
     // Make function buttons visible when hovered or focused
     "&:hover": {
       "& .functionButtonAreaStyle": {
