@@ -186,7 +186,7 @@ const SubtitleListEditor: React.FC<{
             style={{ height: height, width: width }}
             rowComponent={RowComponent}
             rowHeight={segmentHeight ? segmentHeight : 0}
-            rowCount={itemData.items.length}
+            rowCount={itemData.items ? itemData.items.length : 0}
             rowProps={itemData}
             overscanCount={4}
             listRef={listRef}
