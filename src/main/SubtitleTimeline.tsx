@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import { moveCut, selectActiveSegmentIndex, selectDuration, selectSegments } from "../redux/videoSlice";
 import Draggable, { DraggableEventHandler } from "react-draggable";
 import { SubtitleCue } from "../types";
-import { Resizable, ResizableProps } from "react-resizable";
+import { Resizable, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
 import ScrollContainer, { ScrollEvent } from "react-indiana-drag-scroll";
 import { useTheme } from "../themes";
@@ -355,7 +355,8 @@ const TimelineSubtitleSegment: React.FC<{
   // Resizable does not support resizing in the west/north directions out of the box,
   // so additional calculations are necessary.
   // Adapted from Resizable example code
-  const onResizeAbsolute: ResizableProps["onResize"] = (_event, { size, handle }) => {
+  const onResizeAbsolute = (_event: React.SyntheticEvent, data: ResizeCallbackData): void => {
+    const { size, handle } = data;
     // Possible TODO: Find a way to stop resizing a segment beyond 0ms here instead of later
     let newLeft = absoluteLeft;
 
@@ -368,7 +369,8 @@ const TimelineSubtitleSegment: React.FC<{
   };
 
   // Update redux state based on the resize
-  const onResizeStop: ResizableProps["onResizeStop"] = (_event, { handle }) => {
+  const onResizeStop = (_event: React.SyntheticEvent, data: ResizeCallbackData): void => {
+    const { handle } = data;
     // Calc new width, factoring in offset
     const newWidth = absoluteWidth;
 
