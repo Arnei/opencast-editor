@@ -54,6 +54,7 @@ const InteractiveElementsList: React.FC<{
     ({ index, data, style }: ListChildComponentProps<ItemData>) => (
       <ListItem
         index={index}
+        // @ts-expect-error: Type is not properly inferred for some reason
         data={data}
         style={style}
       />
@@ -70,6 +71,8 @@ const InteractiveElementsList: React.FC<{
             itemCount={elements.length}
             itemData={itemData}
             itemSize={_index => segmentHeight}
+            // @ts-expect-error: Type is not properly inferred for some reason
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
             itemKey={(index, data) => data.items[index].idInternal}
             width={width ? width : 0}
             overscanCount={4}
@@ -89,9 +92,13 @@ const InteractiveElementsList: React.FC<{
 /**
  * Helper function for reducing rerender calls caused by react-window
  */
-const createItemData = memoize(items => ({
-  items,
-}));
+function ItemData<T>(
+  items: T,
+) {
+  return { items };
+}
+
+export const createItemData = memoize(ItemData);
 
 /**
  * Global variable to synchronize padding for react-window elements

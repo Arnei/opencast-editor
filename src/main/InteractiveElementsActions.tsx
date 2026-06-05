@@ -10,8 +10,8 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import {
   selectCurrentlyAt,
 } from "../redux/videoSlice";
-import { KEYMAP, rewriteKeys } from "../globalKeys";
-import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import { rewriteKeys } from "../globalKeys";
+import { ActionCreatorWithoutPayload, PayloadActionCreator } from "@reduxjs/toolkit";
 
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../themes";
@@ -20,6 +20,7 @@ import { ModalHandle, ProtoButton } from "@opencast/appkit";
 import { ZoomSlider } from "./CuttingActions";
 import InteractiveElementsEditor from "./InteractiveElementEditor";
 import { InteractiveElement } from "../redux/interactiveElementsSlice";
+import { selectKeymap } from "../redux/hotkeySlice";
 
 /**
  * Defines the different actions a user can perform while in cutting mode
@@ -31,6 +32,7 @@ const InteractiveElementsActions: React.FC = () => {
   // Init redux variables
   const dispatch = useAppDispatch();
   const theme = useTheme();
+  const keymap = useAppSelector(selectKeymap);
 
   const modalRef = useRef<ModalHandle>(null);
   const [type, setType] = useState<InteractiveElement["type"]>("Textbox");
@@ -43,11 +45,10 @@ const InteractiveElementsActions: React.FC = () => {
    * @param action redux event to dispatch
    * @param ref Pass a reference if the clicked element should lose focus
    */
-  const dispatchAction = (
+  const dispatchAction = <T, >(
     action: ActionCreatorWithoutPayload<string> | undefined,
-    actionWithPayload?: ActionCreatorWithPayload<number, string>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any,
+    actionWithPayload?: PayloadActionCreator<T, string>,
+    payload?: T,
     ref?: React.RefObject<HTMLButtonElement>,
   ) => {
     if (action) {
@@ -119,12 +120,12 @@ const InteractiveElementsActions: React.FC = () => {
       <div css={verticalLineStyle} />
       <ZoomSlider actionHandler={dispatchAction}
         tooltip={t("cuttingActions.zoomSlider-tooltip", {
-          hotkeyNameIn: rewriteKeys(KEYMAP.cutting.zoomIn),
-          hotkeyNameOut: rewriteKeys(KEYMAP.cutting.zoomOut),
+          hotkeyNameIn: rewriteKeys(keymap.cutting.zoomIn),
+          hotkeyNameOut: rewriteKeys(keymap.cutting.zoomOut),
         })}
         ariaLabelText={t("cuttingActions.zoomSlider-aria", {
-          hotkeyNameIn: rewriteKeys(KEYMAP.cutting.zoomIn),
-          hotkeyNameOut: rewriteKeys(KEYMAP.cutting.zoomOut),
+          hotkeyNameIn: rewriteKeys(keymap.cutting.zoomIn),
+          hotkeyNameOut: rewriteKeys(keymap.cutting.zoomOut),
         })}
       />
     </div>

@@ -53,7 +53,7 @@ const InteractiveElements: React.FC = () => {
     if (interactiveElements.length === 0) {
       const parsedElements: InteractiveElement[] = [];
       if (textboxTrack) {
-        const textboxes: Textbox[] = JSON.parse(textboxTrack.elementsJSON);
+        const textboxes: Textbox[] = JSON.parse(textboxTrack.elementsJSON) as Textbox[];
         for (const textbox of textboxes) {
           parsedElements.push({
             ...textbox,
@@ -63,7 +63,7 @@ const InteractiveElements: React.FC = () => {
         }
       }
       if (quizTrack) {
-        const quizzes: Quiz[] = JSON.parse(quizTrack.elementsJSON);
+        const quizzes: Quiz[] = JSON.parse(quizTrack.elementsJSON) as Quiz[];
         for (const quiz of quizzes) {
           parsedElements.push({
             ...quiz,
@@ -138,14 +138,16 @@ const InteractiveElements: React.FC = () => {
             setCurrentlyAtAndTriggerPreview={setCurrentlyAt}
           />
         </div>
-        <Timeline
-          selectCurrentlyAt={selectCurrentlyAt}
-          selectIsPlaying={selectIsPlaying}
-          setClickTriggered={setClickTriggered}
-          setCurrentlyAt={setCurrentlyAt}
-          setIsPlaying={setIsPlaying}
-          isInteractiveElements={true}
-        />
+        <div>
+          <Timeline
+            selectCurrentlyAt={selectCurrentlyAt}
+            selectIsPlaying={selectIsPlaying}
+            setClickTriggered={setClickTriggered}
+            setCurrentlyAt={setCurrentlyAt}
+            setIsPlaying={setIsPlaying}
+            isInteractiveElements={true}
+          />
+        </div>
         <InteractiveElementsActions />
       </>
     );
