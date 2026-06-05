@@ -11,7 +11,7 @@ import {
   selectCurrentlyAt,
 } from "../redux/videoSlice";
 import { KEYMAP, rewriteKeys } from "../globalKeys";
-import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import { ActionCreatorWithoutPayload, PayloadActionCreator } from "@reduxjs/toolkit";
 
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../themes";
@@ -43,11 +43,10 @@ const InteractiveElementsActions: React.FC = () => {
    * @param action redux event to dispatch
    * @param ref Pass a reference if the clicked element should lose focus
    */
-  const dispatchAction = (
+  const dispatchAction = <T, >(
     action: ActionCreatorWithoutPayload<string> | undefined,
-    actionWithPayload?: ActionCreatorWithPayload<number, string>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any,
+    actionWithPayload?: PayloadActionCreator<T, string>,
+    payload?: T,
     ref?: React.RefObject<HTMLButtonElement>,
   ) => {
     if (action) {
