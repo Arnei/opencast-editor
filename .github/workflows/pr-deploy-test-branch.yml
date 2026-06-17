@@ -1,76 +1,19 @@
 name: PRs » Publish Pull Request Page
 
 on:
-  pull_request:
+  workflow_run:
+    workflows: ["PRs » Build Pull Request Page"]
     types:
-      - opened
-      - synchronize
+      - completed
 
 concurrency:
   group: pull-request-page
   cancel-in-progress: false
 
-env:
-  NODE_VERSION: 24
-
 jobs:
-  detect-repo-owner:
-    if: github.repository_owner == 'opencast'
-    runs-on: ubuntu-latest
-    outputs:
-      server: ${{ steps.test-server.outputs.server }}
-      branch: ${{ steps.branch-name.outputs.branch }}
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v6
-
-      - name: Determine the correct test server
-        id: test-server
-        run: echo "server=`./.github/get-release-server.sh ${{ github.ref_name }}`" >> $GITHUB_OUTPUT
-
-      - name: Determine branch name
-        id: branch-name
-        run: |
-          #Temp becomes something like r/17.x
-          export TEMP=${{ github.ref_name }}
-          #Strip the r/ prefix, giving us just 17.x.  If this is main/develop this does nothing
-          echo "branch=${TEMP#r\/}" >> $GITHUB_OUTPUT
-
   deploy-pr:
     runs-on: ubuntu-latest
-    needs: detect-repo-owner
     steps:
-      - name: Generate build path
-        run: echo "build=${{github.event.number}}/$(date +%Y-%m-%d_%H-%M-%S)/" >> $GITHUB_OUTPUT
-        id: build-path
-
-      - name: Checkout sources
-        uses: actions/checkout@v6
-
-      - name: Get Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Ensure our node version matches the main repo's version
-        run: |
-          [[ "$(curl -s https://raw.githubusercontent.com/opencast/opencast/refs/heads/${{ github.base_ref }}/pom.xml | \
-              grep node.version | grep -Eo 'v[0-9.]+' | cut -f 1 -d '.' | cut -c 2-)" == "$NODE_VERSION" ]] \
-          && exit 0 \
-          || (echo "Node version does not match"; exit 1)
-
-      - name: Run npm ci
-        run: npm ci
-
-      - name: Build the app
-        run: |
-          # This set the editor's datasource to the relevant test server
-          sed -i "s#develop.opencast.org#$SERVER#g" public/editor-settings.toml
-          npm run build
-        env:
-          SERVER: ${{needs.detect-repo-owner.outputs.server}}
-          PUBLIC_URL: ${{ steps.build-path.outputs.build }}
-
       - name: Prepare git
         run: |
           git config --global user.name "Editor Deployment Bot"
@@ -96,12 +39,16 @@ jobs:
         run: |
           git clone -b gh-pages "git@github.com:${{ github.repository_owner }}/editor-test.git" editor-test
 
+      - name: Fetch build from GHA
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: ${{ runner.temp }}/build.tar
+          run-id: ${{ github.event.workflow_run.id }}
+
       - name: Store build in the clone
-        env:
-          DEPLOY_PATH: editor-test/${{ steps.build-path.outputs.build }}
         run: |
-          mkdir -p ${DEPLOY_PATH}
-          cp -rv build/* ${DEPLOY_PATH}
+          tar xf ${{ runner.temp }}/build.tar
 
       - name: Cleanup test repository
         working-directory: editor-test
@@ -143,62 +90,3 @@ jobs:
             ](https://test.editor.opencast.org/${{ steps.build-path.outputs.build }}).
 
             It might take a few minutes for it to become available.
-
-
-  #This is currently defunct, but kept around in case we run into issues in the future
-  # where this check might be handy, cf spammers filing PRs or something.
-  # Previously we checked is_team_member prior to doing anything else above
-  check-member:
-    name: Check organization membership
-    if: github.repository_owner == 'opencast'
-    runs-on: ubuntu-latest
-
-    # Map a step output to a job output
-    outputs:
-      is_team_member: ${{ steps.is_developer.outputs.permitted == 'true' || steps.is_committer.outputs.permitted == 'true' }}
-
-    steps:
-      - name: Check if user is Opencast developer
-        id: is_developer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
-        uses: TheModdingInquisition/actions-team-membership@v1.0
-        with:
-          team: developers
-          # Personal Access Token with the `read:org` permission
-          token: ${{ secrets.ORGANIZATION_MEMBER_SECRET }}
-          exit: false
-
-      - name: Check if user is Opencast committer
-        id: is_committer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
-        uses: TheModdingInquisition/actions-team-membership@v1.0
-        with:
-          team: committers
-          # Personal Access Token with the `read:org` permission
-          token: ${{ secrets.ORGANIZATION_MEMBER_SECRET }}
-          exit: false
-
-
-  check-no-modified-translations:
-    name: Translations only via Crowdin
-    if: github.repository_owner == 'opencast'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Sources
-        uses: actions/checkout@v6
-
-      - name: Get changed locale files
-        uses: dorny/paths-filter@v4
-        id: filter_locales
-        with:
-          filters: | # !(pattern) matches anything but pattern
-            locales:
-              - 'src/i18n/locales/!(en-US)*.json'
-
-      - name: Check for changes in translations
-        if: steps.filter_locales.outputs.locales == true
-        uses: actions/github-script@v9
-        with:
-          script: |
-              core.setFailed('You should not alter translations outside of Crowdin.')
