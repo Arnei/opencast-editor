@@ -412,6 +412,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
         borderTopLeftRadius: "5px",
         borderBottomRightRadius: "5px",
       },
+      backgroundColor: theme.audio_only_bg,
     });
 
     const videoPlayerWrapperStyles = css({
