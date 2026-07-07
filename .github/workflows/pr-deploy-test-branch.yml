@@ -42,8 +42,9 @@ jobs:
       - name: Fetch build from GHA
         uses: actions/download-artifact@v4
         with:
-          name: build
-          path: ${{ runner.temp }}/build.tar
+          name: ${{ github.event.workflow_run.id }}
+          path: ${{ runner.temp }}/
+          github-token: ${{ github.token }}
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Store build in the clone
