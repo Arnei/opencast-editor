@@ -67,42 +67,8 @@ jobs:
       - name: Upload build to GHA
         uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: ${{ github.run_id }}
           path: ${{ runner.temp }}/build.tar
-
-
-  #This is currently defunct, but kept around in case we run into issues in the future
-  # where this check might be handy, cf spammers filing PRs or something.
-  # Previously we checked is_team_member prior to doing anything else above
-  check-member:
-    name: Check organization membership
-    if: github.repository_owner == 'opencast'
-    runs-on: ubuntu-latest
-
-    # Map a step output to a job output
-    outputs:
-      is_team_member: ${{ steps.is_developer.outputs.permitted == 'true' || steps.is_committer.outputs.permitted == 'true' }}
-
-    steps:
-      - name: Check if user is Opencast developer
-        id: is_developer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
-        uses: TheModdingInquisition/actions-team-membership@v1.0
-        with:
-          team: developers
-          # Personal Access Token with the `read:org` permission
-          token: ${{ secrets.ORGANIZATION_MEMBER_SECRET }}
-          exit: false
-
-      - name: Check if user is Opencast committer
-        id: is_committer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
-        uses: TheModdingInquisition/actions-team-membership@v1.0
-        with:
-          team: committers
-          # Personal Access Token with the `read:org` permission
-          token: ${{ secrets.ORGANIZATION_MEMBER_SECRET }}
-          exit: false
 
 
   check-no-modified-translations:
