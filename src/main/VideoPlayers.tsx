@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useImperativeHandle } from "react";
+import React, { useState, useRef, useEffect, useImperativeHandle, JSX } from "react";
 
 import { css, SerializedStyles } from "@emotion/react";
 
@@ -23,7 +23,7 @@ import {
   selectVideos,
 } from "../redux/videoSlice";
 
-import ReactPlayer, { Config } from "react-player";
+import ReactPlayer from "react-player";
 
 import { roundToDecimalPlace } from "../util/utilityFunctions";
 
@@ -37,7 +37,6 @@ import { ActionCreatorWithPayload, AsyncThunk } from "@reduxjs/toolkit";
 import { useTheme } from "../themes";
 
 import { backgroundBoxStyle } from "../cssStyles";
-import { BaseReactPlayerProps } from "react-player/base";
 import { ErrorBox } from "@opencast/appkit";
 
 const VideoPlayers: React.FC<{
@@ -198,22 +197,22 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
     const theme = useTheme();
 
     // Init state variables
-    const ref = useRef<ReactPlayer>(null);
+    const ref = useRef<HTMLVideoElement>(null);
     const [ready, setReady] = useState(false);
     const [errorState, setError] = useState(false);
     const [isAspectRatioUpdated, setIsAspectRatioUpdated] = useState(false);
 
     // Callback for when the video is playing
-    const onProgressCallback = (state: {
-      played: number, playedSeconds: number, loaded: number, loadedSeconds: number;
-    }) => {
+    const onTimeUpdate = () => {
+      const player = ref.current;
+      if (!player) { return; }
       if (isPrimary) {
         // Only update redux if there was a substantial change
-        if (roundToDecimalPlace(currentlyAt, 3) !== roundToDecimalPlace(state.playedSeconds, 3) &&
-          state.playedSeconds !== 0 &&
+        if (roundToDecimalPlace(currentlyAt, 3) !== roundToDecimalPlace(player.currentTime, 3) &&
+          player.currentTime !== 0 &&
           // Avoid overwriting video restarts
-          state.playedSeconds < duration) {
-          dispatch(setCurrentlyAt(state.playedSeconds * 1000));
+          player.currentTime < duration) {
+          dispatch(setCurrentlyAt(player.currentTime * 1000));
         }
       }
     };
@@ -221,13 +220,13 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
     // Tries to get video dimensions from the HTML5 elements until they are not 0,
     // then updates the store
     async function updateAspectRatio() {
-      if (ref.current && ref.current.getInternalPlayer()) {
-        let w = (ref.current.getInternalPlayer() as HTMLVideoElement).videoWidth;
-        let h = (ref.current.getInternalPlayer() as HTMLVideoElement).videoHeight;
+      if (ref.current) {
+        let w = (ref.current).videoWidth;
+        let h = (ref.current).videoHeight;
         while (w === 0 || h === 0) {
           await sleep(100);
-          w = (ref.current.getInternalPlayer() as HTMLVideoElement).videoWidth;
-          h = (ref.current.getInternalPlayer() as HTMLVideoElement).videoHeight;
+          w = (ref.current).videoWidth;
+          h = (ref.current).videoHeight;
         }
         dispatch(setAspectRatio({ dataKey, width: w, height: h }));
         setIsAspectRatioUpdated(true);
@@ -257,25 +256,25 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       }
     };
 
-    const onErrorCallback: BaseReactPlayerProps["onError"] = _e => {
+    const onErrorCallback: React.ReactEventHandler<HTMLVideoElement> | undefined = _e => {
       setError(true);
     };
 
     useEffect(() => {
       // Seek if the position in the video got changed externally
       if (!isPlaying && ref.current && ready) {
-        ref.current.seekTo(currentlyAt, "seconds");
+        ref.current.currentTime = currentlyAt;
       }
       if (previewTriggered && ref.current && ready) {
-        ref.current.seekTo(currentlyAt, "seconds");
+        ref.current.currentTime = currentlyAt;
         dispatch(setPreviewTriggered(false));
       }
       if (clickTriggered && ref.current && ready) {
-        ref.current.seekTo(currentlyAt, "seconds");
+        ref.current.currentTime = currentlyAt;
         dispatch(setClickTriggered(false));
       }
       if (jumpTriggered && ref.current && ready) {
-        ref.current.seekTo(currentlyAt, "seconds");
+        ref.current.currentTime = currentlyAt;
         dispatch(setJumpTriggered(false));
       }
     });
@@ -294,7 +293,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
     // but keep the current currentlyAt
     useEffect(() => {
       if (ref.current && ready) {
-        ref.current.seekTo(currentlyAt, "seconds");
+        ref.current.currentTime = currentlyAt;
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url]);
@@ -310,7 +309,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [subtitleUrl]);
 
-    const playerConfig: Config = {
+    const playerConfig = {
       file: {
         attributes: {
           // Skip player when navigating page with keyboard
@@ -377,7 +376,10 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       // Renders the current frame in the video element to a canvas
       // Returns the data url
       captureVideo() {
-        const video = ref.current?.getInternalPlayer() as HTMLVideoElement;
+        if (!ref.current) {
+          return;
+        }
+        const video = ref.current;
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
@@ -388,7 +390,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
         }
       },
       getWidth() {
-        return (ref.current?.getInternalPlayer() as HTMLVideoElement).clientWidth;
+        return ref.current?.clientWidth ?? 0;
       },
     }));
 
@@ -430,7 +432,9 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       if (!errorState) {
         return (
           <div css={videoPlayerWrapperStyles}>
-            <ReactPlayer url={url}
+            <ReactPlayer
+              src={url}
+              wrapper={"div"}
               css={overwritePlayerCSS ?? [backgroundBoxStyle(theme), reactPlayerStyle]}
               ref={ref}
               width="unset"
@@ -438,15 +442,17 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
               playing={isPlaying}
               volume={volume}
               muted={!isPrimary || isMuted}
-              onProgress={onProgressCallback}
-              progressInterval={100}
+              onTimeUpdate={onTimeUpdate}
               onReady={onReadyCallback}
               onPlay={onPlay}
               onEnded={onEndedCallback}
               onError={onErrorCallback}
-              tabIndex={-1}
+              // tabindex is currently not properly applied to neither wrapper nor video element
+              tabIndex={-1} // Skip player when navigating page with keyboard
+              crossOrigin="anonymous" // allow thumbnail generation
+              disablePictureInPicture={true}
+              // @ts-expect-error: The Config type does match what we need
               config={playerConfig}
-              disablePictureInPicture
             />
           </div>
         );

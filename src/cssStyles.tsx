@@ -339,48 +339,59 @@ export const subtitleSelectStyle = (theme: Theme) => createTheme({
         },
       },
     },
-    /* Labelborder */
+
+    /* Input / Border */
     MuiOutlinedInput: {
       styleOverrides: {
-        notchedOutline: {
-          border: `${theme.dropdown_border} !important`,
+        root: {
+          backgroundColor: theme.element_bg,
+          color: theme.text,
+
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: theme.dropdown_border,
+          },
+
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            border: theme.dropdown_border,
+          },
+
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            border: theme.dropdown_border,
+          },
         },
-      },
-    },
-    /* Selectfield/Inputfield with Icon */
-    MuiSelect: {
-      styleOverrides: {
-        select: {
-          background: `${theme.element_bg}`,
-          color: `${theme.text} !important`,
-        },
-        icon: {
-          color: `${theme.indicator_color}`,
+
+        input: {
+          color: theme.text,
         },
       },
     },
 
-    /* Dropdownlist */
-    MuiMenu: {
+    MuiAutocomplete: {
       styleOverrides: {
-        list: {
-          background: `${theme.background}`,
-          color: `${theme.text}`,
-          border: `${theme.dropdown_border}`,
+        // Dropdown icons
+        popupIndicator: {
+          color: theme.indicator_color,
         },
-      },
-    },
-    /* Dropdownlist: Single entry */
-    MuiMenuItem: {
-      styleOverrides: {
-        root: {
-          "&:hover, &.Mui-selected:hover": {
-            color: `${theme.focus_text}`,
-            background: `${theme.focused}`,
-          },
-          "&.Mui-selected": {
-            color: `${theme.selected_text}`,
-            background: `${theme.selected}`,
+        clearIndicator: {
+          color: theme.indicator_color,
+        },
+        // Dropdown container
+        paper: {
+          backgroundColor: theme.background,
+          color: theme.text,
+          border: theme.dropdown_border,
+        },
+        // Options wrapper
+        listbox: {
+          backgroundColor: theme.background,
+        },
+        // Single option
+        option: {
+          color: theme.text,
+
+          "&.Mui-focused": {
+            color: theme.focus_text,
+            backgroundColor: theme.focused,
           },
         },
       },

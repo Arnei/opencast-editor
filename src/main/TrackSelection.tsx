@@ -276,8 +276,9 @@ const VideoTrackItem: React.FC<{
         height="unset"
         css={playerStyle}
         style={playerRootStyle}
-        url={track.uri}
-        config={{ file: { attributes: { tabIndex: "-1" } } }}
+        src={track.uri}
+        // tabindex is currently not properly applied to neither wrapper nor video element
+        tabIndex={-1} // Skip player when navigating page with keyboard
       />
     </TrackItem>
   );

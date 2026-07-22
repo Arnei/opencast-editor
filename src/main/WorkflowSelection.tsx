@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { JSX, useEffect } from "react";
 
 import { css } from "@emotion/react";
 import { backOrContinueStyle } from "../cssStyles";
@@ -11,7 +11,6 @@ import { LuChevronLeft } from "react-icons/lu";
 import { selectStatus as saveSelectStatus, selectError as saveSelectError } from "../redux/workflowPostSlice";
 import { httpRequestState, Workflow } from "../types";
 import { SaveButton } from "./Save";
-import { EmotionJSX } from "@emotion/react/dist/declarations/src/jsx-namespace";
 
 import { useTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
@@ -68,7 +67,7 @@ const WorkflowSelection: React.FC = () => {
 
   // Layout template
   const render = (topTitle: string, topText: JSX.Element, hasWorkflowButtons: boolean,
-    nextButton: EmotionJSX.Element, errorStatus: httpRequestState["status"],
+    nextButton: JSX.Element, errorStatus: httpRequestState["status"],
     errorMessage: httpRequestState["error"]) => {
     return (
       <div css={workflowSelectionStyle}>

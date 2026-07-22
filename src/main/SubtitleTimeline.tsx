@@ -14,11 +14,10 @@ import {
   setFocusSegmentTriggered2,
 } from "../redux/subtitleSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import useResizeObserver from "use-resize-observer";
 import { moveCut, selectActiveSegmentIndex, selectDuration, selectSegments } from "../redux/videoSlice";
 import Draggable, { DraggableEventHandler } from "react-draggable";
 import { SubtitleCue } from "../types";
-import { Resizable, ResizableProps } from "react-resizable";
+import { Resizable, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
 import ScrollContainer, { ScrollEvent } from "react-indiana-drag-scroll";
 import { useTheme } from "../themes";
@@ -28,6 +27,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { shallowEqual } from "react-redux";
 import TimelineStamps from "./TimelineStamps";
 import { selectKeymap } from "../redux/hotkeySlice";
+import { useResizeObserver } from "usehooks-ts";
 
 /**
  * Copy-paste of the timeline in Video.tsx, so that we can make some small adjustments,
@@ -45,9 +45,11 @@ const SubtitleTimeline: React.FC = () => {
   const currentlyAt = useAppSelector(selectCurrentlyAt);
   const subtitleId = useAppSelector(selectSelectedSubtitleId, shallowEqual);
 
-  const { ref, width = 1 } = useResizeObserver<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
+  const { width = 1 } = useResizeObserver<HTMLDivElement>({ ref: ref as React.RefObject<HTMLDivElement> });
   const refTop = useRef<HTMLElement>(null);
-  const { ref: refMini, width: widthMiniTimeline = 1 } = useResizeObserver<HTMLDivElement>();
+  const refMini = useRef<HTMLDivElement>(null);
+  const { width: widthMiniTimeline = 1 } = useResizeObserver({ ref: refMini as React.RefObject<HTMLDivElement> });
 
   // How much of the timeline should be visible in milliseconds. Aka a specific zoom level
   const timelineCutoutInMs = 10000;
@@ -353,7 +355,8 @@ const TimelineSubtitleSegment: React.FC<{
   // Resizable does not support resizing in the west/north directions out of the box,
   // so additional calculations are necessary.
   // Adapted from Resizable example code
-  const onResizeAbsolute: ResizableProps["onResize"] = (_event, { size, handle }) => {
+  const onResizeAbsolute = (_event: React.SyntheticEvent, data: ResizeCallbackData): void => {
+    const { size, handle } = data;
     // Possible TODO: Find a way to stop resizing a segment beyond 0ms here instead of later
     let newLeft = absoluteLeft;
 
@@ -366,7 +369,8 @@ const TimelineSubtitleSegment: React.FC<{
   };
 
   // Update redux state based on the resize
-  const onResizeStop: ResizableProps["onResizeStop"] = (_event, { handle }) => {
+  const onResizeStop = (_event: React.SyntheticEvent, data: ResizeCallbackData): void => {
+    const { handle } = data;
     // Calc new width, factoring in offset
     const newWidth = absoluteWidth;
 
