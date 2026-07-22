@@ -125,7 +125,7 @@ const SubtitleListEditor: React.FC<{
   }, [addCueAtIndex, defaultSegmentLength, dispatch, subtitle?.cues, subtitleId]);
 
   const listStyle = css({
-    flex: "1 1 auto",
+    flex: "auto",
     overflow: "auto",
   });
 
@@ -183,9 +183,9 @@ const SubtitleListEditor: React.FC<{
       <AutoSizer renderProp={
         ({ height = 600, width = 800 }) => {
           return <List
-            style={{ height: height, width: width }}
+            style={{ height, width }}
             rowComponent={RowComponent}
-            rowHeight={segmentHeight ? segmentHeight : 0}
+            rowHeight={segmentHeight ?? 0}
             rowCount={itemData.items ? itemData.items.length : 0}
             rowProps={itemData}
             overscanCount={4}

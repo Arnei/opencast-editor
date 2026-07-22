@@ -220,13 +220,13 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
     // Tries to get video dimensions from the HTML5 elements until they are not 0,
     // then updates the store
     async function updateAspectRatio() {
-      if (ref.current && ref.current) {
-        let w = (ref.current as HTMLVideoElement).videoWidth;
-        let h = (ref.current as HTMLVideoElement).videoHeight;
+      if (ref.current) {
+        let w = (ref.current).videoWidth;
+        let h = (ref.current).videoHeight;
         while (w === 0 || h === 0) {
           await sleep(100);
-          w = (ref.current as HTMLVideoElement).videoWidth;
-          h = (ref.current as HTMLVideoElement).videoHeight;
+          w = (ref.current).videoWidth;
+          h = (ref.current).videoHeight;
         }
         dispatch(setAspectRatio({ dataKey, width: w, height: h }));
         setIsAspectRatioUpdated(true);
@@ -376,7 +376,10 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       // Renders the current frame in the video element to a canvas
       // Returns the data url
       captureVideo() {
-        const video = ref.current as HTMLVideoElement;
+        if (!ref.current) {
+          return;
+        }
+        const video = ref.current;
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
@@ -387,7 +390,7 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
         }
       },
       getWidth() {
-        return (ref.current as HTMLVideoElement).clientWidth;
+        return ref.current?.clientWidth ?? 0;
       },
     }));
 
@@ -429,7 +432,8 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
       if (!errorState) {
         return (
           <div css={videoPlayerWrapperStyles}>
-            <ReactPlayer src={url}
+            <ReactPlayer
+              src={url}
               wrapper={"div"}
               css={overwritePlayerCSS ?? [backgroundBoxStyle(theme), reactPlayerStyle]}
               ref={ref}
