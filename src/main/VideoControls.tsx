@@ -131,7 +131,7 @@ const PreviewMode: React.FC<{
   const theme = useTheme();
 
   // Change preview mode from "on" to "off" and vice versa
-  const switchPlayPreview = (ref: React.RefObject<HTMLDivElement> | undefined) => {
+  const switchPlayPreview = (ref?: React.RefObject<HTMLDivElement | null>) => {
     dispatch(setIsPlayPreview(!isPlayPreview));
 
     // Lose focus if clicked by mouse

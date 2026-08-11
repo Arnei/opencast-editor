@@ -78,7 +78,7 @@ const CuttingActions: React.FC<{
     action: ActionCreatorWithoutPayload<string> | undefined,
     actionWithPayload?: PayloadActionCreator<T, string>,
     payload?: T,
-    ref?: React.RefObject<HTMLButtonElement>,
+    ref?: React.RefObject<HTMLButtonElement | null>,
   ) => {
     if (action) {
       dispatch(action());
@@ -296,7 +296,7 @@ interface cuttingActionsButtonInterface {
     actionWithPayload: ActionCreatorWithPayload<number, string> | undefined,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload: any,
-    ref?: React.RefObject<HTMLButtonElement>,
+    ref?: React.RefObject<HTMLButtonElement | null>,
   ) => void,
   action: ActionCreatorWithoutPayload<string>,
   actionWithPayload: ActionCreatorWithPayload<number, string> | undefined,
@@ -344,7 +344,7 @@ interface markAsDeleteButtonInterface {
     actionWithPayload: ActionCreatorWithPayload<number, string> | undefined,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload: any,
-    ref?: React.RefObject<HTMLButtonElement>
+    ref?: React.RefObject<HTMLButtonElement | null>
   ) => void,
   action: ActionCreatorWithoutPayload<string>,
   hotKeyName: string,

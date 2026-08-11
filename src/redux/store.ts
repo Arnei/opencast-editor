@@ -11,8 +11,8 @@ import thumbnailReducer from "./thumbnailSlice";
 import hotkeyReducer from "./hotkeySlice";
 import errorReducer from "./errorSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import storage from "redux-persist/lib/storage";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist";
+import storage from "redux-persist/es/storage";
 
 const reducers = combineReducers({
   mainMenuState: mainMenuStateReducer,

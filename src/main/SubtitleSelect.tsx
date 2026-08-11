@@ -11,13 +11,12 @@ import { selectSubtitles, setSelectedSubtitleId, setSubtitle } from "../redux/su
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { setIsDisplayEditView } from "../redux/subtitleSlice";
 import { LuPlus } from "react-icons/lu";
-import { withTypes } from "react-final-form";
-import { Select } from "mui-rff";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { selectSubtitlesFromOpencast } from "../redux/videoSlice";
 import { useTheme } from "../themes";
 import { ThemeProvider } from "@mui/material/styles";
+import { Autocomplete, TextField } from "@mui/material";
 import { ThemedTooltip } from "./Tooltip";
 import { languageCodeToName } from "../util/utilityFunctions";
 import { v4 as uuidv4 } from "uuid";
@@ -211,12 +210,7 @@ const SubtitleAddButton: React.FC<{
   const dispatch = useAppDispatch();
 
   const [isPlusDisplay, setIsPlusDisplay] = useState(true);
-
-  // Form types
-  interface FormSubmitValues {
-    selectedSubtitle: string;
-  }
-  const { Form } = withTypes<FormSubmitValues>();
+  const [subtitleId, setSubtitleId] = useState<string | null>(null);
 
   // Parse language data into a format the dropdown understands
   const selectData = () => {
@@ -229,9 +223,10 @@ const SubtitleAddButton: React.FC<{
     return data;
   };
 
-  const onSubmit = (values: FormSubmitValues) => {
+  const onSubmit = () => {
+    if (!subtitleId) { return; }
     // Create new subtitle for the given language
-    const id = values.selectedSubtitle;
+    const id = subtitleId;
     const relatedSubtitle = subtitlesForDropdown.find(tag => tag.id === id);
     const tags = relatedSubtitle ? relatedSubtitle.tags : [];
     dispatch(setSubtitle({ identifier: id, subtitles: { cues: [], tags: tags, deleted: false } }));
@@ -279,45 +274,41 @@ const SubtitleAddButton: React.FC<{
         css={[basicButtonStyle(theme), tileButtonStyle(theme), !isPlusDisplay && disableButtonAnimation]}
       >
         <LuPlus css={[plusIconStyle, { fontSize: 42 }]} />
-        <Form
-          onSubmit={onSubmit}
-          subscription={{ submitting: true, pristine: true }} // Hopefully causes less rerenders
-          render={({ handleSubmit, submitting, pristine }) => (
-            <form onSubmit={event => {
-              handleSubmit(event);
-              // // Ugly fix for form not getting updated after submit. TODO: Find a better fix
-              // form.reset()
-            }} css={subtitleAddFormStyle}>
-              {/* TODO: Fix the following warning, caused by removing items from data:
-                MUI: You have provided an out-of-range value `undefined` for the select (name="languages") component.
-              */}
-              <ThemeProvider theme={subtitleSelectStyle(theme)}>
-                <Select
-                  css={{ backgroundColor: `${theme.background}` }}
-                  label={t("subtitles.createSubtitleDropdown-label") ?? undefined}
-                  name="selectedSubtitle"
-                  data={selectData()}
-                >
-                </Select>
-              </ThemeProvider>
 
-              <ThemedTooltip title={submitting || pristine ?
-                t("subtitles.createSubtitleButton-createButton-disabled-tooltip") :
-                t("subtitles.createSubtitleButton-createButton-tooltip")
-              }>
-                <span>
-                  <button css={[basicButtonStyle(theme), createButtonStyle]}
-                    type="submit"
-                    aria-label={t("subtitles.createSubtitleButton-createButton-tooltip")}
-                    disabled={submitting || pristine}>
-                    {t("subtitles.createSubtitleButton-createButton")}
-                  </button>
-                </span>
-              </ThemedTooltip>
+        <div css={subtitleAddFormStyle}>
+          <ThemeProvider theme={subtitleSelectStyle(theme)}>
+            <Autocomplete<{label: string, value: string}>
+              css={{ backgroundColor: `${theme.background}` }}
+              options={selectData()}
+              getOptionLabel={option => option.label}
+              renderInput={params => <TextField {...params} label={t("subtitles.createSubtitleDropdown-label")} />}
+              onChange={(_event: React.SyntheticEvent, newValue: {label: string, value: string} | null) => {
+                setSubtitleId(newValue ? newValue.value : null);
+              }}
+              // @ts-expect-error: Weird typing
+              disableClearable
+            >
+            </Autocomplete>
+          </ThemeProvider>
 
-            </form>
-          )}
-        />
+          <ThemedTooltip
+            title={subtitleId ?
+              t("subtitles.createSubtitleButton-createButton-disabled-tooltip") :
+              t("subtitles.createSubtitleButton-createButton-tooltip")
+            }
+          >
+            <span>
+              <button css={[basicButtonStyle(theme), createButtonStyle]}
+                type="submit"
+                aria-label={t("subtitles.createSubtitleButton-createButton-tooltip")}
+                disabled={!subtitleId}
+                onClick={onSubmit}
+              >
+                {t("subtitles.createSubtitleButton-createButton")}
+              </button>
+            </span>
+          </ThemedTooltip>
+        </div>
       </ProtoButton>
     </ThemedTooltip>
   );

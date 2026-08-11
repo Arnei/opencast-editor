@@ -12,6 +12,7 @@ export default [
     rules: {
       // // TODO: We want to turn these on eventually
       "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
     },
   },
 ];

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { css } from "@emotion/react";
 import { ParseKeys } from "i18next";
 import { useTranslation, Trans } from "react-i18next";
@@ -292,7 +292,7 @@ const KeyboardControls: React.FC = () => {
 };
 
 const ChangeHotkeyModal: React.FC<{
-  modalRef: React.RefObject<ModalHandle>,
+  modalRef: React.RefObject<ModalHandle | null>,
   keys: Set<string>,
   stop: () => void
   group: string,
@@ -393,7 +393,7 @@ const ChangeHotkeyModal: React.FC<{
 };
 
 const DeleteHotkeyModal: React.FC<{
-  modalRef: React.RefObject<ModalHandle>,
+  modalRef: React.RefObject<ModalHandle | null>,
   group: string,
   action: string,
   actionTitle: string,

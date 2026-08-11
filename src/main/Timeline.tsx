@@ -22,7 +22,7 @@ import {
 
 import { LuMenu } from "react-icons/lu";
 
-import useResizeObserver from "use-resize-observer";
+
 
 import { Waveform } from "../util/waveform";
 import { convertMsToReadableString } from "../util/utilityFunctions";
@@ -44,6 +44,7 @@ import {
 } from "../redux/chapterSlice";
 import TimelineStamps from "./TimelineStamps";
 import { selectKeymap } from "../redux/hotkeySlice";
+import { useResizeObserver } from "usehooks-ts";
 
 /**
  * A container for visualizing the cutting of the video, as well as for controlling
@@ -80,9 +81,12 @@ const Timeline: React.FC<{
   const displayDuration = useAppSelector(selectDisplayDuration);
 
   const scrubberRef = useRef<HTMLDivElement | null>(null);
-  const { ref, width = 1 } = useResizeObserver<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
+  const { width = 1 } = useResizeObserver({ ref: ref as React.RefObject<HTMLDivElement> });
   const scrollContainerRef = useRef<HTMLElement>(null);
-  const { width: scrollContainerWidth = 1 } = useResizeObserver<HTMLElement>({ ref: scrollContainerRef });
+  const { width: scrollContainerWidth = 1 } = useResizeObserver({
+    ref: scrollContainerRef as React.RefObject<HTMLElement>,
+  });
 
   const currentlyScrolling = useRef(false);
   const zoomCenter = useRef(0);

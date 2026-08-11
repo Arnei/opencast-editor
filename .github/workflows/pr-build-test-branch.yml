@@ -12,7 +12,6 @@ concurrency:
 
 jobs:
   detect-repo-owner:
-    if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     outputs:
       server: ${{ steps.test-server.outputs.server }}
@@ -67,42 +66,20 @@ jobs:
       - name: Upload build to GHA
         uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: ${{ github.run_id }}-build
           path: ${{ runner.temp }}/build.tar
 
+            # This is stupid, but GHA currently zeros out the pull_requests list in forked repos
+      # so we have no way to get at this number without going through PRs and matching via hash
+      - name: Save PR Number to disk
+        if: github.event.workflow_run.event == 'pull_request'
+        run: echo "${{ github.event.number }}" > pr_number.txt
 
-  #This is currently defunct, but kept around in case we run into issues in the future
-  # where this check might be handy, cf spammers filing PRs or something.
-  # Previously we checked is_team_member prior to doing anything else above
-  check-member:
-    name: Check organization membership
-    if: github.repository_owner == 'opencast'
-    runs-on: ubuntu-latest
-
-    # Map a step output to a job output
-    outputs:
-      is_team_member: ${{ steps.is_developer.outputs.permitted == 'true' || steps.is_committer.outputs.permitted == 'true' }}
-
-    steps:
-      - name: Check if user is Opencast developer
-        id: is_developer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
-        uses: TheModdingInquisition/actions-team-membership@v1.0
+      - uses: actions/upload-artifact@v4
+        if: github.event.workflow_run.event == 'pull_request'
         with:
-          team: developers
-          # Personal Access Token with the `read:org` permission
-          token: ${{ secrets.ORGANIZATION_MEMBER_SECRET }}
-          exit: false
-
-      - name: Check if user is Opencast committer
-        id: is_committer
-        if: ${{ github.event.pull_request.head.repo.full_name != 'opencast/editor' }}
-        uses: TheModdingInquisition/actions-team-membership@v1.0
-        with:
-          team: committers
-          # Personal Access Token with the `read:org` permission
-          token: ${{ secrets.ORGANIZATION_MEMBER_SECRET }}
-          exit: false
+          name: ${{ github.run_id }}-number
+          path: pr_number.txt
 
 
   check-no-modified-translations:
