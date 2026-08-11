@@ -5,7 +5,7 @@
 # This file contains configuration meant for development and demonstration.
 # New features should be enabled in here to make testing easier.
 
-# ⚠️  Please do not use this for production deployments!
+# ⚠️  Please do not use this for production deployments.
 
 
 # Pick a default event identifier which should be on develop.opencast.org
