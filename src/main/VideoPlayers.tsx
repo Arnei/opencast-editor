@@ -202,6 +202,8 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
     const [ready, setReady] = useState(false);
     const [errorState, setError] = useState(false);
     const [isAspectRatioUpdated, setIsAspectRatioUpdated] = useState(false);
+    // Toggled off then back on once as a workaround, see onReadyCallback
+    const [suppressAspectRatio, setSuppressAspectRatio] = useState(false);
 
     // Callback for when the video is playing
     const onProgressCallback = (state: {
@@ -237,6 +239,15 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
     // Callback for checking whether the video element is ready
     const onReadyCallback = () => {
       setReady(true);
+      // Work around a Safari 26 bug (fixed in Safari 27, but 26 is still widely
+      // deployed): the video plays audio but never paints a frame on first mount.
+      // Removing and re-applying the aspect-ratio CSS property on the player's
+      // wrapper forces Safari to repaint it.
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      if (isSafari) {
+        setSuppressAspectRatio(true);
+        setTimeout(() => setSuppressAspectRatio(false), 0);
+      }
     };
 
     const onPlay = () => {
@@ -393,7 +404,9 @@ export const VideoPlayer = React.forwardRef<VideoPlayerForwardRef, VideoPlayerPr
     }));
 
     const reactPlayerStyle = css({
-      aspectRatio: "16 / 9",    // Hard-coded for now because there are problems with updating this value at runtime
+      // Hard-coded for now because there are problems with updating this value at runtime.
+      // Briefly unset by the Safari 26 workaround in onReadyCallback.
+      ...!suppressAspectRatio && { aspectRatio: "16 / 9" },
 
       overflow: "hidden", // Required for borderRadius to show
       ...first && {
